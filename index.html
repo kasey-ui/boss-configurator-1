@@ -375,7 +375,7 @@ body.hide-discount #sum-discount-body{display:none!important}
         <div id="search-results"></div>
       </div>
       <button id="copy-link-btn" class="btn-ghost" onclick="copyBuildLink()" style="display:none">Copy Link</button>
-      <button id="btn-print" class="btn-ghost" onclick="window.print()">Print / Save PDF</button>
+      <button id="btn-print" class="btn-ghost" onclick="printSummary()">Print / Save PDF</button>
       <button class="btn-red" onclick="resetAll()">Reset</button>
     </div>
   </div>
@@ -1557,7 +1557,7 @@ const P = {
   '985-24-052':        {desc:'Fox Performance Shock — 2014-2018 RAM 2500 8-10" Rear (each)', msrp:450},
   '985-24-055':        {desc:'Fox Performance Shock — 2013-2018 RAM 3500 / 2014-2018 RAM 2500 8-10" Rear (each)', msrp:450},
   '985-24-058':        {desc:'Fox Performance Shock — 2013-2018 RAM 3500 5-6" Front Remote Reservoir (each)', msrp:500},
-  '985-24-068':        {desc:'Fox Performance Shock — G5 Dual Steering Stabilizer (pair)', msrp:440},
+  // '985-24-068' defined earlier at $220/ea — do not redefine here
   '980-24-637':        {desc:'Fox Performance Shock — 2013-2018 RAM 2500/3500 5-6" Front (DISCONTINUED)', msrp:0},
   '18961':             {desc:'Kit — 2013-2018 RAM 2500/3500 G5 Dual Shock Steering Stabilizer, 5-6" Lift and Larger (Shocks Not Included)', msrp:320},
 
@@ -2112,17 +2112,6 @@ function gmSilveradoCC(id, model, label) {
         ],
       },
       {
-        key:'shocks', label:'Rear Shocks', badge:'opt',
-        hint:'Optional Kelderman-Raptor 2.0 rear shocks for the 4-Link rear suspension.',
-        condition:(sel)=>sel.scope==='rear-only'||sel.scope==='full',
-        choices:()=>[
-          {val:'none', label:'No Rear Shocks'},
-          {val:'rap',  label:'Kelderman-Raptor 2.0 Rear Shocks — HD Valving (80395)',
-           sub:'(2) bushing mount remote reservoir shocks — 2019+ GM 4500/5500/6500 4-Link Rear',
-           parts:[{pn:'80395',qty:2}]},
-        ],
-      },
-      {
         key:'ctrl', label:'Air Controls', badge:'req',
         condition:(sel)=>sel.scope==='rear-only'||(!!sel.scope&&!!sel.drive),
         choices:(kit,sel)=>{
@@ -2182,7 +2171,6 @@ function gmSilveradoCC(id, model, label) {
           ? {'dual-mech':[{pn:'30664',qty:1}]}
           : {'dual-mech':[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}],'eslk3h2':[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10031767',qty:1}],alp4:[{pn:'10040870',qty:1}],'alp4-console':[{pn:'10040870',qty:1},{pn:'10031767',qty:1}],'full-valve':[{pn:'HCVLK',qty:2},{pn:'HCVRLK',qty:2},{pn:'2002174',qty:1},{pn:'51667',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.shocks==='rap') parts.push({section:'Shocks',pn:'80395',qty:2});
       return parts;
     },
   };
@@ -4520,7 +4508,7 @@ function withAccessories(entry, cfg) {
     condition:(sel)=>sel.category==='accessories'&&(sel['acc-type']==='dss'||sel['acc-type']==='dss+arms'),
     choices:()=>[
       {val:'none',   label:'No Shocks'},
-      {val:'fox',    label:'Fox Steering Stabilizer Shocks — 985-24-068 ($220/ea)',     sub:'(2) Fox 985-24-068',                        parts:[{pn:'985-24-068',qty:2}]},
+      {val:'fox',    label:'Fox Steering Stabilizer Shocks — 985-24-068',               sub:'(2) Fox 985-24-068',                        parts:[{pn:'985-24-068',qty:2}]},
       {val:'raptor', label:'Kelderman-Raptor Steering Stabilizer Shocks — 10003382',   sub:'(2) Kelderman-Raptor 2.0 Monotube Shocks',  parts:[{pn:'10003382',qty:2}]},
     ],
   });
@@ -13447,20 +13435,11 @@ function buildPrintQuote() {
   const custRef = document.getElementById('customer-ref')?.value?.trim()||'';
   const qRef = displayRef();
 
-  // Logo (Kelderman Z-mark approximation)
-  // BOSS logo (works on white paper)
-  const logo = `<div style="text-align:left">
-    <svg viewBox="0 0 90 98" width="74" height="80" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="45" cy="45" r="41" fill="#111" stroke="#cc0000" stroke-width="3.5"/>
-      <circle cx="45" cy="45" r="36" fill="none" stroke="#cc0000" stroke-width="1.5"/>
-      <polygon points="18,27 62,27 62,33 30,60 68,60 68,63 18,63 18,57 50,30 18,30"
-        fill="#cc0000"/>
-      <text x="45" y="91" text-anchor="middle" font-family="Georgia,Times New Roman,serif"
-        font-style="italic" font-size="13" fill="#cc0000" letter-spacing="1">kelderman</text>
-    </svg>
-    <div style="font-family:Arial Black,Impact,sans-serif;font-size:22pt;font-weight:900;
-      color:#111;letter-spacing:2px;margin-top:2pt">BOSS</div>
-  </div>`;
+  // Use the actual BOSS logo image embedded in the page header
+  const logoSrc = document.querySelector('.brand-logo')?.src || '';
+  const logo = logoSrc
+    ? `<img src="${logoSrc}" style="height:64px;width:auto;display:block;border-radius:4px">`
+    : `<div style="font-family:Arial Black,Impact,sans-serif;font-size:22pt;font-weight:900;color:#111;letter-spacing:2px">BOSS</div>`;
 
   document.getElementById('print-quote').innerHTML = `
     <div class="pq-header">
