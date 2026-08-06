@@ -476,6 +476,7 @@ const P = {
   // Pickup DSS & Radius Arms
   '10015292': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup 4WD, Dual Shock Steering Stabilizer Bracket',               msrp:320},
   '10015862': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab, Dual Shock Steering Stabilizer Bracket',msrp:320},
+  'SK758':    {desc:'PSC Power Steering Assist Kit — 2023+ Ford F-450 Pickup, 2-3" / 5-6" Lift',                    msrp:5050},
   '10003381': {desc:'Kelderman-Raptor 2.0 Remote Reservoir Shock (RAP-10093) — 5-6" Lift Front, F-250/F-350',         msrp:480},
   '10003382': {desc:'Kelderman-Raptor 2.0 Steering Stabilizer Mono Tube Shock (RAP-10094)',                           msrp:360},
   '985-24-068':  {desc:'Fox Steering Stabilizer Shock (985-24-068)',                                                    msrp:220},
@@ -2570,9 +2571,11 @@ function ramCC2013(id, model, label) {
   };
   Object.entries(sdModels).forEach(([base,{label,hasStock}])=>{
     // Front bumpers
+    // Note: 3.5" (ER Fender Flare) end caps only exist on No-Parking-Sensors ('002') variants
     ['001','002'].forEach(park=>{
       ['02','04'].forEach(series=>{
-        const endcaps = hasStock ? ['0000','1200','3500'] : ['1200','3500'];
+        const baseEcs = hasStock ? ['0000','1200'] : ['1200'];
+        const endcaps = park==='002' ? [...baseEcs,'3500'] : baseEcs;
         endcaps.forEach(ec=>{
           const pn = `KLM-${base}-${park}${series}${ec}`;
           P[pn] = {desc:`2023+ Ford ${label} Front Bumper — ${seriesDescs[series]}, ${parkDescs[park]}, ${endCapDescs[ec]}`, msrp:2750};
@@ -2641,12 +2644,15 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
     {val:'sr-driving', label:`20" SR-Series PRO — Spot/Driving Combo (+$${qty*780})`,              sub:`RIG921314 × ${qty}`,    parts:[{pn:'RIG921314',qty}]},
   ];
 
-  const endCapChoices = hasStockWidth
-    ? [{val:'stock',    label:'Stock Width'},
-       {val:'wide-125', label:'1.25" Wide End Caps'},
-       {val:'wide-350', label:'3.5" Wide End Caps — ER Fender Flares'}]
-    : [{val:'wide-125', label:'1.25" Wide End Caps'},
-       {val:'wide-350', label:'3.5" Wide End Caps — ER Fender Flares'}];
+  // 3.5" ER Fender Flare end caps only exist on No-Parking-Sensors variants
+  const endCapChoices = (sel) => {
+    const noSensors = sel['front-parking']==='without';
+    const opts = hasStockWidth
+      ? [{val:'stock', label:'Stock Width'}, {val:'wide-125', label:'1.25" Wide End Caps'}]
+      : [{val:'wide-125', label:'1.25" Wide End Caps'}];
+    if(noSensors) opts.push({val:'wide-350', label:'3.5" Wide End Caps — ER Fender Flares'});
+    return opts;
+  };
 
   const parkCode  = {with:'001', without:'002'};
   const seriesCode= {'alpha-winch':'02', 'alpha-light':null/*TBD — P/N code needed*/, delta:'04', bravo:null/*TBD — P/N code needed*/};
@@ -2723,7 +2729,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
     },
     {key:'front-endcap', label:'End Cap Width', badge:'req',
      condition:(sel)=>!!sel['front-parking'],
-     choices:()=>endCapChoices,
+     choices:(kit,sel)=>endCapChoices(sel),
     },
     {key:'front-finish', label:'Bumper Finish', badge:'req',
      condition:(sel)=>!!sel['front-endcap'],
@@ -5421,6 +5427,16 @@ const CATALOG = [
           parts:[{pn:'10015144',qty:1}]},
        ],
       },
+      {key:'psc', label:'Power Steering Assist', badge:'opt',
+       hint:'PSC Power Steering Assist Kit — recommended for lifted F-450 applications.',
+       condition:(sel)=>(sel.height==='2-3'||sel.height==='5-6')&&!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none', label:'No Power Steering Assist'},
+         {val:'psc',  label:'PSC Power Steering Assist Kit (SK758)',
+          sub:'SK758 — PSC power steering assist kit',
+          parts:[{pn:'SK758',qty:1}]},
+       ],
+      },
       {key:'ctrl', label:'Air Controls', badge:'req',
        hint:'Choose how you want to manage your air suspension.',
        condition:(sel)=>!!sel.scope,
@@ -5480,6 +5496,7 @@ const CATALOG = [
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
       if(sel['susp-sensors']==='yes') parts.push({section:'Accessories',pn:'10029766',qty:1});
+      if(sel.psc==='psc') parts.push({section:'Accessories',pn:'SK758',qty:1});
       return parts;
     },
   }, '402023023', false, 'pickup'), {
@@ -9830,7 +9847,7 @@ const CATALOG = [
         hint:'Optional front shocks matched to your suspension kit.',
         condition:(sel)=>!!sel.front&&sel.scope!=='rear-only'&&(sel.scope==='front-only'||!!sel.rear),
         choices:(kit,sel)=>{
-          if(sel.height==='stock'||sel.height==='3-inch') return [
+          if(sel.height==='stock') return [
             {val:'none',         label:'No Front Shocks'},
             {val:'stock-raptor', label:'Raptor 2.0 Monotube Front Shocks (10037605 ×2)',
              sub:'(2) Raptor 2.0 monotube front shocks — $390 each',
@@ -9838,6 +9855,12 @@ const CATALOG = [
             {val:'stock-rancho', label:'Rancho R9000XL SE Front Shocks (80118)',
              sub:'Rancho RS994042 front shocks — pair',
              parts:[{pn:'80118',qty:1}]},
+          ];
+          if(sel.height==='3-inch') return [
+            {val:'none', label:'No Front Shocks'},
+            {val:'rr',   label:'Raptor 2.0 Remote Reservoir Front Shocks (10003380 ×2)',
+             sub:'(2) Raptor 2.0 remote reservoir shocks + (1) reservoir mounting kit (10004545)',
+             parts:[{pn:'10003380',qty:2},{pn:'10004545',qty:1}]},
           ];
           if(sel.height==='12-inch') return [
             {val:'none', label:'No Front Shocks'},
@@ -10304,7 +10327,7 @@ const CATALOG = [
         hint:'Optional front shocks matched to your suspension kit.',
         condition:(sel)=>sel.scope!=='rear-only'&&(sel.scope==='front-only'||!!sel.rear)&&(['5-6','12-inch'].includes(sel.height)?!!sel.front:(sel.height==='stock'||sel.height==='3-inch')),
         choices:(kit,sel)=>{
-          if(sel.height==='stock'||sel.height==='3-inch') return [
+          if(sel.height==='stock') return [
             {val:'none',         label:'No Front Shocks'},
             {val:'stock-raptor', label:'Raptor 2.0 Monotube Front Shocks (10037605 ×2)',
              sub:'(2) Raptor 2.0 monotube front shocks — $390 each',
@@ -10312,6 +10335,12 @@ const CATALOG = [
             {val:'stock-rancho', label:'Rancho R9000XL SE Front Shocks (80118)',
              sub:'Rancho RS994042 front shocks — pair',
              parts:[{pn:'80118',qty:1}]},
+          ];
+          if(sel.height==='3-inch') return [
+            {val:'none', label:'No Front Shocks'},
+            {val:'rr',   label:'Raptor 2.0 Remote Reservoir Front Shocks (10003380 ×2)',
+             sub:'(2) Raptor 2.0 remote reservoir shocks + (1) reservoir mounting kit (10004545)',
+             parts:[{pn:'10003380',qty:2},{pn:'10004545',qty:1}]},
           ];
           if(sel.height==='12-inch') return [
             {val:'none', label:'No Front Shocks'},
