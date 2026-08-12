@@ -887,7 +887,7 @@ const P = {
   '10015498': {desc:'Kit — 2" Lift Spacers — 2019+ GM Silverado 4500/5500/6500 4WD',                                  msrp:350},
   '10040696': {desc:'Kit — 2019+ GM Silverado 4500/5500/6500, 4-Link Rear Air Suspension',                            msrp:6450},
   'HCVRLK':   {desc:'Kit — Haldex Height Control Valve w/ Rear Linkage Kit — 1 Corner (4-Link Rear)',                  msrp:200},
-  '2002174':  {desc:'3-Gallon Supplemental Air Tank — OEM Air Supply Compatible',                                      msrp:278},
+  '2002174':  {desc:'3-Gallon Supplemental Air Tank — OEM Air Supply Compatible',                                      msrp:275},
   '51667':    {desc:'Kit — Dual Dump Valve Kit',                                                                       msrp:175},
   '10031767': {desc:'2019+ GM Silverado 4500/5500/6500 Overhead Console — Air Lift 3H Remote Mount',                  msrp:250},
   '80395':    {desc:'Kelderman-Raptor 2.0 Bushing Mount Remote Reservoir Shock, HD Valving — 2019+ GM 4500/5500/6500 4-Link Rear (RAP-10182)', msrp:480},
@@ -938,7 +938,7 @@ const P = {
 
   // ── Peterbilt / Kenworth Semi Trucks ─────────────────────────
   '10045284': {desc:'Kit — 2008-2023 Peterbilt 389 Front Air Leaf Suspension',                                         msrp:5450},
-  '10040652': {desc:'Kit — 1987-2007 Peterbilt 379 Front Air Leaf Suspension',                                         msrp:5450},
+  '10040652': {desc:'Kit — 1987-2007 Peterbilt 379 Front Air Leaf Suspension',                                         msrp:6150},
   '10030151': {desc:'Kit — 1990+ Kenworth W900L Front Air Leaf Suspension',                                            msrp:5450},
   '10042089': {desc:'Kit — Kenworth T660/T680 Front Air Leaf Suspension',                                              msrp:5450},
   '80356':    {desc:'Shock — Gabriel Fleet (85014), Peterbilt 379/389 / Kenworth W900L Front (each)',                  msrp:100},
@@ -2144,12 +2144,6 @@ function gmSilveradoCC(id, model, label) {
             {val:'eslk3h2-console',  label:'Air Lift 3H + Overhead Console Mount',
              sub:'ESLK3H2 + 10031767 Overhead Console Mount',
              parts:[{pn:'ESLK3H2',qty:1},{pn:'10031767',qty:1}]},
-            {val:'alp4',             label:'ALP4 — Spare Tire Keeper',
-             sub:'10040870 — 4-corner electronic w/ spare tire keeper',
-             parts:[{pn:'10040870',qty:1}]},
-            {val:'alp4-console',     label:'ALP4 + Overhead Console Mount',
-             sub:'10040870 + 10031767 overhead console mount',
-             parts:[{pn:'10040870',qty:1},{pn:'10031767',qty:1}]},
             {val:'full-valve',       label:'Full Valve Set — Factory Air',
              sub:'HCVLK ×2 + HCVRLK ×2 + 2002174 + 51667 — requires factory onboard air compressor',
              parts:[{pn:'HCVLK',qty:2},{pn:'HCVRLK',qty:2},{pn:'2002174',qty:1},{pn:'51667',qty:1}]},
@@ -2170,7 +2164,7 @@ function gmSilveradoCC(id, model, label) {
         ? {'dual-mech':[{pn:'30664',qty:1}],'hcvrlk-air':[{pn:'HCVRLK',qty:2},{pn:'2002174',qty:1},{pn:'51667',qty:1}]}
         : s==='front-only'
           ? {'dual-mech':[{pn:'30664',qty:1}]}
-          : {'dual-mech':[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}],'eslk3h2':[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10031767',qty:1}],alp4:[{pn:'10040870',qty:1}],'alp4-console':[{pn:'10040870',qty:1},{pn:'10031767',qty:1}],'full-valve':[{pn:'HCVLK',qty:2},{pn:'HCVRLK',qty:2},{pn:'2002174',qty:1},{pn:'51667',qty:1}]};
+          : {'dual-mech':[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}],'eslk3h2':[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10031767',qty:1}],'full-valve':[{pn:'HCVLK',qty:2},{pn:'HCVRLK',qty:2},{pn:'2002174',qty:1},{pn:'51667',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       return parts;
     },
@@ -2388,8 +2382,6 @@ function ramCC2019(id, model, label) {
          if(isBoth&&has4link){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                    sub:'4-corner independent electronic control',                              parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'3H system + 2019+ RAM HD overhead console remote mount (10009358)',  parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4',            label:'ALP4 — Spare Tire Keeper',                  sub:'10040870 — 4-corner electronic w/ spare tire keeper',                 parts:[{pn:'10040870',qty:1}]});
-           opts.push({val:'alp4-console',    label:'ALP4 + Overhead Console',                   sub:'10040870 + 2019+ RAM HD overhead console remote mount (10009358)',    parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
        },
@@ -2419,8 +2411,6 @@ function ramCC2019(id, model, label) {
           'dual-mech':      isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],
           eslk3h2:          [{pn:'ESLK3H2',qty:1}],
           'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],
-          alp4:             [{pn:'10040870',qty:1}],
-          'alp4-console':   [{pn:'10040870',qty:1},{pn:'10009358',qty:1}],
         };
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(s!=='rear-only'&&!!sel.front, s!=='front-only'&&!!sel.rear, true, false).forEach(p=>parts.push(p));
@@ -2513,7 +2503,6 @@ function ramCC2013(id, model, label) {
          ];
          if(isBoth&&has4link){
            opts.push({val:'eslk3h2',label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});
-           opts.push({val:'alp4',   label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -2541,7 +2530,6 @@ function ramCC2013(id, model, label) {
           slkd2wd:   isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],
           'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],
           eslk3h2:  [{pn:'ESLK3H2',qty:1}],
-          alp4:     [{pn:'10040870',qty:1}],
         };
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(s!=='rear-only'&&!!sel.front, s!=='front-only'&&!!sel.rear, true, false).forEach(p=>parts.push(p));
@@ -6036,11 +6024,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6086,7 +6073,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6278,11 +6265,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6335,7 +6321,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6457,11 +6443,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6500,7 +6485,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6603,11 +6588,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6636,7 +6620,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6733,11 +6717,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6770,7 +6753,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6854,11 +6837,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -6889,7 +6871,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -6980,11 +6962,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -7018,7 +6999,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -7147,11 +7128,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -7191,7 +7171,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -7329,11 +7309,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -7377,7 +7356,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -7473,11 +7452,10 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'3h',       label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',     label:'ALP4 — Spare Tire Keeper',         sub:'10040872 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040872',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
-           return isBoth||!['3h','alp4'].includes(o.val);
+           return isBoth||!['3h'].includes(o.val);
          });
        },
       },
@@ -7504,7 +7482,7 @@ const CATALOG = [
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
-        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040872',qty:1}]};
+        const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'3h':[{pn:'ESLK3H2',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,false).forEach(p=>parts.push(p));
       }
@@ -7604,10 +7582,6 @@ const CATALOG = [
           sub:'30664', parts:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',  label:'Air Lift 3H Electronic',
           sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]},
-         {val:'alp4',     label:'ALP4 — Spare Tire Keeper',
-          sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]},
-         {val:'alp4-console',label:'ALP4 + Overhead Console (10009335)',
-          sub:'10040872 + 10009335 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]},
        ],
       },
     ],
@@ -7776,10 +7750,6 @@ const CATALOG = [
              sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift 3H + Overhead Console Mount',
              sub:'ESLK3H2 + 10015203 overhead console mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]});
-           opts.push({val:'alp4',           label:'ALP4 — Spare Tire Keeper',
-             sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]});
-           opts.push({val:'alp4-console',   label:'ALP4 + Overhead Console (10015203)',
-             sub:'10040872 + 10015203 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]});
          }
          return opts;
        },
@@ -7814,7 +7784,7 @@ const CATALOG = [
         if(sel.ctrl==='eslk1al')parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', true, false, true).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]};
+        const cM={slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', true, false).forEach(p=>parts.push(p));
       }
@@ -7977,10 +7947,6 @@ const CATALOG = [
              sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift 3H + Overhead Console Mount',
              sub:'ESLK3H2 + 10015203 overhead console mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]});
-           opts.push({val:'alp4',           label:'ALP4 — Spare Tire Keeper',
-             sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]});
-           opts.push({val:'alp4-console',   label:'ALP4 + Overhead Console (10015203)',
-             sub:'10040872 + 10015203 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]});
          }
          return opts;
        },
@@ -8015,7 +7981,7 @@ const CATALOG = [
         if(sel.ctrl==='eslk1al')parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', true, false, true).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]};
+        const cM={slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', true, false).forEach(p=>parts.push(p));
       }
@@ -8151,10 +8117,6 @@ const CATALOG = [
              sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift 3H + Overhead Console Mount',
              sub:'ESLK3H2 + 10015203 overhead console mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]});
-           opts.push({val:'alp4',           label:'ALP4 — Spare Tire Keeper',
-             sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]});
-           opts.push({val:'alp4-console',   label:'ALP4 + Overhead Console (10015203)',
-             sub:'10040872 + 10015203 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]});
          }
          return opts;
        },
@@ -8329,7 +8291,7 @@ const CATALOG = [
         if(sel.ctrl==='eslk1al')parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', true, false, true).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]};
+        const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', true, false).forEach(p=>parts.push(p));
       }
@@ -8472,7 +8434,7 @@ const CATALOG = [
         if(sel.ctrl==='eslk1al')parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', true, false, true).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]};
+        const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', true, false).forEach(p=>parts.push(p));
       }
@@ -8554,11 +8516,7 @@ const CATALOG = [
           sub:'30664', parts:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',  label:'Air Lift 3H Electronic',
           sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]},
-         {val:'alp4',     label:'ALP4 — Spare Tire Keeper',
-          sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]},
-         {val:'alp4-console',label:'ALP4 + Overhead Console (10009335)',
-          sub:'10040872 + 10009335 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]},
-       ].filter(o=>isBoth||!['eslk3h2','alp4','alp4-console'].includes(o.val)); },
+       ].filter(o=>isBoth||!['eslk3h2'].includes(o.val)); },
       },
     ],
     buildParts:(kit,sel)=>{
@@ -8617,7 +8575,6 @@ const CATALOG = [
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]},
            {val:'eslk3h2', label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',    label:'ALP4 — Spare Tire Keeper',          sub:'10040870 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040870',qty:1}]},
          ];
          return [
            {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -8637,7 +8594,7 @@ const CATALOG = [
       const ctrlMap=is2stage
         ?{slkd:[{pn:'SLKD2WD',qty:1}]}
         :hasFront
-          ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040870',qty:1}]}
+          ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}]}
           :{slkd:[{pn:'SLKD2WD',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(hasFront&&sel.front==='front',!!sel.rear,is2stage,!is2stage&&!hasFront).forEach(p=>parts.push(p));
@@ -8684,7 +8641,6 @@ const CATALOG = [
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]},
            {val:'eslk3h2', label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
-           {val:'alp4',    label:'ALP4 — Spare Tire Keeper',          sub:'10040870 — 4-corner electronic w/ spare tire keeper',    parts:[{pn:'10040870',qty:1}]},
          ];
          return [
            {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -8702,7 +8658,7 @@ const CATALOG = [
       if(sel.scope==='4wd'&&sel.front==='front') parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
       const hasFront=sel.scope==='4wd';
       const ctrlMap=hasFront
-        ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}],alp4:[{pn:'10040870',qty:1}]}
+        ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}]}
         :{slkd:[{pn:'SLKD2WD',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(hasFront&&sel.front==='front',!!sel.rear,false,!hasFront).forEach(p=>parts.push(p));
@@ -10894,7 +10850,6 @@ const CATALOG = [
          ];
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -10946,7 +10901,6 @@ const CATALOG = [
           slkd2wd:         isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],
           'dual-mech':     isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],
           eslk3h2:         [{pn:'ESLK3H2',qty:1}],
-          alp4:            [{pn:'10040870',qty:1}],
         };
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(!!sel.front,!!sel.rear,true,false).forEach(p=>parts.push(p));
@@ -11146,7 +11100,6 @@ const CATALOG = [
          ];
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -11204,7 +11157,6 @@ const CATALOG = [
           slkd2wd:         isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],
           'dual-mech':     isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],
           eslk3h2:         [{pn:'ESLK3H2',qty:1}],
-          alp4:            [{pn:'10040870',qty:1}],
         };
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(!!sel.front,!!sel.rear,true,false).forEach(p=>parts.push(p));
@@ -11361,7 +11313,6 @@ const CATALOG = [
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -11401,7 +11352,7 @@ const CATALOG = [
         else if(sel.ctrl==='eslk1al') parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         else if(sel.ctrl==='none') mfLine(s!=='rear-only',true,false,true).forEach(p=>parts.push(p));
       } else {
-        const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};
+        const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none'){const hF=s!=='rear-only',hR=s!=='front-only'&&(!!sel['rear-std']||!!sel.box);mfLine(hF,hR,true,false).forEach(p=>parts.push(p));}
       }
@@ -11550,7 +11501,6 @@ const CATALOG = [
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -11590,7 +11540,7 @@ const CATALOG = [
         else if(sel.ctrl==='eslk1al') parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
         else if(sel.ctrl==='none') mfLine(s!=='rear-only',true,false,true).forEach(p=>parts.push(p));
       } else {
-        const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};
+        const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
         (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none'){const hF=s!=='rear-only',hR=s!=='front-only'&&(!!sel['rear-std']||!!sel.box);mfLine(hF,hR,true,false).forEach(p=>parts.push(p));}
       }
@@ -11696,7 +11646,6 @@ const CATALOG = [
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                   sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper', sub:'10040870 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -11767,7 +11716,7 @@ const CATALOG = [
         if(sel.ctrl==='fcas')     parts.push({section:'Air Controls',pn:'FC/AS',qty:1});
         else if(sel.ctrl==='none') mfLine(true,false,false,false).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};
+        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none'){const hasFront=s!=='rear-only';const hasRear=s!=='front-only'&&(!isLift||sel.yr==='2003-2007');mfLine(hasFront,hasRear,true,false).forEach(p=>parts.push(p));}
       }
@@ -11864,7 +11813,6 @@ const CATALOG = [
          if(isBoth){
            opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                   sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper', sub:'10040870 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -11925,7 +11873,7 @@ const CATALOG = [
         if(sel.ctrl==='fcas')     parts.push({section:'Air Controls',pn:'FC/AS',qty:1});
         else if(sel.ctrl==='none') mfLine(true,false,false,false).forEach(p=>parts.push(p));
       } else {
-        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};
+        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
         (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none'){const hasFront=s!=='rear-only';const hasRear=s!=='front-only'&&(!isLift||sel.yr==='2003-2007');mfLine(hasFront,hasRear,true,false).forEach(p=>parts.push(p));}
       }
@@ -11979,7 +11927,7 @@ const CATALOG = [
            {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});opts.push({val:'alp4',label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});}
+         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});}
          return opts;
        },
       },
@@ -11989,7 +11937,7 @@ const CATALOG = [
       if(sel.front){parts.push({section:'Front Suspension',pn:sel.front==='lift'?'KLM15753':'KLM11310',qty:1});}
       if(sel.rear){parts.push({section:'Rear Suspension',pn:{'35-short':'KLM14516','35-long':'10012038','40-long':'10009247'}[sel.rear],qty:1});}
       if(s==='front-only'){if(sel.ctrl==='none')mfLine(true,false,false,false).forEach(p=>parts.push(p));}
-      else{const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};(c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));if(sel.ctrl==='none')mfLine(s!=='rear-only'&&!!sel.front,s!=='front-only'&&!!sel.rear,true,false).forEach(p=>parts.push(p));}
+      else{const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};(c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));if(sel.ctrl==='none')mfLine(s!=='rear-only'&&!!sel.front,s!=='front-only'&&!!sel.rear,true,false).forEach(p=>parts.push(p));}
       return parts;
     },
   },
@@ -12038,7 +11986,7 @@ const CATALOG = [
            {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});opts.push({val:'alp4',label:'ALP4 — Spare Tire Keeper',sub:'10040870 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040870',qty:1}]});}
+         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift 3H Electronic',sub:'4-corner independent electronic control',parts:[{pn:'ESLK3H2',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift 3H Electronic + Overhead Console',sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)',parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});}
          return opts;
        },
       },
@@ -12048,7 +11996,7 @@ const CATALOG = [
       if(sel.front){parts.push({section:'Front Suspension',pn:sel.front==='lift'?'KLM15753':'KLM11310',qty:1});}
       if(sel.rear){parts.push({section:'Rear Suspension',pn:{'35-short':'KLM14516','35-long':'10012038','40-long':'10009247'}[sel.rear],qty:1});}
       if(s==='front-only'){if(sel.ctrl==='none')mfLine(true,false,false,false).forEach(p=>parts.push(p));}
-      else{const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}]};(c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));if(sel.ctrl==='none')mfLine(s!=='rear-only'&&!!sel.front,s!=='front-only'&&!!sel.rear,true,false).forEach(p=>parts.push(p));}
+      else{const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};(c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));if(sel.ctrl==='none')mfLine(s!=='rear-only'&&!!sel.front,s!=='front-only'&&!!sel.rear,true,false).forEach(p=>parts.push(p));}
       return parts;
     },
   },
@@ -12247,10 +12195,6 @@ const CATALOG = [
               sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
             opts.push({val:'eslk3h2-console',label:'Air Lift 3H Electronic + Overhead Console (10009358)',
               sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-            opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',
-              sub:'10040870 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040870',qty:1}]});
-            opts.push({val:'alp4-console', label:'ALP4 + Overhead Console (10009358)',
-              sub:'10040870 + 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
           }
           return opts;
         },
@@ -12269,8 +12213,6 @@ const CATALOG = [
         'dual-mech':      isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],
         eslk3h2:          [{pn:'ESLK3H2',qty:1}],
         'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],
-        alp4:             [{pn:'10040870',qty:1}],
-        'alp4-console':   [{pn:'10040870',qty:1},{pn:'10009358',qty:1}],
       };
       (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(sel.scope==='both', !!sel.rear, true, false).forEach(p=>parts.push(p));
