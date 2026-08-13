@@ -439,7 +439,7 @@ const P = {
   // ── Ford Super Duty Pickup 2023+ ──────────────────────────────
   '10035358': {desc:'THE BFH — Upgraded Hitch Receiver, Ford F-250/F-350/F-450 Super Duty Pickup', msrp:0},
   'KLM69003': {desc:'Kit — 2017+ Ford F-250/F-350 Pickup, Stock Height Front Air Suspension',                        msrp:1315},
-  'KLM69020': {desc:'Kit — 2023+ Ford F-450 Pickup, Stock Height Front Air Suspension',                               msrp:1315},
+  'KLM69020': {desc:'Kit — 2017+ Ford F-450 Pickup, Stock Height Front Air Suspension',                               msrp:1315},
   '10029766': {desc:'Front Sensor Lock Brackets (PS & DS) — 2023+ Ford Accessories',                                   msrp:0},
   '10032358': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup, 2-3" Lift Front (Incl. Adjustable Radius Arms)',            msrp:4630},
   '10016213': {desc:'Kit — 2023+ Ford F-450 Pickup, 2-3" Lift Front (Incl. Adjustable Radius Arms)',                  msrp:4630},
@@ -729,6 +729,14 @@ const P = {
   'KLM-401041003-100030001-02': {desc:'2003-2009 RAM 2500 Rear Bumper — Bravo Series, Clevis Ears, Stock Width', msrp:2250},
   'KLM-401042003-100030000-02': {desc:'2003-2009 RAM 3500 Rear Bumper — Bravo Series, Smooth Face, Stock Width', msrp:2250},
   'KLM-401042003-100030001-02': {desc:'2003-2009 RAM 3500 Rear Bumper — Bravo Series, Clevis Ears, Stock Width', msrp:2250},
+  // ── Dodge/RAM 2500 2006-2009 Front Bumpers (401041006) ───────
+  'KLM-401041006-002020000': {desc:'2006-2009 Dodge/RAM 2500 Front Bumper — Alpha Series, Winch Center, Stock Width',  msrp:2750},
+  'KLM-401041006-002030000': {desc:'2006-2009 Dodge/RAM 2500 Front Bumper — Bravo Series, Smooth Face, Stock Width',   msrp:2450},
+  'KLM-401041006-002030001': {desc:'2006-2009 Dodge/RAM 2500 Front Bumper — Bravo Series, Clevis Ears, Stock Width',   msrp:2450},
+  // ── Dodge/RAM 3500 2006-2009 Front Bumpers (401042006) ───────
+  'KLM-401042006-002020000': {desc:'2006-2009 Dodge/RAM 3500 Front Bumper — Alpha Series, Winch Center, Stock Width',  msrp:2750},
+  'KLM-401042006-002030000': {desc:'2006-2009 Dodge/RAM 3500 Front Bumper — Bravo Series, Smooth Face, Stock Width',   msrp:2450},
+  'KLM-401042006-002030001': {desc:'2006-2009 Dodge/RAM 3500 Front Bumper — Bravo Series, Clevis Ears, Stock Width',   msrp:2450},
 
   // ── Dodge Ram 1991-1993 Bumpers (150/250/350) ────────────────
   'KLM-401040991-002030000-02': {desc:'1991-1993 Dodge Ram 150 Front Bumper — Bravo Series, Smooth Face, Stock Width', msrp:2450},
@@ -4456,6 +4464,166 @@ function gmSilveradoCCBumper(id, yr_from, yr_to, make, model, label, frontModelB
 }
 
 // Merges a bumper path into an existing suspension platform using 2-level category flow
+// ═══════════════════════════════════════════════════════════════
+// Helper — Dodge/RAM 2003-2009 2500/3500 Pickup Bumper Platform
+// Front P/N: KLM-{frontModelBase}-002{sc}0{cv}
+//   sc: '02'=Alpha-Winch, '03'=Bravo
+//   cv: '000'=smooth, '001'=clevis  (Alpha always 000)
+// Rear P/N: KLM-{rearModelBase}-10003{cv2}-02
+//   cv2: '0000'=smooth, '0001'=clevis
+// hasAlpha: true for 2006-2009 (Alpha Winch available); false for 2003-2005 (Bravo only)
+// ═══════════════════════════════════════════════════════════════
+function ramSDBumper2003(id, yr_from, yr_to, make, model, label, frontModelBase, rearModelBase, hasAlpha) {
+  const hookChoices = [
+    {val:'none',    label:'No Hooks'},
+    {val:'sw1b',    label:'Monster Hooks Swivel Hook — Satin Black (+$500)',         sub:'MH-SW1B \xd7 2'},
+    {val:'sw1c',    label:'Monster Hooks Swivel Hook — Chrome Plated (+$600)',        sub:'MH-SW1C \xd7 2'},
+    {val:'sw1s',    label:'Monster Hooks Swivel Hook — Silver Powder Coat (+$500)',   sub:'MH-SW1S \xd7 2'},
+    {val:'sw1a',    label:'Monster Hooks Swivel Hook — Raw Aluminum (+$500)',         sub:'MH-SW1A \xd7 2'},
+    {val:'sw1r',    label:'Monster Hooks Swivel Hook — Candy Red (+$500)',            sub:'MH-SW1R \xd7 2'},
+    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                             sub:'MH-RS78XLB \xd7 2'},
+  ];
+  const wingLightChoices = (qty)=>[
+    {val:'none',          label:`No Lights — Cutout${qty>1?'s':''} Included`},
+    {val:'flood',         label:`(${qty}) 4" Rigid E-Series Flood (+$${qty*310})`,         sub:`RIG104113 \xd7 ${qty}`},
+    {val:'spot',          label:`(${qty}) 4" Rigid E-Series Spot (+$${qty*310})`,          sub:`RIG104213 \xd7 ${qty}`},
+    {val:'midnight-spot', label:`(${qty}) 4" Rigid E-Series Midnight Spot (+$${qty*310})`, sub:`RIG104213BLK \xd7 ${qty}`},
+  ];
+  const finishChoices = [
+    {val:'bare-steel',     label:'Bare Steel / No Powder Coat'},
+    {val:'primer',         label:'Primer Powder Coat'},
+    {val:'textured-black', label:'Textured Black Powder Coat'},
+  ];
+  const hasFrontPos = (sel)=>['front','front-rear-pu'].includes(sel['bumper-position']);
+  const hasRearPos  = (sel)=>!!rearModelBase&&['rear-pu','front-rear-pu'].includes(sel['bumper-position']);
+  const steps = [
+    {key:'bumper-position', label:'Bumper Position', badge:'req',
+     condition:()=>true,
+     choices:()=>{
+       const opts=[{val:'front',label:'Front Bumper Only'}];
+       if(rearModelBase){
+         opts.push({val:'rear-pu',       label:'Rear Bumper Only'});
+         opts.push({val:'front-rear-pu', label:'Front + Rear Bumper'});
+       }
+       return opts;
+     },
+    },
+    {key:'front-series', label:'Front Bumper Series', badge:'req',
+     condition:(sel)=>hasFrontPos(sel),
+     choices:()=>{
+       const opts=[];
+       if(hasAlpha) opts.push({val:'alpha', label:'Alpha Series', sub:'Winch-ready center'});
+       opts.push({val:'bravo', label:'Bravo Series', sub:'Clean face — smooth or clevis hook mounts'});
+       return opts;
+     },
+    },
+    {key:'bravo-face', label:'Face Style', badge:'req',
+     condition:(sel)=>sel['front-series']==='bravo',
+     choices:()=>[
+       {val:'smooth', label:'Smooth Face — No Clevis Hook Mounts'},
+       {val:'clevis', label:'With Clevis Hook Mounts', sub:'Required for Monster Hooks on the bumper'},
+     ],
+    },
+    {key:'front-finish', label:'Bumper Finish', badge:'req',
+     condition:(sel)=>{
+       if(!hasFrontPos(sel)||!sel['front-series']) return false;
+       if(sel['front-series']==='bravo'&&!sel['bravo-face']) return false;
+       return true;
+     },
+     choices:()=>finishChoices,
+    },
+    {key:'front-lp', label:'License Plate Bracket', badge:'opt',
+     condition:(sel)=>!!sel['front-finish'],
+     choices:()=>[
+       {val:'no',  label:'No License Plate Bracket'},
+       {val:'yes', label:'Yes — Add License Plate Bracket', sub:'31910 — Honeycomb Mesh, No Charge'},
+     ],
+    },
+    {key:'alpha-winch-acc', label:'Winch', badge:'opt',
+     condition:(sel)=>sel['front-series']==='alpha'&&!!sel['front-finish'],
+     choices:()=>[
+       {val:'none',     label:'No Winch — Winch Center Included'},
+       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
+       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+     ],
+    },
+    {key:'front-wing-lights', label:'Outer Wing Lights', badge:'opt',
+     condition:(sel)=>!!sel['front-finish'],
+     choices:()=>wingLightChoices(4),
+    },
+    {key:'front-hooks', label:'Hooks', badge:'opt',
+     condition:(sel)=>!!sel['front-finish']&&(
+       sel['front-series']==='alpha'||
+       (sel['front-series']==='bravo'&&sel['bravo-face']==='clevis')
+     ),
+     choices:()=>hookChoices,
+    },
+    {key:'rear-pu-series', label:'Rear Bumper Series', badge:'req',
+     condition:(sel)=>hasRearPos(sel),
+     choices:()=>[{val:'bravo', label:'Bravo Series', sub:'Smooth face or clevis hook mounts'}],
+    },
+    {key:'rear-pu-face', label:'Rear Face Style', badge:'req',
+     condition:(sel)=>hasRearPos(sel)&&sel['rear-pu-series']==='bravo',
+     choices:()=>[
+       {val:'smooth', label:'Smooth Face — No Clevis Hook Mounts'},
+       {val:'clevis', label:'With Clevis Hook Mounts'},
+     ],
+    },
+    {key:'rear-pu-finish', label:'Rear Bumper Finish', badge:'req',
+     mirror:'front-finish',
+     condition:(sel)=>hasRearPos(sel)&&!!sel['rear-pu-face'],
+     choices:()=>finishChoices,
+    },
+    {key:'rear-pu-lights', label:'Rear Bumper Lights', badge:'opt',
+     mirror:'front-wing-lights',
+     condition:(sel)=>!!sel['rear-pu-finish'],
+     choices:()=>wingLightChoices(2),
+    },
+    {key:'rear-pu-hooks', label:'Rear Bumper Hooks', badge:'opt',
+     mirror:'front-hooks',
+     condition:(sel)=>!!sel['rear-pu-finish']&&sel['rear-pu-face']==='clevis',
+     choices:()=>hookChoices,
+    },
+  ];
+  return {
+    id, yr_from, yr_to, make, model, label,
+    kits:[{id:`${id}-kit`, label:'Bumper Configuration', sub:'Front & rear bumpers with accessories'}],
+    steps,
+    buildParts:(kit,sel)=>{
+      const parts=[];
+      const hookPN={sw1b:'MH-SW1B',sw1c:'MH-SW1C',sw1s:'MH-SW1S',sw1a:'MH-SW1A',sw1r:'MH-SW1R',rs78xlb:'MH-RS78XLB'};
+      const wingPN={flood:'RIG104113',spot:'RIG104213','midnight-spot':'RIG104213BLK'};
+      if(hasFrontPos(sel)){
+        const series=sel['front-series'];
+        const sc=series==='alpha'?'02':'03';
+        const cv=series==='bravo'&&sel['bravo-face']==='clevis'?'001':'000';
+        parts.push({section:'Front Bumper',pn:`KLM-${frontModelBase}-002${sc}0${cv}`,qty:1});
+        if(sel['alpha-winch-acc']==='war97740') parts.push({section:'Winch',pn:'WAR97740',qty:1});
+        if(sel['alpha-winch-acc']==='war68801') parts.push({section:'Winch',pn:'WAR68801',qty:1});
+        if(wingPN[sel['front-wing-lights']]) parts.push({section:'Bumper Lights',pn:wingPN[sel['front-wing-lights']],qty:4});
+        if(sel['front-lp']==='yes') parts.push({section:'Accessories',pn:'31910',qty:1});
+        const fh=sel['front-hooks'];
+        if(fh&&fh!=='none'&&hookPN[fh]){
+          parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
+          if(series==='bravo'&&sel['bravo-face']==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+        }
+      }
+      if(hasRearPos(sel)){
+        const rf=sel['rear-pu-face'];
+        const cv2=rf==='clevis'?'0001':'0000';
+        parts.push({section:'Rear Bumper',pn:`KLM-${rearModelBase}-10003${cv2}-02`,qty:1});
+        if(wingPN[sel['rear-pu-lights']]) parts.push({section:'Bumper Lights',pn:wingPN[sel['rear-pu-lights']],qty:2});
+        const rph=sel['rear-pu-hooks'];
+        if(rph&&rph!=='none'&&hookPN[rph]){
+          parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
+          if(rf==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+        }
+      }
+      return parts;
+    },
+  };
+}
+
 // Accepts optional 5th arg bumperObj to use a pre-built bumper platform (e.g. ramSDBumper)
 // ─────────────────────────────────────────────────────────────
 // withAccessories — adds an 'Accessories' product category to any platform
@@ -5545,7 +5713,8 @@ const CATALOG = [
       {key:'shocks', label:'Shocks', badge:'opt',
        hint:'Select shock package, if desired.',
        condition:(sel)=>{
-         if(!sel.axle||!sel.scope) return false;
+         if(!sel.scope) return false;
+         if(!sel.axle&&sel.scope!=='front-only') return false;
          if(sel.height==='stock') return sel.scope!=='rear-only';
          if(sel.height==='5-6')   return true;
          return false;
@@ -5652,7 +5821,7 @@ const CATALOG = [
        ],
       },
       {key:'axle', label:'Rear Axle Size', badge:'req',
-       condition:(sel)=>!!sel.scope,
+       condition:(sel)=>!!sel.scope&&sel.scope!=='front-only',
        choices:()=>[
          {val:'4.0',label:'4.0" Round Axle (SRW)',sub:'F-350 SRW'},
          {val:'4.5',label:'4.5" Round Axle (DRW)',sub:'F-350 DRW'},
@@ -5660,7 +5829,7 @@ const CATALOG = [
       },
       {key:'radius-arms', label:'Radius Arms', badge:'opt',
        hint:'Optional fabricated radius arms — available on stock height and 5-6" lift kits only.',
-       condition:(sel)=>(sel.height==='stock'||sel.height==='5-6')&&sel.scope!=='rear-only'&&!!sel.axle,
+       condition:(sel)=>(sel.height==='stock'||sel.height==='5-6')&&sel.scope!=='rear-only'&& (!!sel.axle||sel.scope==='front-only'),
        choices:()=>[
          {val:'none', label:'No Radius Arms'},
          {val:'ra',   label:'Add Fabricated Radius Arms (10005712)', sub:'2005-2022 Ford Super Duty Fabricated Radius Arms', parts:[{pn:'10005712',qty:1}]},
@@ -5695,7 +5864,7 @@ const CATALOG = [
        },
       },
       {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
-       condition:(sel)=>!!sel.axle&&sel.scope!=='rear-only',
+       condition:(sel)=>(!!sel.axle||sel.scope==='front-only')&&sel.scope!=='rear-only',
        choices:()=>[
          {val:'none',         label:'No DSS'},
          {val:'bracket-only', label:'Add DSS Bracket Only',
@@ -5705,7 +5874,7 @@ const CATALOG = [
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
-       condition:(sel)=>!!sel.axle,
+       condition:(sel)=>!!sel.axle||sel.scope==='front-only',
        choices:(kit,sel)=>{ const isBoth=sel.scope==='both'; const opts=[
          {val:'none',           label:'No Controls — Manual Fill',  sub:'Fill via shop air — no compressor or automation'},
          {val:'fcas',           label:'Front Compressor / Air Supply (FC/AS)', sub:'Viair compressor, in-cab dual needle gauge, 3-gal tank, pressure switch — front kit vehicles only', parts:[{pn:'FC/AS',qty:1}]},
@@ -5749,20 +5918,21 @@ const CATALOG = [
   }),
 
   // ─────────────────────────────────────────────────────────────
-  // FORD SUPER DUTY PICKUP — 2017-2022 (F-450)
+  // FORD SUPER DUTY PICKUP — 2017 (F-450)
   // ─────────────────────────────────────────────────────────────
   withAccessories(withBumpers({
     id:'ford-f450pu-2017',
-    yr_from:2017, yr_to:2022,
+    yr_from:2017, yr_to:2017,
     make:'Ford', model:'F-450 Super Duty Pickup',
     label:'F-450 Super Duty Pickup',
-    kits:[{id:'ford-f450pu-2017-kit', label:'Air Suspension System', sub:'Stock height and 5-6" lift — DRW 4.5"'}],
+    kits:[{id:'ford-f450pu-2017-kit', label:'Air Suspension System', sub:'Stock height, 5-6", and 8-10" lift — DRW 4.5"'}],
     steps:[
       {key:'height', label:'Suspension Configuration', badge:'req',
        hint:'Select your desired suspension height.',
        choices:()=>[
          {val:'stock', label:'Stock Height / Leveling', sub:'Front and/or rear at factory ride height'},
-         {val:'5-6',   label:'5-6" Lift',               sub:'Optional fabricated radius arms available'},
+         {val:'5-6',   label:'5-6\" Lift',               sub:'Optional fabricated radius arms available'},
+         {val:'8-10',  label:'8-10\" Lift',              sub:'4-link front — trailing arm design'},
        ],
       },
       {key:'scope', label:'Suspension Scope', badge:'req',
@@ -5774,7 +5944,7 @@ const CATALOG = [
        ],
       },
       {key:'radius-arms', label:'Radius Arms', badge:'opt',
-       hint:'Optional fabricated radius arms — available on stock height and 5-6" lift kits only.',
+       hint:'Optional fabricated radius arms — available on stock height and 5-6\" lift kits only.',
        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
        choices:()=>[
          {val:'none', label:'No Radius Arms'},
@@ -5783,16 +5953,28 @@ const CATALOG = [
       },
       {key:'shocks', label:'Shocks', badge:'opt',
        hint:'Select shock package, if desired.',
-       condition:(sel)=>sel.height==='stock'&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none',       label:'No Shocks'},
-         {val:'mono-front', label:'Monotube Front Shocks Only',
-          sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
-         {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-          sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
-         {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
-          sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
-       ],
+       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       choices:(kit,sel)=>{
+         if(sel.height==='8-10'){
+           const opts=[{val:'none',label:'No Shocks'}];
+           opts.push({val:'rr-1012-f',label:'Remote Reservoir Front Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front shocks',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2}]});
+           if(sel.scope==='both') opts.push({val:'rr-1012',label:'Remote Reservoir Front + Rear Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front + (2) 10003384 rear',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003384',qty:2}]});
+           return opts;
+         }
+         return [
+           {val:'none',       label:'No Shocks'},
+           {val:'mono-front', label:'Monotube Front Shocks Only',
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+           {val:'mono-both',  label:'Monotube Front + Rear Shocks',
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+           {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+         ];
+       },
       },
       {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
@@ -5832,14 +6014,16 @@ const CATALOG = [
     ],
     buildParts:(kit,sel)=>{
       const parts=[], h=sel.height;
-      const fMap={stock:'KLM69020','5-6':'10004298'};
+      const fMap={stock:'KLM69020','5-6':'KLM69021','8-10':'KLM69022'};
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
-      const rMap={stock:'KLM69025','5-6':'KLM69722'};
+      const rMap={stock:'KLM69025','5-6':'KLM69026','8-10':'KLM69027'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
       if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
       if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
       if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
       if(dssBrkt[sel.dss]) parts.push({section:'Steering Stabilizer',pn:dssBrkt[sel.dss],qty:1});
       if(sel.dss==='dss-4wd'||sel.dss==='dss-2wd') parts.push({section:'Shocks',pn:'10003382',qty:2});
@@ -5849,7 +6033,265 @@ const CATALOG = [
       if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
       return parts;
     },
-  }, null, null, null, fordSD17Bumper('ford-f450pu-2017-bumper', 2017, 2022, 'Ford', 'F-450 Super Duty Pickup', 'F-450 Super Duty Pickup', '402023017', '402023020', '202023017', false)), {
+  }, null, null, null, fordSD17Bumper('ford-f450pu-2017-bumper', 2017, 2017, 'Ford', 'F-450 Super Duty Pickup', 'F-450 Super Duty Pickup', '402023017', '402023020', '202023017', false)), {
+    dss:[{pn:'16978',drive:'4wd',driveLabel:'4x4 — 2011-2022 F-450/F-550 (16978)'},{pn:'16970',drive:'2wd',driveLabel:'2WD — 2011-2022 F-450/F-550 (16970)'}],
+    arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
+  }),
+
+  // ─────────────────────────────────────────────────────────────
+  // FORD SUPER DUTY PICKUP — 2018 (F-450)
+  // ─────────────────────────────────────────────────────────────
+  withAccessories(withBumpers({
+    id:'ford-f450pu-2018',
+    yr_from:2018, yr_to:2018,
+    make:'Ford', model:'F-450 Super Duty Pickup',
+    label:'F-450 Super Duty Pickup',
+    kits:[{id:'ford-f450pu-2018-kit', label:'Air Suspension System', sub:'Stock height, 5-6", and 8-10" lift — DRW 4.5"'}],
+    steps:[
+      {key:'height', label:'Suspension Configuration', badge:'req',
+       hint:'Select your desired suspension height.',
+       choices:()=>[
+         {val:'stock', label:'Stock Height / Leveling', sub:'Front and/or rear at factory ride height'},
+         {val:'5-6',   label:'5-6\" Lift',               sub:'Optional fabricated radius arms available'},
+         {val:'8-10',  label:'8-10\" Lift',              sub:'4-link front — trailing arm design'},
+       ],
+      },
+      {key:'scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>!!sel.height,
+       choices:()=>[
+         {val:'both',       label:'Front + Rear',  sub:'Complete air suspension system — both ends'},
+         {val:'front-only', label:'Front Only',    sub:'Front air suspension — factory or existing rear'},
+         {val:'rear-only',  label:'Rear Only',     sub:'Rear air suspension — factory or existing front'},
+       ],
+      },
+      {key:'radius-arms', label:'Radius Arms', badge:'opt',
+       hint:'Optional fabricated radius arms — available on stock height and 5-6\" lift kits only.',
+       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none', label:'No Radius Arms'},
+         {val:'ra',   label:'Add Fabricated Radius Arms (10005712)', sub:'2005-2022 Ford Super Duty Fabricated Radius Arms', parts:[{pn:'10005712',qty:1}]},
+       ],
+      },
+      {key:'shocks', label:'Shocks', badge:'opt',
+       hint:'Select shock package, if desired.',
+       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       choices:(kit,sel)=>{
+         if(sel.height==='8-10'){
+           const opts=[{val:'none',label:'No Shocks'}];
+           opts.push({val:'rr-1012-f',label:'Remote Reservoir Front Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front shocks',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2}]});
+           if(sel.scope==='both') opts.push({val:'rr-1012',label:'Remote Reservoir Front + Rear Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front + (2) 10003384 rear',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003384',qty:2}]});
+           return opts;
+         }
+         return [
+           {val:'none',       label:'No Shocks'},
+           {val:'mono-front', label:'Monotube Front Shocks Only',
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+           {val:'mono-both',  label:'Monotube Front + Rear Shocks',
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+           {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+         ];
+       },
+      },
+      {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
+       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
+       choices:(kit,sel)=>{
+         const is810=sel.height==='8-10';
+         const opts=[{val:'none',label:'No DSS'}];
+         if(is810){
+           opts.push({val:'shocks-only-4wd',label:'Add Steering Stabilizer Shocks — 4x4',
+             sub:'(2) Raptor 2.0 Monotube Shocks — 16978 bracket included in KLM69726',
+             parts:[{pn:'10003382',qty:2}]});
+         } else {
+           opts.push({val:'bracket-only-4wd',label:'Add DSS Bracket Only — 4x4 (16978)',
+             sub:'16978 — Bracket only, no shocks',parts:[{pn:'16978',qty:1}]});
+           opts.push({val:'dss-4wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
+             sub:'16978 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]});
+         }
+         opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
+           sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
+         opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
+           sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         return opts;
+       },
+      },
+      {key:'ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>!!sel.scope,
+       choices:(kit,sel)=>{ const isBoth=sel.scope==='both'; const opts=[
+         {val:'none',           label:'No Controls — Manual Fill',  sub:'Fill via shop air — no compressor or automation'},
+         {val:'fcas',           label:'Front Compressor / Air Supply (FC/AS)', sub:'Viair compressor, in-cab dual needle gauge, 3-gal tank, pressure switch — front kit vehicles only', parts:[{pn:'FC/AS',qty:1}]},
+         {val:'slkd',           label:'Mechanical, Self-Leveling Air Control System (Single Compressor - Single Tank)',
+          sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+         {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
+          sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+         {val:'eslk3h2',        label:'Air Lift 3H Electronic',
+          sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
+         {val:'eslk3h2-console',label:'Air Lift 3H + Overhead Console',
+          sub:'ESLK3H2 + 10009335', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]},
+         {val:'alp4',           label:'ALP4 — Spare Tire Keeper',
+          sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]},
+         {val:'alp4-console',   label:'ALP4 + Overhead Console (10009335)',
+          sub:'10040872 + 10009335 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]},
+       ];
+       if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas','slkd'].includes(o.val));
+       return opts.filter(o=>o.val!=='fcas'&&(isBoth||!['eslk3h2','eslk3h2-console','alp4','alp4-console'].includes(o.val))); },
+      },
+    ],
+    buildParts:(kit,sel)=>{
+      const parts=[], h=sel.height;
+      const fMap={stock:'KLM69020','5-6':'KLM69719','8-10':'KLM69726'};
+      if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
+      const rMap={stock:'KLM69025','5-6':'KLM69722','8-10':'KLM69727'};
+      if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
+      if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
+      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
+      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
+      if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
+      const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
+      if(dssBrkt[sel.dss]) parts.push({section:'Steering Stabilizer',pn:dssBrkt[sel.dss],qty:1});
+      if(sel.dss==='dss-4wd'||sel.dss==='dss-2wd'||sel.dss==='shocks-only-4wd') parts.push({section:'Shocks',pn:'10003382',qty:2});
+      const isBoth=sel.scope==='both';
+      const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]};
+      (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+      if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
+      return parts;
+    },
+  }, null, null, null, fordSD17Bumper('ford-f450pu-2018-bumper', 2018, 2018, 'Ford', 'F-450 Super Duty Pickup', 'F-450 Super Duty Pickup', '402023017', '402023020', '202023017', false)), {
+    dss:[{pn:'16978',drive:'4wd',driveLabel:'4x4 — 2011-2022 F-450/F-550 (16978)'},{pn:'16970',drive:'2wd',driveLabel:'2WD — 2011-2022 F-450/F-550 (16970)'}],
+    arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
+  }),
+
+  // ─────────────────────────────────────────────────────────────
+  // FORD SUPER DUTY PICKUP — 2019-2022 (F-450)
+  // ─────────────────────────────────────────────────────────────
+  withAccessories(withBumpers({
+    id:'ford-f450pu-2019',
+    yr_from:2019, yr_to:2022,
+    make:'Ford', model:'F-450 Super Duty Pickup',
+    label:'F-450 Super Duty Pickup',
+    kits:[{id:'ford-f450pu-2019-kit', label:'Air Suspension System', sub:'Stock height, 5-6", and 8-10" lift — DRW 4.5"'}],
+    steps:[
+      {key:'height', label:'Suspension Configuration', badge:'req',
+       hint:'Select your desired suspension height.',
+       choices:()=>[
+         {val:'stock', label:'Stock Height / Leveling', sub:'Front and/or rear at factory ride height'},
+         {val:'5-6',   label:'5-6\" Lift',               sub:'Optional fabricated radius arms available'},
+         {val:'8-10',  label:'8-10\" Lift',              sub:'4-link front — trailing arm design'},
+       ],
+      },
+      {key:'scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>!!sel.height,
+       choices:()=>[
+         {val:'both',       label:'Front + Rear',  sub:'Complete air suspension system — both ends'},
+         {val:'front-only', label:'Front Only',    sub:'Front air suspension — factory or existing rear'},
+         {val:'rear-only',  label:'Rear Only',     sub:'Rear air suspension — factory or existing front'},
+       ],
+      },
+      {key:'radius-arms', label:'Radius Arms', badge:'opt',
+       hint:'Optional fabricated radius arms — available on stock height and 5-6\" lift kits only.',
+       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none', label:'No Radius Arms'},
+         {val:'ra',   label:'Add Fabricated Radius Arms (10005712)', sub:'2005-2022 Ford Super Duty Fabricated Radius Arms', parts:[{pn:'10005712',qty:1}]},
+       ],
+      },
+      {key:'shocks', label:'Shocks', badge:'opt',
+       hint:'Select shock package, if desired.',
+       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       choices:(kit,sel)=>{
+         if(sel.height==='8-10'){
+           const opts=[{val:'none',label:'No Shocks'}];
+           opts.push({val:'rr-1012-f',label:'Remote Reservoir Front Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front shocks',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2}]});
+           if(sel.scope==='both') opts.push({val:'rr-1012',label:'Remote Reservoir Front + Rear Shocks',
+             sub:'10004022 mounting kit + (2) 10003380 front + (2) 10003384 rear',
+             parts:[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003384',qty:2}]});
+           return opts;
+         }
+         return [
+           {val:'none',       label:'No Shocks'},
+           {val:'mono-front', label:'Monotube Front Shocks Only',
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+           {val:'mono-both',  label:'Monotube Front + Rear Shocks',
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+           {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+         ];
+       },
+      },
+      {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
+       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
+       choices:(kit,sel)=>{
+         const is810=sel.height==='8-10';
+         const opts=[{val:'none',label:'No DSS'}];
+         if(is810){
+           opts.push({val:'shocks-only-4wd',label:'Add Steering Stabilizer Shocks — 4x4',
+             sub:'(2) Raptor 2.0 Monotube Shocks — 16978 bracket included in KLM69726',
+             parts:[{pn:'10003382',qty:2}]});
+         } else {
+           opts.push({val:'bracket-only-4wd',label:'Add DSS Bracket Only — 4x4 (16978)',
+             sub:'16978 — Bracket only, no shocks',parts:[{pn:'16978',qty:1}]});
+           opts.push({val:'dss-4wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
+             sub:'16978 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]});
+         }
+         opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
+           sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
+         opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
+           sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         return opts;
+       },
+      },
+      {key:'ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>!!sel.scope,
+       choices:(kit,sel)=>{ const isBoth=sel.scope==='both'; const opts=[
+         {val:'none',           label:'No Controls — Manual Fill',  sub:'Fill via shop air — no compressor or automation'},
+         {val:'fcas',           label:'Front Compressor / Air Supply (FC/AS)', sub:'Viair compressor, in-cab dual needle gauge, 3-gal tank, pressure switch — front kit vehicles only', parts:[{pn:'FC/AS',qty:1}]},
+         {val:'slkd',           label:'Mechanical, Self-Leveling Air Control System (Single Compressor - Single Tank)',
+          sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+         {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
+          sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+         {val:'eslk3h2',        label:'Air Lift 3H Electronic',
+          sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
+         {val:'eslk3h2-console',label:'Air Lift 3H + Overhead Console',
+          sub:'ESLK3H2 + 10009335', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]},
+         {val:'alp4',           label:'ALP4 — Spare Tire Keeper',
+          sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]},
+         {val:'alp4-console',   label:'ALP4 + Overhead Console (10009335)',
+          sub:'10040872 + 10009335 overhead console mount', parts:[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]},
+       ];
+       if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas','slkd'].includes(o.val));
+       return opts.filter(o=>o.val!=='fcas'&&(isBoth||!['eslk3h2','eslk3h2-console','alp4','alp4-console'].includes(o.val))); },
+      },
+    ],
+    buildParts:(kit,sel)=>{
+      const parts=[], h=sel.height;
+      const fMap={stock:'KLM69020','5-6':'10004298','8-10':'KLM69726'};
+      if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
+      const rMap={stock:'KLM69025','5-6':'KLM69722','8-10':'KLM69727'};
+      if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
+      if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
+      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
+      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
+      if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
+      const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
+      if(dssBrkt[sel.dss]) parts.push({section:'Steering Stabilizer',pn:dssBrkt[sel.dss],qty:1});
+      if(sel.dss==='dss-4wd'||sel.dss==='dss-2wd'||sel.dss==='shocks-only-4wd') parts.push({section:'Shocks',pn:'10003382',qty:2});
+      const isBoth=sel.scope==='both';
+      const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10009335',qty:1}]};
+      (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+      if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
+      return parts;
+    },
+  }, null, null, null, fordSD17Bumper('ford-f450pu-2019-bumper', 2019, 2022, 'Ford', 'F-450 Super Duty Pickup', 'F-450 Super Duty Pickup', '402023017', '402023020', '202023017', false)), {
     dss:[{pn:'16978',drive:'4wd',driveLabel:'4x4 — 2011-2022 F-450/F-550 (16978)'},{pn:'16970',drive:'2wd',driveLabel:'2WD — 2011-2022 F-450/F-550 (16970)'}],
     arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
   }),
@@ -8545,31 +8987,28 @@ const CATALOG = [
     label:'F-450 Chassis Cab',
     kits:[{id:'ford-f450cc-2008-kit', label:'Air Suspension System', sub:'Stock height, 2" lowering, or 2-Stage rear — 2WD or 4WD'}],
     steps:[
-      {key:'scope', label:'Suspension Scope', badge:'req',
-       hint:'Select your drivetrain. 2WD models support rear only; 4WD supports front + rear.',
+      {key:'rear', label:'Rear Suspension', badge:'req',
        choices:()=>[
-         {val:'2wd', label:'2WD — Rear Only',    sub:'2-WD models (front kit not available)'},
-         {val:'4wd', label:'4WD — Front & Rear', sub:'2011-2016 4WD: front + rear'},
+         {val:'stock',          label:'Stock Height 4-Link Rear (10004016)',             sub:'2008-2016 F-450 CC — 4-Link, stock height',         parts:[{pn:'10004016',qty:1}]},
+         {val:'low',            label:'2" Lowering 4-Link Rear (KLM17571)',              sub:'2008-2016 F-450 CC — 4-Link, 2" lowering',          parts:[{pn:'KLM17571',qty:1}]},
+         {val:'2stage',         label:'2-Stage Rear w/ Receiver Hitch (10010194)',       sub:'2008-2016 F-450 CC — 2-Stage rear, 2.5" hitch',     parts:[{pn:'10010194',qty:1}]},
+         {val:'2stage-nohitch', label:'2-Stage Rear — No Receiver Hitch (10013347)',     sub:'1999+ F-450 CC — 2-Stage rear, no hitch receiver',  parts:[{pn:'10013347',qty:1}]},
        ],
       },
-      {key:'front', label:'Front Suspension (4WD Only)', badge:'req',
-       condition:(sel)=>sel.scope==='4wd',
+      {key:'front', label:'Front Suspension', badge:'opt',
+       hint:'4WD only (2011-2016). Leave at "No Front Kit" for 2WD models.',
+       condition:(sel)=>!!sel.rear,
        choices:()=>[
+         {val:'none',  label:'No Front Kit — 2WD / Rear Only'},
          {val:'front', label:'2011-2016 4WD Front Kit (F2F4-4-CC-11)', sub:'2-Stage front air suspension', parts:[{pn:'F2F4-4-CC-11',qty:1}]},
        ],
       },
-      {key:'rear', label:'Rear Suspension', badge:'req',
-       condition:(sel)=>!!sel.scope&&(sel.scope==='2wd'||!!sel.front),
-       choices:()=>[
-         {val:'stock',  label:'Stock Height 4-Link Rear (10004016)',                   sub:'2008-2016 F-450 CC — 4-Link, stock height',       parts:[{pn:'10004016',qty:1}]},
-         {val:'low',    label:'2" Lowering 4-Link Rear (KLM17571)',                   sub:'2008-2016 F-450 CC — 4-Link, 2" lowering',        parts:[{pn:'KLM17571',qty:1}]},
-         {val:'2stage', label:'2-Stage Rear w/ Receiver Hitch (10010194)',            sub:'2008-2016 F-450 CC — 2-Stage rear, 2.5" hitch',   parts:[{pn:'10010194',qty:1}]},
-       ],
-      },
       {key:'ctrl', label:'Air Controls', badge:'req',
-       condition:(sel)=>!!sel.rear,
+       condition:(sel)=>!!sel.rear&&(sel.front==='none'||sel.front==='front'),
        choices:(kit,sel)=>{
-         if(sel.scope==='4wd') return [
+         const hasFront=sel.front==='front';
+         const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
+         if(hasFront&&!is2stage) return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
            {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD + 2× HCVLK)',
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
@@ -8587,17 +9026,18 @@ const CATALOG = [
     ],
     buildParts:(kit,sel)=>{
       const parts=[];
-      const rearPnMap={stock:'10004016',low:'KLM17571','2stage':'10010194'};
+      const rearPnMap={stock:'10004016',low:'KLM17571','2stage':'10010194','2stage-nohitch':'10013347'};
       if(sel.rear) parts.push({section:'Rear Suspension',pn:rearPnMap[sel.rear],qty:1});
-      if(sel.scope==='4wd'&&sel.front==='front') parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
-      const hasFront=sel.scope==='4wd', is2stage=sel.rear==='2stage';
+      const hasFront=sel.front==='front';
+      if(hasFront) parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
+      const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
       const ctrlMap=is2stage
         ?{slkd:[{pn:'SLKD2WD',qty:1}]}
         :hasFront
           ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}]}
           :{slkd:[{pn:'SLKD2WD',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.ctrl==='none') mfLine(hasFront&&sel.front==='front',!!sel.rear,is2stage,!is2stage&&!hasFront).forEach(p=>parts.push(p));
+      if(sel.ctrl==='none') mfLine(hasFront,!!sel.rear,is2stage,!is2stage&&!hasFront).forEach(p=>parts.push(p));
       return parts;
     },
   },
@@ -11559,14 +11999,14 @@ const CATALOG = [
   ramSDBumper2010('ram-5500-cc-2010-bump', 2010, 2018, 'RAM', 'RAM 5500 Chassis Cab', 'RAM 5500 Chassis Cab', '401044010', null, null, false),
 
   // ─────────────────────────────────────────────────────────────
-  // DODGE 2500 PICKUP — 2003-2009 (G3)
+  // DODGE 2500 PICKUP — 2003-2005 (G3)
   // ─────────────────────────────────────────────────────────────
-  {
+  withAccessories(withBumpers({
     id:'dodge-2500-pu-2003',
-    yr_from:2003, yr_to:2009,
+    yr_from:2003, yr_to:2005,
     make:'Dodge', model:'2500 Pickup',
     label:'Dodge 2500 Pickup',
-    kits:[{id:'dodge-2500-g3-pu', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
+    kits:[{id:'dodge-2500-g3-pu-2003', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
     steps:[
       {key:'height', label:'Lift Height', badge:'req',
        hint:'Select the desired lift height.',
@@ -11574,17 +12014,13 @@ const CATALOG = [
          {val:'stock', label:'Stock Height',  sub:'2-Stage front at factory height (Rancho shocks included)'},
          {val:'1.5',   label:'1.5" Lift',     sub:'2-Stage front — 1.5" lift'},
          {val:'3',     label:'3" Lift',       sub:'2-Stage front — 3" lift'},
-         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear (2003-2007) — front only for 2008-2009'},
-         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear (2003-2007) — front only for 2008-2009'},
+         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear'},
+         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear'},
        ],
       },
       {key:'yr', label:'Model Year', badge:'req',
        condition:(sel)=>{const h=sel.height;return h==='5-6'||h==='8-10';},
-       choices:()=>[
-         {val:'2009',     label:'2009'},
-         {val:'2008',     label:'2008'},
-         {val:'2003-2007',label:'2003–2007'},
-       ],
+       choices:()=>[{val:'2003-2007', label:'2003–2005'}],
       },
       {key:'scope', label:'Suspension Scope', badge:'req',
        condition:(sel)=>{const h=sel.height;const isLift=h==='5-6'||h==='8-10';return isLift?!!sel.yr:!!h;},
@@ -11659,7 +12095,7 @@ const CATALOG = [
        choices:(kit,sel)=>[
          {val:'none', label:'No Front Shocks'},
          {val:'fox',  label:`Fox 2.0 Remote Reservoir Front Shocks (${sel.height==='8-10'?'980-02-034':'980-02-032'} ×2)`,
-          sub:`2003-2009 Dodge 2500 ${sel.height}" front`,
+          sub:'2003-2005 Dodge 2500 front shocks',
           parts:[{pn:sel.height==='8-10'?'980-02-034':'980-02-032',qty:2}]},
        ],
       },
@@ -11669,7 +12105,7 @@ const CATALOG = [
        choices:()=>[
          {val:'none', label:'No Steering Stabilizer Shocks'},
          {val:'fox',  label:'Fox 985-24-068 Steering Stabilizer Shocks (×2)',
-          sub:'Fox Performance — G3 Dual Steering Stabilizer, 2003-2007 Dodge 2500',
+          sub:`Fox Performance — G3 Dual Steering Stabilizer, 2003-2007 Dodge 2500`,
           parts:[{pn:'985-24-068',qty:2}]},
        ],
       },
@@ -11681,7 +12117,7 @@ const CATALOG = [
        choices:()=>[
          {val:'none', label:'No Rear Shocks'},
          {val:'fox',  label:'Fox 2.0 Remote Reservoir Rear Shocks (980-02-035 ×2)',
-          sub:'2003-2007 Dodge 2500 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
+          sub:'2003-2007 Dodge 2500 Pickup 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
        ],
       },
     ],
@@ -11698,7 +12134,7 @@ const CATALOG = [
           let fpn;
           if(sel.yr==='2009')          fpn=`D4F4-23-X-09-${sfx}`;
           else if(sel.yr==='2008')     fpn=`D4F4-23-X-08-${sfx}`;
-          else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11314':h==='8-10'?'KLM11620':null;
+                    else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11314':h==='8-10'?'KLM11620':null;
           if(fpn) parts.push({section:'Front Suspension',pn:fpn,qty:1});
         }
       }
@@ -11708,7 +12144,7 @@ const CATALOG = [
         if(!isLift){
           parts.push({section:'Rear Suspension',pn:'KLM11256',qty:1});
         } else if(sel.yr==='2003-2007'){
-          const rpn=h==='5-6'?'KLM15762':h==='8-10'?'KLM15764':null;
+                    const rpn=h==='5-6'?'KLM15762':h==='8-10'?'KLM15764':null;
           if(rpn) parts.push({section:'Rear Suspension',pn:rpn,qty:1});
         }
       }
@@ -11725,17 +12161,21 @@ const CATALOG = [
       if(sel['fox-rear']==='fox')  parts.push({section:'Shocks',pn:'980-02-035',qty:2});
       return parts;
     },
-  },
-
+  }, null, null, null,
+  ramSDBumper2003('dodge-2500-pu-2003-bump', 2003, 2005, 'Dodge', '2500 Pickup', 'Dodge 2500 Pickup', '401041003', '401041003', false)),
+  {dss:[
+    {pn:'10008005', drive:'stock', driveLabel:'Stock Differential Cover (10008005)'},
+    {pn:'10009522', drive:'upd',   driveLabel:'Updated Steering Linkage (10009522)'},
+  ]}),
   // ─────────────────────────────────────────────────────────────
-  // DODGE 3500 PICKUP — 2003-2009 (G3)
+  // DODGE 2500 PICKUP — 2006-2009 (G3)
   // ─────────────────────────────────────────────────────────────
-  {
-    id:'dodge-3500-pu-2003',
-    yr_from:2003, yr_to:2009,
-    make:'Dodge', model:'3500 Pickup',
-    label:'Dodge 3500 Pickup',
-    kits:[{id:'dodge-3500-g3-pu', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
+  withAccessories(withBumpers({
+    id:'dodge-2500-pu-2006',
+    yr_from:2006, yr_to:2009,
+    make:'Dodge', model:'2500 Pickup',
+    label:'Dodge 2500 Pickup',
+    kits:[{id:'dodge-2500-g3-pu-2006', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
     steps:[
       {key:'height', label:'Lift Height', badge:'req',
        hint:'Select the desired lift height.',
@@ -11743,17 +12183,182 @@ const CATALOG = [
          {val:'stock', label:'Stock Height',  sub:'2-Stage front at factory height (Rancho shocks included)'},
          {val:'1.5',   label:'1.5" Lift',     sub:'2-Stage front — 1.5" lift'},
          {val:'3',     label:'3" Lift',       sub:'2-Stage front — 3" lift'},
-         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear (2003-2007) — front only for 2008-2009'},
-         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear (2003-2007) — front only for 2008-2009'},
+         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear (2006–2007) — front only for 2008-2009'},
+         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear (2006–2007) — front only for 2008-2009'},
        ],
       },
       {key:'yr', label:'Model Year', badge:'req',
        condition:(sel)=>{const h=sel.height;return h==='5-6'||h==='8-10';},
+       choices:()=>[{val:'2009',label:'2009'},{val:'2008',label:'2008'},{val:'2003-2007',label:'2006–2007'}],
+      },
+      {key:'scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>{const h=sel.height;const isLift=h==='5-6'||h==='8-10';return isLift?!!sel.yr:!!h;},
+       choices:(kit,sel)=>{
+         const h=sel.height;
+         const isLift=h==='5-6'||h==='8-10';
+         if(isLift&&(sel.yr==='2009'||sel.yr==='2008')) return [
+           {val:'front-only', label:'Front Only', sub:'Front 4-Link lift only — no rear lift kit available for '+sel.yr},
+         ];
+         return [
+           {val:'both',       label:'Front + Rear', sub:'Complete front and rear air suspension system'},
+           {val:'front-only', label:'Front Only',   sub:'Front kit only'},
+           {val:'rear-only',  label:'Rear Only',    sub:'Rear kit only'},
+         ];
+       },
+      },
+      {key:'dss', label:'Steering Stabilizer', badge:'opt',
+       condition:(sel)=>{
+         if(!sel.scope||sel.scope==='rear-only') return false;
+         const h=sel.height;
+         const isLift=h==='5-6'||h==='8-10';
+         // 5-6" 2003-2007 kit (KLM11314) includes DSS bracket — handled by stab-shock step
+         if(h==='5-6'&&sel.yr==='2003-2007') return false;
+         if(!isLift) return !!h;
+         return !!sel.yr;
+       },
        choices:()=>[
-         {val:'2009',     label:'2009'},
-         {val:'2008',     label:'2008'},
-         {val:'2003-2007',label:'2003–2007'},
+         {val:'none',  label:'No Steering Stabilizer'},
+         {val:'stock', label:'Steering Stabilizer — Stock Differential Cover (10008005)', sub:'4x4 only', parts:[{pn:'10008005',qty:1}]},
+         {val:'upd',   label:'Steering Stabilizer — Updated Steering Linkage (10009522)', sub:'4x4 only', parts:[{pn:'10009522',qty:1}]},
        ],
+      },
+      {key:'ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>{
+         const h=sel.height;const s=sel.scope;
+         if(!s) return false;
+         const isLift=h==='5-6'||h==='8-10';
+         if(!isLift) return true;
+         return !!sel.yr;
+       },
+       choices:(kit,sel)=>{
+         const s=sel.scope;
+         const isBoth=s==='both';
+         if(s==='front-only') return [
+           {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+           {val:'fcas', label:'Front Compressor / Air Supply (FC/AS)',
+            sub:'Viair compressor, in-cab dual needle gauge, 3-gal tank, pressure switch — front kit vehicles only',
+            parts:[{pn:'FC/AS',qty:1}]},
+         ];
+         const opts=[
+           {val:'none',      label:'No Controls — Manual Fill', sub:'Fill via shop air'},
+           {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
+            sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',
+            parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+           {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',
+            sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',
+            parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+         ];
+         if(isBoth){
+           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                   sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
+           opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
+         }
+         return opts;
+       },
+      },
+      {key:'fox-front', label:'Front Shocks', badge:'opt',
+       condition:(sel)=>{
+         const h=sel.height;const isLift=h==='5-6'||h==='8-10';
+         if(!isLift||!sel.scope||sel.scope==='rear-only') return false;
+         return !!sel.yr;
+       },
+       choices:(kit,sel)=>[
+         {val:'none', label:'No Front Shocks'},
+         {val:'fox',  label:`Fox 2.0 Remote Reservoir Front Shocks (${sel.height==='8-10'?'980-02-034':'980-02-032'} ×2)`,
+          sub:'2006-2009 Dodge 2500 front shocks',
+          parts:[{pn:sel.height==='8-10'?'980-02-034':'980-02-032',qty:2}]},
+       ],
+      },
+      {key:'stab-shock', label:'Steering Stabilizer Shocks', badge:'opt',
+       hint:'The 5-6" front kit (KLM11314) includes a dual steering stabilizer bracket. Add shocks here.',
+       condition:(sel)=>sel.height==='5-6'&&sel.yr==='2003-2007'&&!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none', label:'No Steering Stabilizer Shocks'},
+         {val:'fox',  label:'Fox 985-24-068 Steering Stabilizer Shocks (×2)',
+          sub:`Fox Performance — G3 Dual Steering Stabilizer, 2003-2007 Dodge 2500`,
+          parts:[{pn:'985-24-068',qty:2}]},
+       ],
+      },
+      {key:'fox-rear', label:'Rear Shocks', badge:'opt',
+       condition:(sel)=>{
+         const h=sel.height;const isLift=h==='5-6'||h==='8-10';
+         return isLift&&sel.yr==='2003-2007'&&!!sel.scope&&sel.scope!=='front-only';
+       },
+       choices:()=>[
+         {val:'none', label:'No Rear Shocks'},
+         {val:'fox',  label:'Fox 2.0 Remote Reservoir Rear Shocks (980-02-035 ×2)',
+          sub:'2003-2007 Dodge 2500 Pickup 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
+       ],
+      },
+    ],
+    buildParts:(kit,sel)=>{
+      const parts=[];
+      const s=sel.scope, h=sel.height;
+      const isLift=h==='5-6'||h==='8-10', isBoth=s==='both';
+      const sfx=h==='8-10'?'10':'6';
+      if(s!=='rear-only'){
+        if(!isLift){
+          const fMap={'stock':'KLM11315','1.5':'KLM15754','3':'10040963'};
+          if(fMap[h]) parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
+        } else {
+          let fpn;
+          if(sel.yr==='2009')          fpn=`D4F4-23-X-09-${sfx}`;
+          else if(sel.yr==='2008')     fpn=`D4F4-23-X-08-${sfx}`;
+                    else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11314':h==='8-10'?'KLM11620':null;
+          if(fpn) parts.push({section:'Front Suspension',pn:fpn,qty:1});
+        }
+      }
+      if(sel.dss==='stock') parts.push({section:'Steering Stabilizer',pn:'10008005',qty:1});
+      if(sel.dss==='upd')   parts.push({section:'Steering Stabilizer',pn:'10009522',qty:1});
+      if(s!=='front-only'){
+        if(!isLift){
+          parts.push({section:'Rear Suspension',pn:'KLM11256',qty:1});
+        } else if(sel.yr==='2003-2007'){
+                    const rpn=h==='5-6'?'KLM15762':h==='8-10'?'KLM15764':null;
+          if(rpn) parts.push({section:'Rear Suspension',pn:rpn,qty:1});
+        }
+      }
+      if(s==='front-only'){
+        if(sel.ctrl==='fcas')     parts.push({section:'Air Controls',pn:'FC/AS',qty:1});
+        else if(sel.ctrl==='none') mfLine(true,false,false,false).forEach(p=>parts.push(p));
+      } else {
+        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
+        (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+        if(sel.ctrl==='none'){const hasFront=s!=='rear-only';const hasRear=s!=='front-only'&&(!isLift||sel.yr==='2003-2007');mfLine(hasFront,hasRear,true,false).forEach(p=>parts.push(p));}
+      }
+      if(sel['fox-front']==='fox') parts.push({section:'Shocks',pn:h==='8-10'?'980-02-034':'980-02-032',qty:2});
+      if(sel['stab-shock']==='fox') parts.push({section:'Shocks',pn:'985-24-068',qty:2});
+      if(sel['fox-rear']==='fox')  parts.push({section:'Shocks',pn:'980-02-035',qty:2});
+      return parts;
+    },
+  }, null, null, null,
+  ramSDBumper2003('dodge-2500-pu-2006-bump', 2006, 2009, 'Dodge', '2500 Pickup', 'Dodge 2500 Pickup', '401041006', '401041003', true)),
+  {dss:[
+    {pn:'10008005', drive:'stock', driveLabel:'Stock Differential Cover (10008005)'},
+    {pn:'10009522', drive:'upd',   driveLabel:'Updated Steering Linkage (10009522)'},
+  ]}),
+  // ─────────────────────────────────────────────────────────────
+  // DODGE 3500 PICKUP — 2003-2005 (G3)
+  // ─────────────────────────────────────────────────────────────
+  withAccessories(withBumpers({
+    id:'dodge-3500-pu-2003',
+    yr_from:2003, yr_to:2005,
+    make:'Dodge', model:'3500 Pickup',
+    label:'Dodge 3500 Pickup',
+    kits:[{id:'dodge-3500-g3-pu-2003', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
+    steps:[
+      {key:'height', label:'Lift Height', badge:'req',
+       hint:'Select the desired lift height.',
+       choices:()=>[
+         {val:'stock', label:'Stock Height',  sub:'2-Stage front at factory height (Rancho shocks included)'},
+         {val:'1.5',   label:'1.5" Lift',     sub:'2-Stage front — 1.5" lift'},
+         {val:'3',     label:'3" Lift',       sub:'2-Stage front — 3" lift'},
+         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear'},
+         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear'},
+       ],
+      },
+      {key:'yr', label:'Model Year', badge:'req',
+       condition:(sel)=>{const h=sel.height;return h==='5-6'||h==='8-10';},
+       choices:()=>[{val:'2003-2007', label:'2003–2005'}],
       },
       {key:'scope', label:'Suspension Scope', badge:'req',
        condition:(sel)=>{const h=sel.height;const isLift=h==='5-6'||h==='8-10';return isLift?!!sel.yr:!!h;},
@@ -11826,7 +12431,7 @@ const CATALOG = [
        choices:(kit,sel)=>[
          {val:'none', label:'No Front Shocks'},
          {val:'fox',  label:`Fox 2.0 Remote Reservoir Front Shocks (${sel.height==='8-10'?'980-02-034':'980-02-032'} ×2)`,
-          sub:`2003-2009 Dodge 3500 ${sel.height}" front`,
+          sub:'2003-2005 Dodge 3500 front shocks',
           parts:[{pn:sel.height==='8-10'?'980-02-034':'980-02-032',qty:2}]},
        ],
       },
@@ -11838,7 +12443,7 @@ const CATALOG = [
        choices:()=>[
          {val:'none', label:'No Rear Shocks'},
          {val:'fox',  label:'Fox 2.0 Remote Reservoir Rear Shocks (980-02-035 ×2)',
-          sub:'2003-2007 Dodge 3500 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
+          sub:'2003-2007 Dodge 3500 Pickup 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
        ],
       },
     ],
@@ -11855,7 +12460,7 @@ const CATALOG = [
           let fpn;
           if(sel.yr==='2009')          fpn=`D4F4-23-X-09-${sfx}`;
           else if(sel.yr==='2008')     fpn=`D4F4-23-X-08-${sfx}`;
-          else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11612':h==='8-10'?'KLM11614':null;
+                    else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11612':h==='8-10'?'KLM11614':null;
           if(fpn) parts.push({section:'Front Suspension',pn:fpn,qty:1});
         }
       }
@@ -11865,7 +12470,7 @@ const CATALOG = [
         if(!isLift){
           parts.push({section:'Rear Suspension',pn:'KLM11256',qty:1});
         } else if(sel.yr==='2003-2007'){
-          const rpn=h==='5-6'?'KLM15763':h==='8-10'?'KLM15765':null;
+                    const rpn=h==='5-6'?'KLM15763':h==='8-10'?'KLM15765':null;
           if(rpn) parts.push({section:'Rear Suspension',pn:rpn,qty:1});
         }
       }
@@ -11881,8 +12486,168 @@ const CATALOG = [
       if(sel['fox-rear']==='fox')  parts.push({section:'Shocks',pn:'980-02-035',qty:2});
       return parts;
     },
-  },
-
+  }, null, null, null,
+  ramSDBumper2003('dodge-3500-pu-2003-bump', 2003, 2005, 'Dodge', '3500 Pickup', 'Dodge 3500 Pickup', '401042003', '401042003', false)),
+  {dss:[
+    {pn:'10008005', drive:'stock', driveLabel:'Stock Differential Cover (10008005)'},
+    {pn:'10009522', drive:'upd',   driveLabel:'Updated Steering Linkage (10009522)'},
+  ]}),
+  // ─────────────────────────────────────────────────────────────
+  // DODGE 3500 PICKUP — 2006-2009 (G3)
+  // ─────────────────────────────────────────────────────────────
+  withAccessories(withBumpers({
+    id:'dodge-3500-pu-2006',
+    yr_from:2006, yr_to:2009,
+    make:'Dodge', model:'3500 Pickup',
+    label:'Dodge 3500 Pickup',
+    kits:[{id:'dodge-3500-g3-pu-2006', label:'Air Suspension System', sub:'Stock through 8-10" lift — configure front and rear independently'}],
+    steps:[
+      {key:'height', label:'Lift Height', badge:'req',
+       hint:'Select the desired lift height.',
+       choices:()=>[
+         {val:'stock', label:'Stock Height',  sub:'2-Stage front at factory height (Rancho shocks included)'},
+         {val:'1.5',   label:'1.5" Lift',     sub:'2-Stage front — 1.5" lift'},
+         {val:'3',     label:'3" Lift',       sub:'2-Stage front — 3" lift'},
+         {val:'5-6',   label:'5-6" Lift',     sub:'4-Link front + 4-link rear (2006–2007) — front only for 2008-2009'},
+         {val:'8-10',  label:'8-10" Lift',    sub:'4-Link front + 4-link rear (2006–2007) — front only for 2008-2009'},
+       ],
+      },
+      {key:'yr', label:'Model Year', badge:'req',
+       condition:(sel)=>{const h=sel.height;return h==='5-6'||h==='8-10';},
+       choices:()=>[{val:'2009',label:'2009'},{val:'2008',label:'2008'},{val:'2003-2007',label:'2006–2007'}],
+      },
+      {key:'scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>{const h=sel.height;const isLift=h==='5-6'||h==='8-10';return isLift?!!sel.yr:!!h;},
+       choices:(kit,sel)=>{
+         const h=sel.height;
+         const isLift=h==='5-6'||h==='8-10';
+         if(isLift&&(sel.yr==='2009'||sel.yr==='2008')) return [
+           {val:'front-only', label:'Front Only', sub:'Front 4-Link lift only — no rear lift kit available for '+sel.yr},
+         ];
+         return [
+           {val:'both',       label:'Front + Rear', sub:'Complete front and rear air suspension system'},
+           {val:'front-only', label:'Front Only',   sub:'Front kit only'},
+           {val:'rear-only',  label:'Rear Only',    sub:'Rear kit only'},
+         ];
+       },
+      },
+      {key:'dss', label:'Steering Stabilizer', badge:'opt',
+       condition:(sel)=>{
+         if(!sel.scope||sel.scope==='rear-only') return false;
+         const h=sel.height;
+         const isLift=h==='5-6'||h==='8-10';
+         if(!isLift) return !!h;
+         return !!sel.yr;
+       },
+       choices:()=>[
+         {val:'none',  label:'No Steering Stabilizer'},
+         {val:'stock', label:'Steering Stabilizer — Stock Differential Cover (10008005)', sub:'4x4 only', parts:[{pn:'10008005',qty:1}]},
+         {val:'upd',   label:'Steering Stabilizer — Updated Steering Linkage (10009522)', sub:'4x4 only', parts:[{pn:'10009522',qty:1}]},
+       ],
+      },
+      {key:'ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>{
+         const h=sel.height;const s=sel.scope;
+         if(!s) return false;
+         const isLift=h==='5-6'||h==='8-10';
+         if(!isLift) return true;
+         return !!sel.yr;
+       },
+       choices:(kit,sel)=>{
+         const s=sel.scope;
+         const isBoth=s==='both';
+         if(s==='front-only') return [
+           {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+           {val:'fcas', label:'Front Compressor / Air Supply (FC/AS)',
+            sub:'Viair compressor, in-cab dual needle gauge, 3-gal tank, pressure switch — front kit vehicles only',
+            parts:[{pn:'FC/AS',qty:1}]},
+         ];
+         const opts=[
+           {val:'none',      label:'No Controls — Manual Fill', sub:'Fill via shop air'},
+           {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
+            sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',
+            parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+           {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',
+            sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',
+            parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+         ];
+         if(isBoth){
+           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                   sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
+           opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount (10009358)', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
+         }
+         return opts;
+       },
+      },
+      {key:'fox-front', label:'Front Shocks', badge:'opt',
+       condition:(sel)=>{
+         const h=sel.height;const isLift=h==='5-6'||h==='8-10';
+         if(!isLift||!sel.scope||sel.scope==='rear-only') return false;
+         return !!sel.yr;
+       },
+       choices:(kit,sel)=>[
+         {val:'none', label:'No Front Shocks'},
+         {val:'fox',  label:`Fox 2.0 Remote Reservoir Front Shocks (${sel.height==='8-10'?'980-02-034':'980-02-032'} ×2)`,
+          sub:'2006-2009 Dodge 3500 front shocks',
+          parts:[{pn:sel.height==='8-10'?'980-02-034':'980-02-032',qty:2}]},
+       ],
+      },
+      {key:'fox-rear', label:'Rear Shocks', badge:'opt',
+       condition:(sel)=>{
+         const h=sel.height;const isLift=h==='5-6'||h==='8-10';
+         return isLift&&sel.yr==='2003-2007'&&!!sel.scope&&sel.scope!=='front-only';
+       },
+       choices:()=>[
+         {val:'none', label:'No Rear Shocks'},
+         {val:'fox',  label:'Fox 2.0 Remote Reservoir Rear Shocks (980-02-035 ×2)',
+          sub:'2003-2007 Dodge 3500 Pickup 5-6" and 8-10" rear', parts:[{pn:'980-02-035',qty:2}]},
+       ],
+      },
+    ],
+    buildParts:(kit,sel)=>{
+      const parts=[];
+      const s=sel.scope, h=sel.height;
+      const isLift=h==='5-6'||h==='8-10', isBoth=s==='both';
+      const sfx=h==='8-10'?'10':'6';
+      if(s!=='rear-only'){
+        if(!isLift){
+          const fMap={'stock':'KLM11315','1.5':'KLM15754','3':'10040963'};
+          if(fMap[h]) parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
+        } else {
+          let fpn;
+          if(sel.yr==='2009')          fpn=`D4F4-23-X-09-${sfx}`;
+          else if(sel.yr==='2008')     fpn=`D4F4-23-X-08-${sfx}`;
+                    else if(sel.yr==='2003-2007') fpn=h==='5-6'?'KLM11612':h==='8-10'?'KLM11614':null;
+          if(fpn) parts.push({section:'Front Suspension',pn:fpn,qty:1});
+        }
+      }
+      if(sel.dss==='stock') parts.push({section:'Steering Stabilizer',pn:'10008005',qty:1});
+      if(sel.dss==='upd')   parts.push({section:'Steering Stabilizer',pn:'10009522',qty:1});
+      if(s!=='front-only'){
+        if(!isLift){
+          parts.push({section:'Rear Suspension',pn:'KLM11256',qty:1});
+        } else if(sel.yr==='2003-2007'){
+                    const rpn=h==='5-6'?'KLM15763':h==='8-10'?'KLM15765':null;
+          if(rpn) parts.push({section:'Rear Suspension',pn:rpn,qty:1});
+        }
+      }
+      if(s==='front-only'){
+        if(sel.ctrl==='fcas')     parts.push({section:'Air Controls',pn:'FC/AS',qty:1});
+        else if(sel.ctrl==='none') mfLine(true,false,false,false).forEach(p=>parts.push(p));
+      } else {
+        const cM={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
+        (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+        if(sel.ctrl==='none'){const hasFront=s!=='rear-only';const hasRear=s!=='front-only'&&(!isLift||sel.yr==='2003-2007');mfLine(hasFront,hasRear,true,false).forEach(p=>parts.push(p));}
+      }
+      if(sel['fox-front']==='fox') parts.push({section:'Shocks',pn:h==='8-10'?'980-02-034':'980-02-032',qty:2});
+      if(sel['fox-rear']==='fox')  parts.push({section:'Shocks',pn:'980-02-035',qty:2});
+      return parts;
+    },
+  }, null, null, null,
+  ramSDBumper2003('dodge-3500-pu-2006-bump', 2006, 2009, 'Dodge', '3500 Pickup', 'Dodge 3500 Pickup', '401042006', '401042003', true)),
+  {dss:[
+    {pn:'10008005', drive:'stock', driveLabel:'Stock Differential Cover (10008005)'},
+    {pn:'10009522', drive:'upd',   driveLabel:'Updated Steering Linkage (10009522)'},
+  ]}),
   // ─────────────────────────────────────────────────────────────
   // DODGE 2500 PICKUP — 1994-2002 (G2)
   // ─────────────────────────────────────────────────────────────
