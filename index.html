@@ -887,7 +887,7 @@ const P = {
   // ── Ford Chassis Cab 2008-2016 ────────────────────────────────
   '10004016': {desc:'Kit — 2008-2016 Ford F-450/F-550 Chassis Cab, 4-Link Rear, Stock Height',                        msrp:5000},
   'KLM17571': {desc:'Kit — 2008-2016 Ford F-450/F-550 Chassis Cab, 4-Link Rear, 2" Lowering',                         msrp:5000},
-  'F2F4-4-CC-11':{desc:'Kit — 2011-2016 Ford F-450/F-550 Chassis Cab 4WD, 4-Link Front Air Suspension',               msrp:1650},
+  'F2F4-4-CC-11':{desc:'Kit — 2011-2016 Ford F-450/F-550 Chassis Cab, Stock Height Control Arm Front Air Suspension — 2WD and 4WD',               msrp:1650},
 
   // ── GM Silverado 4500/5500/6500 2019+ ────────────────────────
   '10014749': {desc:'Kit — 2019+ GM Silverado 4500/5500/6500 2WD, Front Air Suspension (Incl. DSS, Shocks)',          msrp:4750},
@@ -6954,10 +6954,9 @@ const CATALOG = [
   fordSD11Bumper('ford-f350-2011-bumper', 2011, 2016, 'Ford', 'F-350 Super Duty Pickup', 'F-350 Super Duty Pickup', '402022011', true, 'pickup'),
 
   // ─────────────────────────────────────────────────────────────
-  // FORD SUPER DUTY PICKUP BUMPERS — 2011-2016 (F-450 / F-550)
-  // F-450 and F-550 share Bravo front P/N; F-450 Alpha and rear P/Ns used for both
+  // FORD SUPER DUTY PICKUP BUMPERS — 2011-2016 (F-450)
   // ─────────────────────────────────────────────────────────────
-  fordSD11Bumper('ford-f450f550-2011-bumper', 2011, 2016, 'Ford', 'F-450 / F-550 Super Duty Pickup', 'F-450 / F-550 Super Duty Pickup', '402023011', false, 'pickup'),
+  fordSD11Bumper('ford-f450f550-2011-bumper', 2011, 2016, 'Ford', 'F-450 Super Duty Pickup', 'F-450 Super Duty Pickup', '402023011', false, 'pickup'),
 
   // ─────────────────────────────────────────────────────────────
   // FORD SUPER DUTY PICKUP — 2008-2010 (F-250)
@@ -8985,28 +8984,35 @@ const CATALOG = [
     yr_from:2008, yr_to:2016,
     make:'Ford', model:'F-450 Chassis Cab',
     label:'F-450 Chassis Cab',
-    kits:[{id:'ford-f450cc-2008-kit', label:'Air Suspension System', sub:'Stock height, 2" lowering, or 2-Stage rear — 2WD or 4WD'}],
+    kits:[{id:'ford-f450cc-2008-kit', label:'Air Suspension System', sub:'Stock height, 2" lowering, or 2-Stage rear — front available 2011-2016'}],
     steps:[
-      {key:'rear', label:'Rear Suspension', badge:'req',
+      {key:'scope', label:'Suspension Scope', badge:'req',
        choices:()=>[
-         {val:'stock',          label:'Stock Height 4-Link Rear (10004016)',             sub:'2008-2016 F-450 CC — 4-Link, stock height',         parts:[{pn:'10004016',qty:1}]},
-         {val:'low',            label:'2" Lowering 4-Link Rear (KLM17571)',              sub:'2008-2016 F-450 CC — 4-Link, 2" lowering',          parts:[{pn:'KLM17571',qty:1}]},
-         {val:'2stage',         label:'2-Stage Rear w/ Receiver Hitch (10010194)',       sub:'2008-2016 F-450 CC — 2-Stage rear, 2.5" hitch',     parts:[{pn:'10010194',qty:1}]},
-         {val:'2stage-nohitch', label:'2-Stage Rear — No Receiver Hitch (10013347)',     sub:'1999+ F-450 CC — 2-Stage rear, no hitch receiver',  parts:[{pn:'10013347',qty:1}]},
+         {val:'both',      label:'Front + Rear', sub:'2011-2016: control arm front + 4-link rear — 2WD or 4WD'},
+         {val:'rear-only', label:'Rear Only',    sub:'4-link or 2-Stage rear air suspension'},
        ],
       },
-      {key:'front', label:'Front Suspension', badge:'opt',
-       hint:'4WD only (2011-2016). Leave at "No Front Kit" for 2WD models.',
-       condition:(sel)=>!!sel.rear,
+      {key:'front', label:'Front Air Suspension', badge:'req',
+       condition:(sel)=>sel.scope==='both',
        choices:()=>[
-         {val:'none',  label:'No Front Kit — 2WD / Rear Only'},
-         {val:'front', label:'2011-2016 4WD Front Kit (F2F4-4-CC-11)', sub:'2-Stage front air suspension', parts:[{pn:'F2F4-4-CC-11',qty:1}]},
+         {val:'yes', label:'Stock Height Control Arm Front (F2F4-4-CC-11)',
+          sub:'2011-2016 F-450/F-550 CC — 2WD and 4WD',
+          parts:[{pn:'F2F4-4-CC-11',qty:1}]},
+       ],
+      },
+      {key:'rear', label:'Rear Air Suspension', badge:'req',
+       condition:(sel)=>sel.scope==='rear-only'||sel.front==='yes',
+       choices:()=>[
+         {val:'stock',          label:'Stock Height 4-Link Rear (10004016)',             sub:'2008-2016 F-450 CC — 4-Link, stock height',        parts:[{pn:'10004016',qty:1}]},
+         {val:'low',            label:'2" Lowering 4-Link Rear (KLM17571)',              sub:'2008-2016 F-450 CC — 4-Link, 2" lowering',         parts:[{pn:'KLM17571',qty:1}]},
+         {val:'2stage',         label:'2-Stage Rear — With 2.5" Receiver Hitch (10010194)', sub:'2008-2016 F-450 CC — 2-Stage rear, 2.5" hitch', parts:[{pn:'10010194',qty:1}]},
+         {val:'2stage-nohitch', label:'2-Stage Rear — No Receiver Hitch (10013347)',     sub:'1999+ F-450 CC — 2-Stage rear, no hitch receiver', parts:[{pn:'10013347',qty:1}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
-       condition:(sel)=>!!sel.rear&&(sel.front==='none'||sel.front==='front'),
+       condition:(sel)=>!!sel.rear,
        choices:(kit,sel)=>{
-         const hasFront=sel.front==='front';
+         const hasFront=sel.front==='yes';
          const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
          if(hasFront&&!is2stage) return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -9026,10 +9032,10 @@ const CATALOG = [
     ],
     buildParts:(kit,sel)=>{
       const parts=[];
+      const hasFront=sel.front==='yes';
+      if(hasFront) parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
       const rearPnMap={stock:'10004016',low:'KLM17571','2stage':'10010194','2stage-nohitch':'10013347'};
       if(sel.rear) parts.push({section:'Rear Suspension',pn:rearPnMap[sel.rear],qty:1});
-      const hasFront=sel.front==='front';
-      if(hasFront) parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
       const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
       const ctrlMap=is2stage
         ?{slkd:[{pn:'SLKD2WD',qty:1}]}
@@ -9050,23 +9056,24 @@ const CATALOG = [
     yr_from:2008, yr_to:2016,
     make:'Ford', model:'F-550 Chassis Cab',
     label:'F-550 Chassis Cab',
-    kits:[{id:'ford-f550cc-2008-kit', label:'Air Suspension System', sub:'Stock height or 2" lowering — 2WD or 4WD'}],
+    kits:[{id:'ford-f550cc-2008-kit', label:'Air Suspension System', sub:'Stock height or 2" lowering — front available 2011-2016'}],
     steps:[
       {key:'scope', label:'Suspension Scope', badge:'req',
-       hint:'Select your drivetrain. 2WD models support rear only; 4WD supports front + rear.',
        choices:()=>[
-         {val:'2wd', label:'2WD — Rear Only',    sub:'2-WD models (front kit not available)'},
-         {val:'4wd', label:'4WD — Front & Rear', sub:'2011-2016 4WD: front + rear'},
+         {val:'both',      label:'Front + Rear', sub:'2011-2016: control arm front + 4-link rear — 2WD or 4WD'},
+         {val:'rear-only', label:'Rear Only',    sub:'4-link rear air suspension'},
        ],
       },
-      {key:'front', label:'Front Suspension (4WD Only)', badge:'req',
-       condition:(sel)=>sel.scope==='4wd',
+      {key:'front', label:'Front Air Suspension', badge:'req',
+       condition:(sel)=>sel.scope==='both',
        choices:()=>[
-         {val:'front', label:'2011-2016 4WD Front Kit (F2F4-4-CC-11)', sub:'2-Stage front air suspension', parts:[{pn:'F2F4-4-CC-11',qty:1}]},
+         {val:'yes', label:'Stock Height Control Arm Front (F2F4-4-CC-11)',
+          sub:'2011-2016 F-450/F-550 CC — 2WD and 4WD',
+          parts:[{pn:'F2F4-4-CC-11',qty:1}]},
        ],
       },
-      {key:'rear', label:'Rear Suspension', badge:'req',
-       condition:(sel)=>!!sel.scope&&(sel.scope==='2wd'||!!sel.front),
+      {key:'rear', label:'Rear Air Suspension', badge:'req',
+       condition:(sel)=>sel.scope==='rear-only'||sel.front==='yes',
        choices:()=>[
          {val:'stock', label:'Stock Height 4-Link Rear (10004016)', sub:'2008-2016 F-550 CC — 4-Link, stock height', parts:[{pn:'10004016',qty:1}]},
          {val:'low',   label:'2" Lowering 4-Link Rear (KLM17571)', sub:'2008-2016 F-550 CC — 4-Link, 2" lowering',  parts:[{pn:'KLM17571',qty:1}]},
@@ -9075,7 +9082,8 @@ const CATALOG = [
       {key:'ctrl', label:'Air Controls', badge:'req',
        condition:(sel)=>!!sel.rear,
        choices:(kit,sel)=>{
-         if(sel.scope==='4wd') return [
+         const hasFront=sel.front==='yes';
+         if(hasFront) return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
            {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD + 2× HCVLK)',
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
@@ -9093,15 +9101,15 @@ const CATALOG = [
     ],
     buildParts:(kit,sel)=>{
       const parts=[];
+      const hasFront=sel.front==='yes';
+      if(hasFront) parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
       const rearPnMap={stock:'10004016',low:'KLM17571'};
       if(sel.rear) parts.push({section:'Rear Suspension',pn:rearPnMap[sel.rear],qty:1});
-      if(sel.scope==='4wd'&&sel.front==='front') parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
-      const hasFront=sel.scope==='4wd';
       const ctrlMap=hasFront
         ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}]}
         :{slkd:[{pn:'SLKD2WD',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.ctrl==='none') mfLine(hasFront&&sel.front==='front',!!sel.rear,false,!hasFront).forEach(p=>parts.push(p));
+      if(sel.ctrl==='none') mfLine(hasFront,!!sel.rear,false,!hasFront).forEach(p=>parts.push(p));
       return parts;
     },
   },
