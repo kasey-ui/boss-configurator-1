@@ -6325,7 +6325,7 @@ const CATALOG = [
   // ─────────────────────────────────────────────────────────────
   // FORD SUPER DUTY PICKUP — 2011-2016 (F-250)
   // ─────────────────────────────────────────────────────────────
-  withAccessories({
+  withAccessories(withBumpers({
     id:'ford-f250-2011',
     yr_from:2011, yr_to:2016,
     make:'Ford', model:'F-250 Super Duty Pickup',
@@ -6481,7 +6481,7 @@ const CATALOG = [
          if((h==='stock'||h==='1.5-lift')&&sel['rear-type']==='2stage') return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
            {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
-           {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+           {val:'slkd2wd', label:'Mechanical Self-Leveling (SLKD2WD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKD2WD',qty:1}]},
          ];
          return [
            {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -6536,7 +6536,7 @@ const CATALOG = [
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if((h==='stock'||h==='1.5-lift')&&rt==='2stage'){
-        const c2={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
+        const c2={arck:[{pn:'ARCK',qty:1}],slkd2wd:[{pn:'SLKD2WD',qty:1}]};
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
@@ -6546,7 +6546,7 @@ const CATALOG = [
       }
       return parts;
     },
-  }, {
+  }, null, null, null, fordSD11Bumper('ford-f250-2011-bumper', 2011, 2016, 'Ford', 'F-250 Super Duty Pickup', 'F-250 Super Duty Pickup', '402021011', true, 'pickup')), {
     dss:[{pn:'69170',drive:'4wd',driveLabel:'4x4 — 2005-2022 Ford F-250/F-350 (69170)'}],
     arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
     hitch:true,
@@ -6555,7 +6555,7 @@ const CATALOG = [
   // ─────────────────────────────────────────────────────────────
   // FORD SUPER DUTY PICKUP — 2011-2016 (F-350)
   // ─────────────────────────────────────────────────────────────
-  withAccessories({
+  withAccessories(withBumpers({
     id:'ford-f350-2011',
     yr_from:2011, yr_to:2016,
     make:'Ford', model:'F-350 Super Duty Pickup',
@@ -6722,7 +6722,7 @@ const CATALOG = [
          if((h==='stock'||h==='1.5-lift')&&sel['rear-type']==='2stage') return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
            {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
-           {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+           {val:'slkd2wd', label:'Mechanical Self-Leveling (SLKD2WD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKD2WD',qty:1}]},
          ];
          return [
            {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -6784,7 +6784,7 @@ const CATALOG = [
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if((h==='stock'||h==='1.5-lift')&&rt==='2stage'){
-        const c2={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
+        const c2={arck:[{pn:'ARCK',qty:1}],slkd2wd:[{pn:'SLKD2WD',qty:1}]};
         (c2[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
         if(sel.ctrl==='none') mfLine(scope!=='rear-only',scope!=='front-only',false,true).forEach(p=>parts.push(p));
       } else {
@@ -6794,7 +6794,7 @@ const CATALOG = [
       }
       return parts;
     },
-  }, {
+  }, null, null, null, fordSD11Bumper('ford-f350-2011-bumper', 2011, 2016, 'Ford', 'F-350 Super Duty Pickup', 'F-350 Super Duty Pickup', '402022011', true, 'pickup')), {
     dss:[{pn:'69170',drive:'4wd',driveLabel:'4x4 — 2005-2022 Ford F-250/F-350 (69170)'}],
     arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
     hitch:true,
@@ -6967,16 +6967,6 @@ const CATALOG = [
     arms:{pn:'10005712',note:'2005-2022 Ford Super Duty Fabricated Radius Arms — F-250/F-350/F-450/F-550/F-600'},
     hitch:true,
   }),
-
-  // ─────────────────────────────────────────────────────────────
-  // FORD SUPER DUTY PICKUP BUMPERS — 2011-2016 (F-250)
-  // ─────────────────────────────────────────────────────────────
-  fordSD11Bumper('ford-f250-2011-bumper', 2011, 2016, 'Ford', 'F-250 Super Duty Pickup', 'F-250 Super Duty Pickup', '402021011', true, 'pickup'),
-
-  // ─────────────────────────────────────────────────────────────
-  // FORD SUPER DUTY PICKUP BUMPERS — 2011-2016 (F-350)
-  // ─────────────────────────────────────────────────────────────
-  fordSD11Bumper('ford-f350-2011-bumper', 2011, 2016, 'Ford', 'F-350 Super Duty Pickup', 'F-350 Super Duty Pickup', '402022011', true, 'pickup'),
 
   // ─────────────────────────────────────────────────────────────
   // FORD SUPER DUTY PICKUP BUMPERS — 2011-2016 (F-450)
@@ -9049,8 +9039,10 @@ const CATALOG = [
            {val:'eslk3h2', label:'Air Lift 3H Electronic', sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]},
          ];
          return [
-           {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
-           {val:'slkd', label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
+           {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+           {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
+           {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+           {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:[{pn:'SLKD2WD',qty:1}]},
          ];
@@ -9065,7 +9057,7 @@ const CATALOG = [
       if(sel.rear) parts.push({section:'Rear Suspension',pn:rearPnMap[sel.rear],qty:1});
       const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
       const ctrlMap=is2stage
-        ?{slkd:[{pn:'SLKD2WD',qty:1}]}
+        ?{arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}],slkd:[{pn:'SLKD2WD',qty:1}]}
         :hasFront
           ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'ESLK3H2',qty:1}]}
           :{slkd:[{pn:'SLKD2WD',qty:1}]};
@@ -9621,16 +9613,17 @@ const CATALOG = [
       {key:'ctrl', label:'Air Controls', badge:'req',
        condition:(sel)=>!!sel.rear,
        choices:()=>[
-         {val:'none',   label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
-         {val:'arck',   label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
-         {val:'slkdwd', label:'Mechanical Self-Leveling — Single Compressor (SLKDWD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKDWD',qty:1}]},
+         {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+         {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
+         {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+         {val:'slkdwd',  label:'Mechanical Self-Leveling — Single Compressor (SLKDWD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKDWD',qty:1}]},
        ],
       },
     ],
     buildParts:(kit,sel)=>{
       const parts=[];
       if(sel.rear) parts.push({section:'Rear Suspension',pn:'KLM20547',qty:1});
-      const cM={arck:[{pn:'ARCK',qty:1}],slkdwd:[{pn:'SLKDWD',qty:1}]};
+      const cM={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}],slkdwd:[{pn:'SLKDWD',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(false,!!sel.rear,false,true).forEach(p=>parts.push(p));
       return parts;
@@ -9655,16 +9648,17 @@ const CATALOG = [
       {key:'ctrl', label:'Air Controls', badge:'req',
        condition:(sel)=>!!sel.rear,
        choices:()=>[
-         {val:'none',   label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
-         {val:'arck',   label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
-         {val:'slkdwd', label:'Mechanical Self-Leveling — Single Compressor (SLKDWD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKDWD',qty:1}]},
+         {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+         {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
+         {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+         {val:'slkdwd',  label:'Mechanical Self-Leveling — Single Compressor (SLKDWD)', sub:'Viair compressor, 3-gal tank, HCV, dual dump valve', parts:[{pn:'SLKDWD',qty:1}]},
        ],
       },
     ],
     buildParts:(kit,sel)=>{
       const parts=[];
       if(sel.rear) parts.push({section:'Rear Suspension',pn:'KLM20547',qty:1});
-      const cM={arck:[{pn:'ARCK',qty:1}],slkdwd:[{pn:'SLKDWD',qty:1}]};
+      const cM={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}],slkdwd:[{pn:'SLKDWD',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(false,!!sel.rear,false,true).forEach(p=>parts.push(p));
       return parts;
