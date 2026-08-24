@@ -603,6 +603,13 @@ const P = {
   'KLM-201044019-02121000000': {desc:'RAM 5500 Commander Grille Guard — Sq. Crossbars ×2 w/20" Light Cutouts, Smooth Face', msrp:1100},
   'KLM-201044019-02121000001': {desc:'RAM 5500 Commander Grille Guard — Sq. Crossbars ×2 w/20" Light Cutouts, Clevis Ears', msrp:1100},
 
+  // ── RAM 2500/3500/4500/5500 GG + Headlight Guard Conversion (2019-2024 & 2025+) ─
+  'KLM-201041019-11703050001': {desc:'2019+ RAM 2500/3500/4500/5500 Pickup & Cab Chassis Commander Grille Guard + Headlight Guards — Sq. SR Light (×1), Round (×1), Round Offset (×1), Camera Mount, w/ Clevis Ears', msrp:1400},
+  'KLM-201041019-11103050001': {desc:'2019+ RAM 2500/3500/4500/5500 Pickup & Cab Chassis Commander Grille Guard + Headlight Guards — Sq. (×1), Round (×1), Round Offset (×1), w/ Clevis Ears', msrp:1400},
+  'KLM-201041019-11903050001': {desc:'2019+ RAM 2500/3500/4500/5500 Pickup & Cab Chassis Commander Grille Guard + Headlight Guards — Sq. 30" 360-Connect Light (×1), Round (×1), Round Offset (×1), w/ Clevis Ears', msrp:1400},
+  'KLM-201041019-12103050001': {desc:'2019+ RAM 2500/3500/4500/5500 Pickup & Cab Chassis Commander Grille Guard + Headlight Guards — Sq. 20" SR Light (×1), Round (×1), Round Offset (×1), w/ Clevis Ears', msrp:1400},
+  'KLM-201041019-10000000000': {desc:'2019+ RAM 2500/3500/4500/5500 Pickup & Cab Chassis Alpha Front Bumper Commander Grille Guard — Headlight Guard Conversion Kit', msrp:0},
+
   // ── RAM 2500 Rear Bumpers (401041019) — SRW ───────────────────
   'KLM-401041019-104000000': {desc:'2019+ RAM 2500 Rear Bumper — Alpha Series, w/Parking Sensors ×4, SRW',             msrp:2250},
   'KLM-401041019-104030000': {desc:'2019+ RAM 2500 Rear Bumper — Bravo Series, Smooth Face, w/Parking Sensors ×4, SRW', msrp:2250},
@@ -3341,7 +3348,7 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
     const cv = clevis ? '1' : '0';
     if(config==='sq-solid')  return `KLM-${ggModelBase}-0111100000${cv}`;
     if(config==='sq-lights') return `KLM-${ggModelBase}-0212100000${cv}`;
-    if(config==='headlight') return 'Part # TBD';
+    if(config==='headlight') return null; // handled separately in buildParts based on gg-hl-config
     return null;
   };
 
@@ -3394,6 +3401,7 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
        {val:'none',      label:'No Grille Guard'},
        {val:'sq-solid',  label:'Commander Grille Guard — Square × 2 Crossbars, No Light Cutouts (+$1,100)', sub:`KLM-${ggModelBase}-01111000...`},
        {val:'sq-lights', label:'Commander Grille Guard — Square × 2 Crossbars with Light Bar Cutouts (+$1,100)', sub:`KLM-${ggModelBase}-02121000...`},
+       {val:'headlight', label:'Commander Grille Guard + Headlight Guards (+$1,400)', sub:'KLM-201041019-1XX03050001 — Always w/ Clevis Ears — 2019+ RAM 2500/3500/4500/5500'},
      ],
     },
     // GG clevis hook mounts (sq-solid / sq-lights only)
@@ -3402,6 +3410,16 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
      choices:()=>[
        {val:'smooth', label:'Smooth Face — No Clevis Hook Mounts'},
        {val:'clevis', label:'With Clevis Hook Mounts', sub:'Required for Monster Hooks on the grille guard'},
+     ],
+    },
+    // Headlight Guard center section (only when gg-config === 'headlight')
+    {key:'gg-hl-config', label:'Headlight Guard — Center Section', badge:'req',
+     condition:(sel)=>sel['gg-config']==='headlight',
+     choices:()=>[
+       {val:'none',        label:'No Center Light Bar',                                         sub:'KLM-201041019-11103050001', parts:[{pn:'KLM-201041019-11103050001',qty:1}]},
+       {val:'20-sr',       label:'20" SR Series Light (+$670)',  sub:'RIG920314 — KLM-201041019-12103050001', parts:[{pn:'KLM-201041019-12103050001',qty:1}]},
+       {val:'360-connect', label:'30" Rigid 360-Connect (+$2,100)', sub:'RIG36306 — KLM-201041019-11903050001', parts:[{pn:'KLM-201041019-11903050001',qty:1}]},
+       {val:'sr-camera',   label:'SR Light + Camera Mount',         sub:'KLM-201041019-11703050001', parts:[{pn:'KLM-201041019-11703050001',qty:1}]},
      ],
     },
     // End cap — pickup only (CC auto-selects 2.375")
@@ -3546,8 +3564,14 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
         // Grille guard
         const gg=sel['gg-config'];
         const clevis=gg==='headlight'||sel['gg-clevis']==='clevis';
-        const ggpn=ggPN(gg,clevis);
-        if(ggpn) parts.push({section:'Grille Guard',pn:ggpn,qty:1});
+        if(gg==='headlight'){
+          const hlMap={'none':'KLM-201041019-11103050001','20-sr':'KLM-201041019-12103050001','360-connect':'KLM-201041019-11903050001','sr-camera':'KLM-201041019-11703050001'};
+          const hlpn=hlMap[sel['gg-hl-config']];
+          if(hlpn) parts.push({section:'Grille Guard',pn:hlpn,qty:1});
+        } else {
+          const ggpn=ggPN(gg,clevis);
+          if(ggpn) parts.push({section:'Grille Guard',pn:ggpn,qty:1});
+        }
 
         // GG light bars (sq-lights → 2 × SR-Series)
         if(gg==='sq-lights'){
@@ -8009,9 +8033,9 @@ const CATALOG = [
        choices:()=>[
          {val:'none',         label:'No DSS'},
          {val:'bracket-only', label:'Add DSS Bracket Only',
-          sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+          sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
          {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
-          parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+          parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
@@ -8035,8 +8059,8 @@ const CATALOG = [
       parts.push({section:'Shocks (Included)',pn:'10015855',qty:2});
       parts.push({section:'Shocks (Included)',pn:'10015798',qty:2});
       if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
-      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(true, !!sel.rear, true, false).forEach(p=>parts.push(p));
@@ -8144,10 +8168,10 @@ const CATALOG = [
          const opts=[
            {val:'none',         label:'No Steering Stabilizer'},
            {val:'bracket-only', label:'Add DSS Bracket Only',
-            sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+            sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
            {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
             sub:'4x4 only — bracket + (2) Raptor 2.0 Monotube Shocks',
-            parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+            parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
          ];
          if(isOv) opts.push({val:'psc', label:'PSC BIG BORE XD DDS Steering Kit (80435)',
            sub:'Required for proper function with 6" Overlander front lift — 2018-2025 Ford F-450/F-550 4WD',
@@ -8215,8 +8239,8 @@ const CATALOG = [
         if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
       }
       if(sel.dss==='psc')          parts.push({section:'Steering Stabilizer',pn:'80435',qty:1});
-      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const isBoth=sel.scope==='both';
       const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
       if(is2stageRear){
@@ -8233,7 +8257,7 @@ const CATALOG = [
       return parts;
     },
   }, '402023023', false, 'cc'), {
-    dss:[{pn:'10015862',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
+    dss:[{pn:'16978',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
     arms:{pn:'10034532',note:'2023+ Ford F-450/F-550/F-600 CC Adjustable Radius Arms'},
     headacheRack:{
       variants:[{val:'stomper', label:'8\'4" "Stomper" Headache Rack — Pickup Box Conversion', pn:'KLM-802022023-183600'}],
@@ -8341,10 +8365,10 @@ const CATALOG = [
          const opts=[
            {val:'none',         label:'No Steering Stabilizer'},
            {val:'bracket-only', label:'Add DSS Bracket Only',
-            sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+            sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
            {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
             sub:'4x4 only — bracket + (2) Raptor 2.0 Monotube Shocks',
-            parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+            parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
          ];
          if(isOv) opts.push({val:'psc', label:'PSC BIG BORE XD DDS Steering Kit (80435)',
            sub:'Required for proper function with 6" Overlander front lift — 2018-2025 Ford F-450/F-550 4WD',
@@ -8412,8 +8436,8 @@ const CATALOG = [
         if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
       }
       if(sel.dss==='psc')          parts.push({section:'Steering Stabilizer',pn:'80435',qty:1});
-      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const isBoth=sel.scope==='both';
       const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
       if(is2stageRear){
@@ -8430,7 +8454,7 @@ const CATALOG = [
       return parts;
     },
   }, '402024023', false, 'cc'), {
-    dss:[{pn:'10015862',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
+    dss:[{pn:'16978',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
     arms:{pn:'10034532',note:'2023+ Ford F-450/F-550/F-600 CC Adjustable Radius Arms'},
     headacheRack:{
       variants:[{val:'stomper', label:'8\'4" "Stomper" Headache Rack — Pickup Box Conversion', pn:'KLM-802022023-183600'}],
@@ -8530,10 +8554,10 @@ const CATALOG = [
          const opts=[
            {val:'none',         label:'No Steering Stabilizer'},
            {val:'bracket-only', label:'Add DSS Bracket Only',
-            sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+            sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
            {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
             sub:'4x4 only — bracket + (2) Raptor 2.0 Monotube Shocks',
-            parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+            parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
          ];
          if(isOv) opts.push({val:'psc', label:'PSC BIG BORE XD DDS Steering Kit (80435)',
            sub:'Required for proper function with 6" Overlander front lift — 2018-2025 Ford F-450/F-550 4WD',
@@ -8581,8 +8605,8 @@ const CATALOG = [
         if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
       }
       if(sel.dss==='psc')          parts.push({section:'Steering Stabilizer',pn:'80435',qty:1});
-      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss')         {parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const isBoth=sel.scope==='both';
       const cM={slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
@@ -8590,7 +8614,7 @@ const CATALOG = [
       return parts;
     },
   }, '402032023', false, 'cc'), {
-    dss:[{pn:'10015862',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
+    dss:[{pn:'16978',note:'2023+ Ford F-450/F-550/F-600 Pickup & Chassis Cab 4WD Dual Shock Steering Stabilizer Bracket, No Shocks'}],
     arms:{pn:'10034532',note:'2023+ Ford F-450/F-550/F-600 CC Adjustable Radius Arms'},
     headacheRack:{
       variants:[{val:'stomper', label:'8\'4" "Stomper" Headache Rack — Pickup Box Conversion', pn:'KLM-802022023-183600'}],
@@ -8674,9 +8698,9 @@ const CATALOG = [
        choices:()=>[
          {val:'none',         label:'No DSS'},
          {val:'bracket-only', label:'Add DSS Bracket Only',
-          sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+          sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
          {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
-          parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+          parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
@@ -8722,8 +8746,8 @@ const CATALOG = [
       if(sel.shocks==='mono'&&sel.scope!=='rear-only')  parts.push({section:'Shocks',pn:'10015855',qty:2});
       if(sel.shocks==='mono'&&sel.scope!=='front-only'&&sel.rear!=='2stage-hitch'&&sel.rear!=='2stage-nohitch') parts.push({section:'Shocks',pn:'10015798',qty:2});
       if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
-      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
       const isBothCtrl=sel.scope==='both';
       if(is2stageRear){
@@ -8817,9 +8841,9 @@ const CATALOG = [
        choices:()=>[
          {val:'none',         label:'No DSS'},
          {val:'bracket-only', label:'Add DSS Bracket Only',
-          sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+          sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
          {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
-          parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+          parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
@@ -8865,8 +8889,8 @@ const CATALOG = [
       if(sel.shocks==='mono'&&sel.scope!=='rear-only')  parts.push({section:'Shocks',pn:'10015855',qty:2});
       if(sel.shocks==='mono'&&sel.scope!=='front-only'&&sel.rear!=='2stage-hitch'&&sel.rear!=='2stage-nohitch') parts.push({section:'Shocks',pn:'10015798',qty:2});
       if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
-      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
       const isBothCtrl=sel.scope==='both';
       if(is2stageRear){
@@ -8943,9 +8967,9 @@ const CATALOG = [
        choices:()=>[
          {val:'none',         label:'No DSS'},
          {val:'bracket-only', label:'Add DSS Bracket Only',
-          sub:'4x4 only — bracket, no shocks', parts:[{pn:'10015862',qty:1}]},
+          sub:'4x4 only — bracket, no shocks', parts:[{pn:'16978',qty:1}]},
          {val:'dss',          label:'Add DSS Bracket, Kelderman-Raptor Shocks',
-          parts:[{pn:'10015862',qty:1},{pn:'10003382',qty:2}]},
+          parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
@@ -8970,8 +8994,8 @@ const CATALOG = [
       if(sel.shocks==='mono'&&sel.scope!=='rear-only')  parts.push({section:'Shocks',pn:'10015855',qty:2});
       if(sel.shocks==='mono'&&sel.scope!=='front-only') parts.push({section:'Shocks',pn:'10015798',qty:2});
       if(sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10034532',qty:1});
-      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
+      if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+      if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'16978',qty:1});
       const cM={slkd:[{pn:'SLKD2WD',qty:1}],'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009335',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', true, false).forEach(p=>parts.push(p));
@@ -9863,7 +9887,7 @@ const CATALOG = [
       tandem:[
         ['KLM16700','KLM16703','KLM16706'],  // 3.0"
         ['KLM16701','KLM16704','KLM16707'],  // 3.5"
-        ['KLM16702','KLM16705','KLM21290'],  // 3.875"
+        ['KLM16702','KLM16705','KLM16708'],  // 3.875"
       ],
       triple:[
         ['KLM16709','KLM16712','KLM16715'],  // 3.0"
