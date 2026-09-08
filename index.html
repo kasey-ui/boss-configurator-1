@@ -1020,7 +1020,7 @@ const P = {
   'HCVLK':    {desc:'Kit — Haldex Height Control Valve w/ Front Linkage — Mechanical, 1 Corner',                      msrp:175},
   '30664':    {desc:'Kit — Dual VIAIR Air Compressor / Controls Box — Mechanical 2-Corner, w/Dryer, Dual Tank, w/Dump Valves', msrp:3200},
   'ESLK3H2':  {desc:'Air Lift 3H Electronic Air Control System',                                                       msrp:4475},
-  '10040870': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer (Spare Tire Keeper)',      msrp:4675},
+  '10040870': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer',                         msrp:4675},
   '10040872': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer (Spare Tire Keeper) — 2017+ Ford Super Duty', msrp:4675},
   '10032642': {desc:'Kit — Air Lift 3H/3P Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire — 2023+ Ford SD F250/350/450 Pickup', msrp:4675},
   '10037368': {desc:'Kit — Air Lift 3H Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire — 2025+ RAM 2500/3500 Pickup', msrp:4675},
@@ -1438,10 +1438,11 @@ const P = {
 
   // ── Ford CC Overlander 2023+ ──────────────────────────────────────
   '10036905': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC 4WD, 6" Lift Control Arm Front — Overlander, Adjustable Radius Arms (REQUIRES PSC SK756)', msrp:4630},
-  '10046218': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 3" Lift Control Arm Front, 4WD — Includes Radius Arms, Sway Bar & Bushings, Kryptonite End Links (Requires PSC SK756; RAP-10124 Shocks Not Included)', msrp:5430},
+  '10046218': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 3" Lift Control Arm Front, 4WD — Includes Radius Arms, Sway Bar & Bushings, Kryptonite End Links (Requires PSC SK756; Shocks: RAP-10124 / 10006722 ×2, Not Included)', msrp:5430},
   'SK756':    {desc:'PSC Hydraulic Assist — 2023+ Ford F-450/F-550/F-600 Chassis Cab 4WD (Required for 3" and 6" Overlander Lift)', msrp:4450},
   '10035930': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 6" Lift 4-Link Rear — Overlander, 84"/108"/120" CA', msrp:5250},
-  '10045787': {desc:'Prototype — Kit — 3" Lift 4-Link Rear — 2023+ Ford F-450/F-550/F-600 Chassis Cab',           msrp:5250},
+  '10041754': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 6" Lift 4-Link Rear — Stomper, 60" CA (Ext. DEF Tank, Integrated Box Mounts, Pickup Box Conversion)', msrp:5250},
+  '10045787': {desc:'Prototype — Kit — 3" Lift 4-Link Rear — 2023+ Ford F-450/F-550/F-600 Chassis Cab (Shocks: RAP-10175 / 10015798 ×2, Not Included)', msrp:5250},
   '80435':    {desc:'PSC BIG BORE XD DDS Steering Kit — 2018-2025 Ford F-450/F-550 4WD',                      msrp:4750},
   '10037611': {desc:'Kelderman-Raptor 2.0 Stem Mount RR Shock, Ext:25.3"/Comp:15.2" — Overland Front (RAP-10188)', msrp:480},
   '10037612': {desc:'Kelderman-Raptor 2.0 Bushing Mount RR Shock, Ext:30.5"/Comp:18.5" — Overland Rear (RAP-10189)', msrp:480},
@@ -1844,10 +1845,10 @@ function gmHDPickup2020(id, make, model, label) {
           parts:[{pn:'10013505',qty:2},{pn:'10036751',qty:2}]},
        ],
       },
-      // Air controls — choices vary by height; leveling only shows when rear is included
+      // Air controls — choices vary by height; front-only scope has no air ride so never show
       {key:'ctrl', label:'Air Controls', badge:'req',
        hint:'Select your air management system.',
-       condition:(sel)=>(sel.height==='level'||sel.height==='rear')?(sel.scope&&sel.scope!=='front-only'):(!!sel.scope&&!!sel.height),
+       condition:(sel)=>!!sel.scope&&sel.scope!=='front-only'&&!!sel.height,
        choices:(kit,sel)=>(sel.height==='level'||sel.height==='rear')
          ? [{val:'none',      label:'No Controls — Manual Fill',
              sub:'Fill via shop air — no compressor or automation'},
@@ -2205,7 +2206,7 @@ function gmKodiakCC(id, model, label) {
   return {
     id, yr_from:2003, yr_to:2009,
     make:'Chevrolet / GMC', model, label,
-    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'A la carte front and/or rear'}],
+    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'Front and/or rear'}],
     steps:[
       {key:'scope', label:'Suspension Scope', badge:'req',
        hint:'Select which end(s) of the vehicle you want to configure.',
@@ -2324,7 +2325,7 @@ function ramCC2019(id, model, label, yrTo=null) {
   return {
     id, yr_from:2019, yr_to:yrTo,
     make:'RAM', model, label,
-    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'A la carte front and/or rear'}],
+    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'Front and/or rear'}],
     steps:[
       {key:'scope', label:'Suspension Scope', badge:'req',
        hint:'Select which end(s) of the vehicle you want to configure.',
@@ -2448,13 +2449,215 @@ function ramCC2019(id, model, label, yrTo=null) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// Helper — RAM 4500/5500 Chassis Cab 2025+
+// One platform: 6" Overlander Lift OR Stock Height
+// ═══════════════════════════════════════════════════════════════
+function ramCC2025(id, model, label) {
+  return {
+    id, yr_from:2025, yr_to:null,
+    make:'RAM', model, label,
+    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'6" Overlander Lift or Stock Height'}],
+    steps:[
+      {key:'system', label:'Suspension System', badge:'req',
+       hint:'Select the suspension system type for this vehicle.',
+       choices:()=>[
+         {val:'overlander', label:'6" Overlander Lift',        sub:'2025+ — 6" lift control arm front, 4WD'},
+         {val:'stock',      label:'Stock Height', sub:'Stock height front and/or rear'},
+       ],
+      },
+      // ── Overlander steps ─────────────────────────────────
+      {key:'scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>sel.system==='overlander',
+       choices:()=>[
+         {val:'both',       label:'Front + Rear', sub:'Complete 6" Overlander lift system — 4WD'},
+         {val:'front-only', label:'Front Only',   sub:'6" Overlander front lift only'},
+         {val:'rear-only',  label:'Rear Only',    sub:'6" Overlander rear lift only'},
+       ],
+      },
+      {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
+       hint:'Strongly recommended for chassis cab applications. PSC Hydraulic Assist also available.',
+       condition:(sel)=>sel.system==='overlander'&&!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none',        label:'No Steering Stabilizer'},
+         {val:'bracket-only',label:'Add DSS Bracket Only (10012103)',             sub:'Bracket only — no shocks', parts:[{pn:'10012103',qty:1}]},
+         {val:'dss',         label:'Add DSS Bracket + Raptor Shocks',             sub:'10012103 + (2) Raptor 2.0 Monotube Shocks (10003382)', parts:[{pn:'10012103',qty:1},{pn:'10003382',qty:2}]},
+         {val:'psc-nolane',  label:'PSC Hydraulic Assist — Without Lane Assist (SK859)', sub:'SK859 — 2025+ RAM 4500/5500, without lane assist', parts:[{pn:'SK859',qty:1}]},
+         {val:'psc-lane',    label:'PSC Hydraulic Assist — With Lane Assist (SK860)',    sub:'SK860 — 2025+ RAM 4500/5500, with lane assist',    parts:[{pn:'SK860',qty:1}]},
+       ],
+      },
+      {key:'front-shock', label:'Front Shocks', badge:'opt',
+       condition:(sel)=>sel.system==='overlander'&&!!sel.scope&&sel.scope!=='rear-only',
+       choices:()=>[
+         {val:'none', label:'No Front Shocks'},
+         {val:'rr',   label:'Raptor 2.0 Remote Reservoir Front Shocks (10003383 ×2)',
+          sub:'(2) Kelderman-Raptor 2.0 Remote Reservoir shocks + (2) clamp brackets (10036751)',
+          parts:[{pn:'10003383',qty:2},{pn:'10036751',qty:2}]},
+       ],
+      },
+      {key:'rear-shock', label:'Rear Shocks', badge:'opt',
+       condition:(sel)=>sel.system==='overlander'&&!!sel.scope&&sel.scope!=='front-only',
+       choices:()=>[
+         {val:'none', label:'No Rear Shocks'},
+         {val:'std',  label:'Raptor 2.0 Monotube — Standard Valving (10037608 ×2)', parts:[{pn:'10037608',qty:2}]},
+         {val:'hd',   label:'Raptor 2.0 Monotube — HD Valving (10037609 ×2)',       parts:[{pn:'10037609',qty:2}]},
+       ],
+      },
+      {key:'ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>sel.system==='overlander'&&!!sel.scope,
+       choices:(kit,sel)=>{
+         const isBoth=sel.scope==='both';
+         const opts=[
+           {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+           {val:'dual-mech',label:'Mechanical Self-Leveling — Dual Compressor (30664)',
+            sub:'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve', parts:[{pn:'30664',qty:1}]},
+         ];
+         if(isBoth){
+           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',         sub:'4-corner independent electronic control',                                        parts:[{pn:'ESLK3H2',qty:1}]});
+           opts.push({val:'eslk3h2-console', label:'Air Lift 3H + Overhead Console', sub:'ESLK3H2 + 10009358 overhead console mount',                                     parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
+           opts.push({val:'alp4',            label:'ALP4',                           sub:'10040870 — ALP4 4-corner electronic controls',                                  parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'alp4-console',    label:'ALP4 + Overhead Console Mount',  sub:'10040870 + 10009358 — ALP4 4-corner electronic controls + overhead console mount',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
+         }
+         return opts;
+       },
+      },
+      // ── Stock Height steps ────────────────────────────────
+      {key:'st-scope', label:'Suspension Scope', badge:'req',
+       condition:(sel)=>sel.system==='stock',
+       choices:()=>[
+         {val:'both',       label:'Front + Rear', sub:'Complete front and rear air suspension system'},
+         {val:'front-only', label:'Front Only',   sub:'2-Stage front kit — factory or existing rear'},
+         {val:'rear-only',  label:'Rear Only',    sub:'Rear kit — factory or existing front'},
+       ],
+      },
+      {key:'front', label:'Front Kit', badge:'req',
+       condition:(sel)=>sel.system==='stock'&&!!sel['st-scope']&&sel['st-scope']!=='rear-only',
+       choices:()=>[
+         {val:'std', label:'2-Stage Front Air Suspension — Standard Valving', sub:'Kelderman-Raptor std valving shocks', parts:[{pn:'10004488',qty:1}]},
+         {val:'hd',  label:'2-Stage Front Air Suspension — HD Valving',       sub:'Kelderman-Raptor HD valving shocks',  parts:[{pn:'10013641',qty:1}]},
+       ],
+      },
+      {key:'rear', label:'Rear Suspension', badge:'req',
+       condition:(sel)=>sel.system==='stock'&&!!sel['st-scope']&&sel['st-scope']!=='front-only'&&(!!sel.front||sel['st-scope']==='rear-only'),
+       choices:()=>[
+         {val:'4link-stock',    label:'2008+ 4-Link Rear — Stock Height',             parts:[{pn:'10010498',qty:1}]},
+         {val:'4link-low',      label:'2008+ 4-Link Rear — 2.5" Lowering',           parts:[{pn:'D4RX-45-CC-13',qty:1}]},
+         {val:'2stage-hitch',   label:'2008+ 2-Stage Rear — w/ 2.5" Receiver Hitch', parts:[{pn:'10005361',qty:1}]},
+         {val:'2stage-nohitch', label:'2008+ 2-Stage Rear — No Receiver Hitch',       parts:[{pn:'10011546',qty:1}]},
+       ],
+      },
+      {key:'st-rear-shock', label:'4-Link Rear Shocks', badge:'req',
+       condition:(sel)=>sel.system==='stock'&&(sel.rear==='4link-stock'||sel.rear==='4link-low'),
+       choices:()=>[
+         {val:'std', label:'Raptor 2.0 Monotube — Standard Valving (10037608 ×2)', parts:[{pn:'10037608',qty:2}]},
+         {val:'hd',  label:'Raptor 2.0 Monotube — HD Valving (10037609 ×2)',       parts:[{pn:'10037609',qty:2}]},
+       ],
+      },
+      {key:'st-dss', label:'Dual Steering Stabilizer', badge:'opt',
+       condition:(sel)=>sel.system==='stock'&&!!sel['st-scope']&&sel['st-scope']!=='rear-only'&&!!sel.front&&(sel['st-scope']==='front-only'||!!sel.rear),
+       choices:()=>[
+         {val:'none',       label:'No DSS'},
+         {val:'dss',        label:'Add DSS Bracket Only (10012103)', sub:'Bracket only — no shocks', parts:[{pn:'10012103',qty:1}]},
+         {val:'dss-shocks', label:'Add DSS Bracket + Kelderman-Raptor Shocks',       sub:'10012103 + (2) Raptor 2.0 Monotube Shocks (10003382)', parts:[{pn:'10012103',qty:1},{pn:'10003382',qty:2}]},
+       ],
+      },
+      {key:'st-ctrl', label:'Air Controls', badge:'req',
+       condition:(sel)=>{
+         if(sel.system!=='stock') return false;
+         const s=sel['st-scope']; if(!s) return false;
+         if(s==='front-only') return !!sel.front;
+         if(s==='rear-only')  return !!sel.rear;
+         return !!sel.front&&!!sel.rear;
+       },
+       choices:(kit,sel)=>{
+         const s=sel['st-scope'];
+         const has4link=sel.rear==='4link-stock'||sel.rear==='4link-low';
+         const is2stage=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
+         const isBoth=s==='both';
+         if(s==='front-only') return [{val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'}];
+         if(is2stage){
+           if(isBoth) return [
+             {val:'none',   label:'No Controls — Manual Fill'},
+             {val:'slkdwd', label:'Mechanical Self-Leveling — Single Compressor (SLKDWD + 2× HCVLK)',
+              sub:'SLKDWD + (2) HCVLK', parts:[{pn:'SLKDWD',qty:1},{pn:'HCVLK',qty:2}]},
+           ];
+           return [
+             {val:'none',   label:'No Controls — Manual Fill'},
+             {val:'arck',   label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
+             {val:'eslk1al',label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+             {val:'slkdwd', label:'Mechanical Self-Leveling — Single Compressor (SLKDWD)', sub:'SLKDWD', parts:[{pn:'SLKDWD',qty:1}]},
+           ];
+         }
+         const opts=[
+           {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air'},
+           {val:'slkd2wd',  label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
+            sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD',
+            parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+           {val:'dual-mech',label:'Mechanical Self-Leveling — Dual Compressor (30664)',
+            sub:isBoth?'30664 + (2) HCVLK':'30664',
+            parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+         ];
+         if(isBoth&&has4link){
+           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',                    sub:'4-corner independent electronic control',                             parts:[{pn:'ESLK3H2',qty:1}]});
+           opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console', sub:'3H system + 2019+ RAM HD overhead console remote mount (10009358)', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
+         }
+         return opts;
+       },
+      },
+    ],
+    buildParts:(kit,sel)=>{
+      const parts=[];
+      if(sel.system==='overlander'){
+        const s=sel.scope;
+        if(s!=='rear-only')  parts.push({section:'Front Suspension',pn:'10038135',qty:1});
+        if(s!=='front-only') parts.push({section:'Rear Suspension', pn:'10039931',qty:1});
+        const d=sel.dss;
+        if(d==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
+        if(d==='dss'){parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
+        if(d==='psc-nolane') parts.push({section:'Steering Stabilizer',pn:'SK859',qty:1});
+        if(d==='psc-lane')   parts.push({section:'Steering Stabilizer',pn:'SK860',qty:1});
+        if(sel['front-shock']==='rr'){parts.push({section:'Shocks',pn:'10003383',qty:2});parts.push({section:'Shocks',pn:'10036751',qty:2});}
+        if(sel['rear-shock']==='std') parts.push({section:'Shocks',pn:'10037608',qty:2});
+        if(sel['rear-shock']==='hd')  parts.push({section:'Shocks',pn:'10037609',qty:2});
+        const cM={'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}],'alp4-console':[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]};
+        (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+        if(sel.ctrl==='none') mfLine(s!=='rear-only',s!=='front-only',true,false).forEach(p=>parts.push(p));
+      } else if(sel.system==='stock'){
+        const s=sel['st-scope'];
+        if(sel.front){const m={std:'10004488',hd:'10013641'};parts.push({section:'Front Suspension',pn:m[sel.front],qty:1});}
+        const stDss=sel['st-dss'];
+        if(stDss==='dss'||stDss==='dss-shocks') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
+        if(stDss==='dss-shocks') parts.push({section:'Shocks',pn:'10003382',qty:2});
+        if(sel.rear){const m={'4link-stock':'10010498','4link-low':'D4RX-45-CC-13','2stage-hitch':'10005361','2stage-nohitch':'10011546'};parts.push({section:'Rear Suspension',pn:m[sel.rear],qty:1});}
+        if(sel['st-rear-shock']){const spn=sel['st-rear-shock']==='std'?'10037608':'10037609';parts.push({section:'Shocks',pn:spn,qty:2});}
+        const isBoth=s==='both';
+        const is2stage=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
+        const ctrl=sel['st-ctrl'];
+        if(is2stage){
+          if(ctrl==='slkdwd')(isBoth?[{pn:'SLKDWD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKDWD',qty:1}]).forEach(p=>parts.push({section:'Air Controls',...p}));
+          if(ctrl==='arck')   parts.push({section:'Air Controls',pn:'ARCK',qty:1});
+          if(ctrl==='eslk1al')parts.push({section:'Air Controls',pn:'ESLK1AL',qty:1});
+          if(ctrl==='none') mfLine(s!=='rear-only',s!=='front-only',false,true).forEach(p=>parts.push(p));
+        } else if(s==='front-only'){
+          if(ctrl==='none') mfLine(true,false,false,false).forEach(p=>parts.push(p));
+        } else {
+          const c={slkd2wd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]};
+          (c[ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
+          if(ctrl==='none') mfLine(s!=='rear-only'&&!!sel.front,s!=='front-only'&&!!sel.rear,true,false).forEach(p=>parts.push(p));
+        }
+      }
+      return parts;
+    },
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════
 // Helper — RAM 4500/5500 Chassis Cab 2013-2018
 // ═══════════════════════════════════════════════════════════════
 function ramCC2013(id, model, label, yrFrom=2013, yrTo=2018, frontPn='KLM21525') {
   return {
     id, yr_from:yrFrom, yr_to:yrTo,
     make:'RAM', model, label,
-    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'A la carte front and/or rear'}],
+    kits:[{id:id+'-kit', label:'Air Suspension System', sub:'Front and/or rear'}],
     steps:[
       {key:'scope', label:'Suspension Scope', badge:'req',
        hint:'Select which end(s) of the vehicle you want to configure.',
@@ -5770,14 +5973,15 @@ const CATALOG = [
          if(!sel.axle&&sel.scope!=='front-only') return false;
          if(sel.height==='stock') return sel.scope!=='rear-only';
          if(sel.height==='5-6')   return true;
+         if(sel.height==='6-8')   return true;
          return false;
        },
        choices:(kit,sel)=>{
-         if(sel.height==='5-6'){
+         if(sel.height==='5-6'||sel.height==='6-8'){
            const s=sel.scope;
            const opts=[{val:'none',label:'No Shocks'}];
-           if(s==='both')       opts.push({val:'rr-56',  label:'Remote Reservoir Shocks (Front + Rear)',  sub:'10004022 mounting kit + (2) 10003381 front + (2) 10003383 rear', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}]});
-           if(s==='front-only') opts.push({val:'rr-56-f',label:'Remote Reservoir Front Shocks',           sub:'(2) 10003381', parts:[{pn:'10003381',qty:2}]});
+           if(s==='both')       opts.push({val:'rr-56',  label:'Remote Reservoir Shocks (Front + Rear)',  sub:'10004022 clamp kit + (2) 10003381 front + (2) 10003383 rear', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}]});
+           if(s==='front-only') opts.push({val:'rr-56-f',label:'Remote Reservoir Front Shocks',           sub:'(2) 10003381 + 10004022 clamp kit', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2}]});
            if(s==='rear-only')  opts.push({val:'rr-56-r',label:'Remote Reservoir Rear Shocks',            sub:'(2) 10003383 + (4) 80227 clamp brackets', parts:[{pn:'10003383',qty:2},{pn:'80227',qty:4}]});
            return opts;
          }
@@ -5894,14 +6098,15 @@ const CATALOG = [
          if(!sel.axle||!sel.scope) return false;
          if(sel.height==='stock') return sel.scope!=='rear-only';
          if(sel.height==='5-6')   return true;
+         if(sel.height==='6-8')   return true;
          return false;
        },
        choices:(kit,sel)=>{
-         if(sel.height==='5-6'){
+         if(sel.height==='5-6'||sel.height==='6-8'){
            const s=sel.scope;
            const opts=[{val:'none',label:'No Shocks'}];
-           if(s==='both')       opts.push({val:'rr-56',  label:'Remote Reservoir Shocks (Front + Rear)',  sub:'10004022 mounting kit + (2) 10003381 front + (2) 10003383 rear', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}]});
-           if(s==='front-only') opts.push({val:'rr-56-f',label:'Remote Reservoir Front Shocks',           sub:'(2) 10003381', parts:[{pn:'10003381',qty:2}]});
+           if(s==='both')       opts.push({val:'rr-56',  label:'Remote Reservoir Shocks (Front + Rear)',  sub:'10004022 clamp kit + (2) 10003381 front + (2) 10003383 rear', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}]});
+           if(s==='front-only') opts.push({val:'rr-56-f',label:'Remote Reservoir Front Shocks',           sub:'(2) 10003381 + 10004022 clamp kit', parts:[{pn:'10004022',qty:1},{pn:'10003381',qty:2}]});
            if(s==='rear-only')  opts.push({val:'rr-56-r',label:'Remote Reservoir Rear Shocks',            sub:'(2) 10003383 + (4) 80227 clamp brackets', parts:[{pn:'10003383',qty:2},{pn:'80227',qty:4}]});
            return opts;
          }
@@ -8258,6 +8463,10 @@ const CATALOG = [
         if(sel.scope!=='front-only') parts.push({section:'Rear Suspension', pn:'10035930',qty:1});
         if(sel['front-shocks']==='rr') parts.push({section:'Shocks',pn:'10037611',qty:2});
         if(sel['rear-shocks']==='rr')  parts.push({section:'Shocks',pn:'10037612',qty:2});
+        {const hF=sel['front-shocks']==='rr', hR=sel['rear-shocks']==='rr';
+         if(hF&&hR) parts.push({section:'Shocks',pn:'10004022',qty:1});
+         else if(hF) parts.push({section:'Shocks',pn:'80227',qty:4});
+         else if(hR) parts.push({section:'Shocks',pn:'80227',qty:4});}
       } else {
         const rMap={stock:'10014700',lowering:'10029801','2stage-hitch':'10013346','2stage-nohitch':'10013347'};
         const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
@@ -8467,6 +8676,10 @@ const CATALOG = [
         if(sel.scope!=='front-only') parts.push({section:'Rear Suspension', pn:'10035930',qty:1});
         if(sel['front-shocks']==='rr') parts.push({section:'Shocks',pn:'10037611',qty:2});
         if(sel['rear-shocks']==='rr')  parts.push({section:'Shocks',pn:'10037612',qty:2});
+        {const hF=sel['front-shocks']==='rr', hR=sel['rear-shocks']==='rr';
+         if(hF&&hR) parts.push({section:'Shocks',pn:'10004022',qty:1});
+         else if(hF) parts.push({section:'Shocks',pn:'80227',qty:4});
+         else if(hR) parts.push({section:'Shocks',pn:'80227',qty:4});}
       } else {
         const rMap={stock:'10014700',lowering:'10029801','2stage-hitch':'10013346','2stage-nohitch':'10013347'};
         const is2stageRear=sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch';
@@ -8649,6 +8862,10 @@ const CATALOG = [
         if(sel.scope!=='front-only') parts.push({section:'Rear Suspension', pn:'10035930',qty:1});
         if(sel['front-shocks']==='rr') parts.push({section:'Shocks',pn:'10037611',qty:2});
         if(sel['rear-shocks']==='rr')  parts.push({section:'Shocks',pn:'10037612',qty:2});
+        {const hF=sel['front-shocks']==='rr', hR=sel['rear-shocks']==='rr';
+         if(hF&&hR) parts.push({section:'Shocks',pn:'10004022',qty:1});
+         else if(hF) parts.push({section:'Shocks',pn:'80227',qty:4});
+         else if(hR) parts.push({section:'Shocks',pn:'80227',qty:4});}
       } else {
         const rearPn = sel.rear==='lowering' ? '10029801' : sel.rear==='stock' ? '10014700' : null;
         if(sel.scope!=='rear-only'&&sel.front)  parts.push({section:'Front Suspension',pn:sel.front,qty:1});
@@ -10453,8 +10670,8 @@ const CATALOG = [
             opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console',
               sub:'3H system + 2019+ RAM HD overhead console remote mount (10009358)',
               parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-            opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',
-              sub:'10040870 — 4-corner electronic w/ spare tire keeper',
+            opts.push({val:'alp4', label:'ALP4',
+              sub:'10040870 — ALP4 4-corner electronic controls',
               parts:[{pn:'10040870',qty:1}]});
             opts.push({val:'alp4-console', label:'ALP4 + Overhead Console',
               sub:'10040870 + 10009358 overhead console remote mount',
@@ -10956,8 +11173,8 @@ const CATALOG = [
             opts.push({val:'eslk3h2-console', label:'Air Lift 3H Electronic + Overhead Console',
               sub:'3H system + 2019+ RAM HD overhead console remote mount (10009358)',
               parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-            opts.push({val:'alp4', label:'ALP4 — Spare Tire Keeper',
-              sub:'10040870 — 4-corner electronic w/ spare tire keeper',
+            opts.push({val:'alp4', label:'ALP4',
+              sub:'10040870 — ALP4 4-corner electronic controls',
               parts:[{pn:'10040870',qty:1}]});
             opts.push({val:'alp4-console', label:'ALP4 + Overhead Console',
               sub:'10040870 + 10009358 overhead console remote mount',
@@ -13221,197 +13438,18 @@ const CATALOG = [
   // ─────────────────────────────────────────────────────────────
   // RAM 4500 / 5500 Chassis Cab — 2025+ (6" Overlander Lift)
   // ─────────────────────────────────────────────────────────────
-  withBumpers({
-    id:'ram-cc-4500-2025',
-    yr_from:2025, yr_to:null,
-    make:'RAM', model:'RAM 4500 Chassis Cab',
-    label:'4500 Chassis Cab',
-    kits:[{id:'ram-cc-4500-2025-kit', label:'Air Suspension System', sub:'6" Overlander Lift — 4WD only'}],
-    steps:[
-      {key:'scope', label:'Suspension Scope', badge:'req',
-       hint:'Select which axles to equip with air suspension.',
-       choices:()=>[
-         {val:'both',       label:'Front + Rear', sub:'Complete 6" Overlander lift system — 4WD'},
-         {val:'front-only', label:'Front Only',   sub:'6" Overlander front lift only'},
-         {val:'rear-only',  label:'Rear Only',    sub:'6" Overlander rear lift only'},
-       ],
-      },
-      {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
-       hint:'Strongly recommended for chassis cab applications. PSC Hydraulic Assist also available.',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none',        label:'No Steering Stabilizer'},
-         {val:'bracket-only',label:'Add DSS Bracket Only (10012103)',
-          sub:'Bracket only — no shocks', parts:[{pn:'10012103',qty:1}]},
-         {val:'dss',         label:'Add DSS Bracket + Raptor Shocks',
-          sub:'10012103 + (2) Raptor 2.0 Monotube Shocks (10003382)',
-          parts:[{pn:'10012103',qty:1},{pn:'10003382',qty:2}]},
-         {val:'psc-nolane',  label:'PSC Hydraulic Assist — Without Lane Assist (SK859)',
-          sub:'SK859 — 2025+ RAM 4500/5500, without lane assist', parts:[{pn:'SK859',qty:1}]},
-         {val:'psc-lane',    label:'PSC Hydraulic Assist — With Lane Assist (SK860)',
-          sub:'SK860 — 2025+ RAM 4500/5500, with lane assist', parts:[{pn:'SK860',qty:1}]},
-       ],
-      },
-      {key:'front-shock', label:'Front Shocks', badge:'opt',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none', label:'No Front Shocks'},
-         {val:'rr',   label:'Raptor 2.0 Remote Reservoir Front Shocks (10003383 ×2)',
-          sub:'(2) Kelderman-Raptor 2.0 Remote Reservoir shocks + (2) clamp brackets (10036751)',
-          parts:[{pn:'10003383',qty:2},{pn:'10036751',qty:2}]},
-       ],
-      },
-      {key:'rear-shock', label:'Rear Shocks', badge:'opt',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='front-only',
-       choices:()=>[
-         {val:'none', label:'No Rear Shocks'},
-         {val:'std',  label:'Raptor 2.0 Monotube — Standard Valving (10037608 ×2)', parts:[{pn:'10037608',qty:2}]},
-         {val:'hd',   label:'Raptor 2.0 Monotube — HD Valving (10037609 ×2)',       parts:[{pn:'10037609',qty:2}]},
-       ],
-      },
-      {key:'ctrl', label:'Air Controls', badge:'req',
-       condition:(sel)=>!!sel.scope,
-       choices:(kit,sel)=>{
-         const isBoth=sel.scope==='both';
-         const opts=[
-           {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
-           {val:'dual-mech',label:'Mechanical Self-Leveling — Dual Compressor (30664)',
-            sub:'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
-            parts:[{pn:'30664',qty:1}]},
-         ];
-         if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',
-             sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
-           opts.push({val:'eslk3h2-console', label:'Air Lift 3H + Overhead Console Mount',
-             sub:'ESLK3H2 + 10009358 overhead console mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4',            label:'ALP4 — Spare Tire Keeper',
-             sub:'10040870 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040870',qty:1}]});
-           opts.push({val:'alp4-console',    label:'ALP4 + Overhead Console Mount',
-             sub:'10040870 + 10009358 — spare tire keeper w/ overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
-         }
-         return opts;
-       },
-      },
-    ],
-    buildParts:(kit,sel)=>{
-      const parts=[];
-      if(sel.scope!=='rear-only')  parts.push({section:'Front Suspension',pn:'10038135',qty:1});
-      if(sel.scope!=='front-only') parts.push({section:'Rear Suspension', pn:'10039931',qty:1});
-      const d=sel.dss;
-      if(d==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
-      if(d==='dss'){parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(d==='psc-nolane') parts.push({section:'Steering Stabilizer',pn:'SK859',qty:1});
-      if(d==='psc-lane')   parts.push({section:'Steering Stabilizer',pn:'SK860',qty:1});
-      if(sel['front-shock']==='rr'){parts.push({section:'Shocks',pn:'10003383',qty:2});parts.push({section:'Shocks',pn:'10036751',qty:2});}
-      if(sel['rear-shock']==='std') parts.push({section:'Shocks',pn:'10037608',qty:2});
-      if(sel['rear-shock']==='hd')  parts.push({section:'Shocks',pn:'10037609',qty:2});
-      const isBoth=sel.scope==='both';
-      const cM={'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}],'alp4-console':[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]};
-      (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only',sel.scope!=='front-only',true,false).forEach(p=>parts.push(p));
-      return parts;
-    },
-  }, null, null, null, ramSDBumper('_',null,null,'','','','401043025','201043025',null,false,false)),
-  withBumpers({
-    id:'ram-cc-5500-2025',
-    yr_from:2025, yr_to:null,
-    make:'RAM', model:'RAM 5500 Chassis Cab',
-    label:'5500 Chassis Cab',
-    kits:[{id:'ram-cc-5500-2025-kit', label:'Air Suspension System', sub:'6" Overlander Lift — 4WD only'}],
-    steps:[
-      {key:'scope', label:'Suspension Scope', badge:'req',
-       hint:'Select which axles to equip with air suspension.',
-       choices:()=>[
-         {val:'both',       label:'Front + Rear', sub:'Complete 6" Overlander lift system — 4WD'},
-         {val:'front-only', label:'Front Only',   sub:'6" Overlander front lift only'},
-         {val:'rear-only',  label:'Rear Only',    sub:'6" Overlander rear lift only'},
-       ],
-      },
-      {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
-       hint:'Strongly recommended for chassis cab applications. PSC Hydraulic Assist also available.',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none',        label:'No Steering Stabilizer'},
-         {val:'bracket-only',label:'Add DSS Bracket Only (10012103)',
-          sub:'Bracket only — no shocks', parts:[{pn:'10012103',qty:1}]},
-         {val:'dss',         label:'Add DSS Bracket + Raptor Shocks',
-          sub:'10012103 + (2) Raptor 2.0 Monotube Shocks (10003382)',
-          parts:[{pn:'10012103',qty:1},{pn:'10003382',qty:2}]},
-         {val:'psc-nolane',  label:'PSC Hydraulic Assist — Without Lane Assist (SK859)',
-          sub:'SK859 — 2025+ RAM 4500/5500, without lane assist', parts:[{pn:'SK859',qty:1}]},
-         {val:'psc-lane',    label:'PSC Hydraulic Assist — With Lane Assist (SK860)',
-          sub:'SK860 — 2025+ RAM 4500/5500, with lane assist', parts:[{pn:'SK860',qty:1}]},
-       ],
-      },
-      {key:'front-shock', label:'Front Shocks', badge:'opt',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none', label:'No Front Shocks'},
-         {val:'rr',   label:'Raptor 2.0 Remote Reservoir Front Shocks (10003383 ×2)',
-          sub:'(2) Kelderman-Raptor 2.0 Remote Reservoir shocks + (2) clamp brackets (10036751)',
-          parts:[{pn:'10003383',qty:2},{pn:'10036751',qty:2}]},
-       ],
-      },
-      {key:'rear-shock', label:'Rear Shocks', badge:'opt',
-       condition:(sel)=>!!sel.scope&&sel.scope!=='front-only',
-       choices:()=>[
-         {val:'none', label:'No Rear Shocks'},
-         {val:'std',  label:'Raptor 2.0 Monotube — Standard Valving (10037608 ×2)', parts:[{pn:'10037608',qty:2}]},
-         {val:'hd',   label:'Raptor 2.0 Monotube — HD Valving (10037609 ×2)',       parts:[{pn:'10037609',qty:2}]},
-       ],
-      },
-      {key:'ctrl', label:'Air Controls', badge:'req',
-       condition:(sel)=>!!sel.scope,
-       choices:(kit,sel)=>{
-         const isBoth=sel.scope==='both';
-         const opts=[
-           {val:'none',     label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
-           {val:'dual-mech',label:'Mechanical Self-Leveling — Dual Compressor (30664)',
-            sub:'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
-            parts:[{pn:'30664',qty:1}]},
-         ];
-         if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift 3H Electronic',
-             sub:'4-corner independent electronic control', parts:[{pn:'ESLK3H2',qty:1}]});
-           opts.push({val:'eslk3h2-console', label:'Air Lift 3H + Overhead Console Mount',
-             sub:'ESLK3H2 + 10009358 overhead console mount', parts:[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}]});
-           opts.push({val:'alp4',            label:'ALP4 — Spare Tire Keeper',
-             sub:'10040870 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040870',qty:1}]});
-           opts.push({val:'alp4-console',    label:'ALP4 + Overhead Console Mount',
-             sub:'10040870 + 10009358 — spare tire keeper w/ overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
-         }
-         return opts;
-       },
-      },
-    ],
-    buildParts:(kit,sel)=>{
-      const parts=[];
-      if(sel.scope!=='rear-only')  parts.push({section:'Front Suspension',pn:'10038135',qty:1});
-      if(sel.scope!=='front-only') parts.push({section:'Rear Suspension', pn:'10039931',qty:1});
-      const d=sel.dss;
-      if(d==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
-      if(d==='dss'){parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(d==='psc-nolane') parts.push({section:'Steering Stabilizer',pn:'SK859',qty:1});
-      if(d==='psc-lane')   parts.push({section:'Steering Stabilizer',pn:'SK860',qty:1});
-      if(sel['front-shock']==='rr'){parts.push({section:'Shocks',pn:'10003383',qty:2});parts.push({section:'Shocks',pn:'10036751',qty:2});}
-      if(sel['rear-shock']==='std') parts.push({section:'Shocks',pn:'10037608',qty:2});
-      if(sel['rear-shock']==='hd')  parts.push({section:'Shocks',pn:'10037609',qty:2});
-      const isBoth=sel.scope==='both';
-      const cM={'dual-mech':[{pn:'30664',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10009358',qty:1}],alp4:[{pn:'10040870',qty:1}],'alp4-console':[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]};
-      (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only',sel.scope!=='front-only',true,false).forEach(p=>parts.push(p));
-      return parts;
-    },
-  }, null, null, null, ramSDBumper('_',null,null,'','','','401044025','201044025',null,false,false)),
-
+  // RAM 4500 / 5500 Chassis Cab — 2025+
   // ─────────────────────────────────────────────────────────────
+  withBumpers(ramCC2025('ram-cc-4500-2025','4500 Chassis Cab','4500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401043025','201043025',null,false,false)),
+  withBumpers(ramCC2025('ram-cc-5500-2025','5500 Chassis Cab','5500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401044025','201044025',null,false,false)),
+
   // RAM 4500 / 5500 Chassis Cab — 2019+
   // ─────────────────────────────────────────────────────────────
-  withAccessories(withBumpers(ramCC2019('ram-cc-4500-2019','RAM 4500 Chassis Cab','4500 Chassis Cab'),null,null,null,
+  withAccessories(withBumpers(ramCC2019('ram-cc-4500-2019','4500 Chassis Cab','4500 Chassis Cab',2024),null,null,null,
     ramSDBumper('_',null,null,'','','','401043019','201043019',null,false,false)), {
     dss:[{pn:'10012103',note:'2019+ RAM 4500-5500 4x4 Chassis Cab, Dual Steering Stabilizer Bracket, No Shocks'}],
   }),
-  withAccessories(withBumpers(ramCC2019('ram-cc-5500-2019','RAM 5500 Chassis Cab','5500 Chassis Cab'),null,null,null,
+  withAccessories(withBumpers(ramCC2019('ram-cc-5500-2019','5500 Chassis Cab','5500 Chassis Cab',2024),null,null,null,
     ramSDBumper('_',null,null,'','','','401044019','201044019',null,false,false)), {
     dss:[{pn:'10012103',note:'2019+ RAM 4500-5500 4x4 Chassis Cab, Dual Steering Stabilizer Bracket, No Shocks'}],
   }),
