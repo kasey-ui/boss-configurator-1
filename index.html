@@ -700,6 +700,13 @@ const P = {
   'KLM-401044010-002033500-02': {desc:'2010-2018 RAM 5500 Front Bumper — Bravo Series, Smooth Face, No Parking Sensors, 3.5" Wide',  msrp:2450},
   'KLM-401044010-002033501-02': {desc:'2010-2018 RAM 5500 Front Bumper — Bravo Series, Clevis Ears, No Parking Sensors, 3.5" Wide',  msrp:2450},
 
+  // ── RAM 4500/5500 2008+ CC Rear Bumpers — Sherptek Flatbed DRW (94") ──
+  'KLM-401043008-108039000': {desc:'2008+ RAM 4500 Cab Chassis Rear Bumper — Bravo Series, Smooth Face (Sherptek Flatbed DRW 94")',  msrp:2250},
+  'KLM-401043008-108039001': {desc:'2008+ RAM 4500 Cab Chassis Rear Bumper — Bravo Series, Clevis Ears (Sherptek Flatbed DRW 94")',   msrp:2250},
+  'KLM-401044008-108039000': {desc:'2008+ RAM 5500 Cab Chassis Rear Bumper — Bravo Series, Smooth Face (Sherptek Flatbed DRW 94")',  msrp:2250},
+  'KLM-401044008-108039001': {desc:'2008+ RAM 5500 Cab Chassis Rear Bumper — Bravo Series, Clevis Ears (Sherptek Flatbed DRW 94")',   msrp:2250},
+  '10045921':                {desc:'Kelderman Cab Chassis Receiver Hitch — RAM 4500/5500 (Compatible with Sherptek Flatbed DRW)',       msrp:0},
+
   // ── RAM 2500 2010-2018 Commander Grille Guards (201041010) ───
   'KLM-201041010-01212000000': {desc:'2010-2018 RAM 2500 Commander Grille Guard — Sq. ×2, Smooth Face',                    msrp:1100},
   'KLM-201041010-01212000001': {desc:'2010-2018 RAM 2500 Commander Grille Guard — Sq. ×2, Clevis Ears',                    msrp:1100},
@@ -3701,8 +3708,8 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
      condition:(sel)=>sel['front-series']==='alpha'&&sel['alpha-center-type']==='winch',
      choices:()=>[
        {val:'none',     label:'No Winch — Winch Center Included'},
-       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
-       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740', parts:[{pn:'WAR97740',qty:1}]},
+       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801', parts:[{pn:'WAR68801',qty:1}]},
      ],
     },
     // GG light bars (sq-lights — 2 cutouts)
@@ -3867,7 +3874,7 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
 // rearModelBase  : e.g. '401041010' (2010-2018 rear), null for CC
 // hasStockWidth  : true for 2500/3500 pickup, false for 4500/5500 CC
 // ═══════════════════════════════════════════════════════════════
-function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase, ggModelBase, rearModelBase, hasStockWidth) {
+function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase, ggModelBase, rearModelBase, hasStockWidth, sherptekBase=null) {
   const hookChoices = [
     {val:'none',    label:'No Hooks'},
     {val:'sw1b',    label:'Monster Hooks Swivel Hook — Satin Black (+$500)',         sub:'MH-SW1B × 2'},
@@ -3903,8 +3910,9 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
     return null;
   };
 
-  const hasFrontPos = (sel)=>['front','front-rear-pu'].includes(sel['bumper-position']);
+  const hasFrontPos = (sel)=>['front','front-rear-pu','front-rear-st'].includes(sel['bumper-position']);
   const hasRearPos  = (sel)=>!!rearModelBase&&['rear-pu','front-rear-pu'].includes(sel['bumper-position']);
+  const hasSherptek = (sel)=>!!sherptekBase&&['rear-st','front-rear-st'].includes(sel['bumper-position']);
 
   const steps = [
     // ── Bumper Position ──────────────────────────────────────────
@@ -3915,6 +3923,10 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
        if(rearModelBase){
          opts.push({val:'rear-pu',      label:'Rear Bumper Only'});
          opts.push({val:'front-rear-pu',label:'Front + Rear Bumper'});
+       }
+       if(sherptekBase){
+         opts.push({val:'rear-st',      label:'Rear Bumper Only — Sherptek Flatbed DRW'});
+         opts.push({val:'front-rear-st',label:'Front + Rear Bumper — Sherptek Flatbed DRW'});
        }
        return opts;
      },
@@ -4005,8 +4017,8 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
      condition:(sel)=>sel['front-series']==='alpha'&&sel['alpha-center-type']==='winch',
      choices:()=>[
        {val:'none',     label:'No Winch — Winch Center Included'},
-       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
-       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740', parts:[{pn:'WAR97740',qty:1}]},
+       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801', parts:[{pn:'WAR68801',qty:1}]},
      ],
     },
     {key:'gg-light-bars', label:'Grille Guard — Light Bar Selection', badge:'opt',
@@ -4053,6 +4065,26 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
      mirror:'front-hooks',
      condition:(sel)=>!!sel['rear-pu-finish']&&(sel['rear-pu-series']==='alpha'||sel['rear-pu-face']==='clevis'),
      choices:()=>hookChoices,
+    },
+    // ══ REAR BUMPER — SHERPTEK FLATBED DRW PATH ══════════════════
+    {key:'rear-st-face', label:'Rear Bumper Style', badge:'req',
+     condition:(sel)=>hasSherptek(sel),
+     choices:()=>[
+       {val:'smooth', label:'Smooth Face — No Clevis Ears'},
+       {val:'clevis', label:'With Clevis Ears'},
+     ],
+    },
+    {key:'rear-st-finish', label:'Rear Bumper Finish', badge:'req',
+     mirror:'front-finish',
+     condition:(sel)=>hasSherptek(sel)&&!!sel['rear-st-face'],
+     choices:()=>finishChoices,
+    },
+    {key:'rear-st-hitch', label:'Receiver Hitch', badge:'opt',
+     condition:(sel)=>hasSherptek(sel)&&!!sel['rear-st-finish'],
+     choices:()=>[
+       {val:'none', label:'No Receiver Hitch'},
+       {val:'yes',  label:'Add Kelderman Cab Chassis Receiver Hitch', sub:'10045921'},
+     ],
     },
   ];
 
@@ -4137,6 +4169,13 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
           parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
           if(rs==='bravo'&&rf==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
         }
+      }
+
+      // ── REAR SHERPTEK ──────────────────────────────────────────
+      if(sherptekBase&&['rear-st','front-rear-st'].includes(bp)){
+        const suf=sel['rear-st-face']==='clevis'?'108039001':'108039000';
+        parts.push({section:'Rear Bumper',pn:`KLM-${sherptekBase}-${suf}`,qty:1});
+        if(sel['rear-st-hitch']==='yes') parts.push({section:'Accessories',pn:'10045921',qty:1});
       }
 
       return parts;
@@ -4249,13 +4288,13 @@ function gmHDPickup2020Bumper(id, yr_from, yr_to, make, model, label, frontModel
          {val:'yes', label:'Yes — Add License Plate Bracket', sub:'31910 — Honeycomb Mesh, No Charge'},
        ],
       },
-      // Alpha — winch accessory (only when no GG)
+      // Alpha — winch accessory
       {key:'alpha-winch-acc', label:'Winch', badge:'opt',
-       condition:(sel)=>hasFrontPos(sel)&&sel['front-series']==='alpha'&&sel['gg-config']==='none',
+       condition:(sel)=>hasFrontPos(sel)&&sel['front-series']==='alpha'&&!!sel['front-finish'],
        choices:()=>[
          {val:'none',    label:'No Winch'},
-         {val:'war97740',label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
-         {val:'war68801',label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+         {val:'war97740',label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740', parts:[{pn:'WAR97740',qty:1}]},
+         {val:'war68801',label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801', parts:[{pn:'WAR68801',qty:1}]},
        ],
       },
       // Delta — 20" center light bar
@@ -4617,8 +4656,8 @@ function gmSilveradoCCBumper(id, yr_from, yr_to, make, model, label, frontModelB
      condition:(sel)=>hasFrontPos(sel)&&sel['front-series']==='alpha'&&sel['alpha-center-type']==='winch'&&!!sel['front-finish'],
      choices:()=>[
        {val:'none',     label:'No Winch — Winch Center Included'},
-       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
-       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740', parts:[{pn:'WAR97740',qty:1}]},
+       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801', parts:[{pn:'WAR68801',qty:1}]},
      ],
     },
     // GG light bars — sq-lights only (2 × 20" SR-Series cutouts)
@@ -4802,8 +4841,8 @@ function ramSDBumper2003(id, yr_from, yr_to, make, model, label, frontModelBase,
      condition:(sel)=>sel['front-series']==='alpha'&&!!sel['front-finish'],
      choices:()=>[
        {val:'none',     label:'No Winch — Winch Center Included'},
-       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740'},
-       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801'},
+       {val:'war97740', label:'Warn 16.5ti — Hawse Fairlead, Synthetic Rope (+$3,350)', sub:'WAR97740', parts:[{pn:'WAR97740',qty:1}]},
+       {val:'war68801', label:'Warn 16.5ti — Roller Fairlead, Steel Cable (+$3,015)',   sub:'WAR68801', parts:[{pn:'WAR68801',qty:1}]},
      ],
     },
     {key:'front-wing-lights', label:'Outer Wing Lights', badge:'opt',
@@ -5558,7 +5597,7 @@ const CATALOG = [
       const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'single-sd':sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10015203',qty:1}],'alp4-dc':[{pn:'10032642',qty:1}],'alp4-dc-console':[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
-      if(sel.shocks){const sM={'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}],'rr-1012':[{pn:'10003380',qty:2},{pn:'10003384',qty:2}],'rr-1012-f':[{pn:'10003380',qty:2}],'rr-1012-r':[{pn:'10003384',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}],'rr-1012':[{pn:'10003380',qty:2},{pn:'10003384',qty:2}],'rr-1012-f':[{pn:'10003380',qty:2}],'rr-1012-r':[{pn:'10003384',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel['susp-sensors']==='yes') parts.push({section:'Accessories',pn:'10029766',qty:1});
       return parts;
     },
@@ -5745,7 +5784,7 @@ const CATALOG = [
       const cM={fcas:[{pn:'FC/AS',qty:1}],slkd:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}],'dual-mech':isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}],'single-sd':sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}],eslk3h2:[{pn:'ESLK3H2',qty:1}],'eslk3h2-console':[{pn:'ESLK3H2',qty:1},{pn:'10015203',qty:1}],alp4:[{pn:'10040872',qty:1}],'alp4-console':[{pn:'10040872',qty:1},{pn:'10015203',qty:1}],'alp4-dc':[{pn:'10032642',qty:1}],'alp4-dc-console':[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]};
       (cM[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(sel.scope!=='rear-only', sel.scope!=='front-only', false, false).forEach(p=>parts.push(p));
-      if(sel.shocks){const sM={'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}],'rr-1012':[{pn:'10003380',qty:2},{pn:'10003384',qty:2}],'rr-1012-f':[{pn:'10003380',qty:2}],'rr-1012-r':[{pn:'10003384',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}],'rr-1012':[{pn:'10003380',qty:2},{pn:'10003384',qty:2}],'rr-1012-f':[{pn:'10003380',qty:2}],'rr-1012-r':[{pn:'10003384',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel['susp-sensors']==='yes') parts.push({section:'Accessories',pn:'10029766',qty:1});
       return parts;
     },
@@ -5826,9 +5865,9 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr', label:'Remote Reservoir Kit (Front + Rear)',
             sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
          ];
@@ -5914,7 +5953,7 @@ const CATALOG = [
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
       const rMap={'stock':'10015113','2-3':'10015113','5-6':'10015191'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
-      if(sel.shocks){const sM={'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003380',qty:2},{pn:'80227',qty:4}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003380',qty:2},{pn:'80227',qty:4}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
       if(h==='stock'&&sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10015144',qty:1});
@@ -6004,11 +6043,11 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr', label:'Remote Reservoir Kit (Front + Rear)',
-            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}]},
          ];
        },
       },
@@ -6048,7 +6087,7 @@ const CATALOG = [
       const rpn=rMap[h]?.[sel.axle];
       if(rpn&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rpn,qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
-      if(sel.shocks){const sM={'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});
       const isBoth=sel.scope==='both';
@@ -6126,11 +6165,11 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr', label:'Remote Reservoir Kit (Front + Rear)',
-            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}]},
          ];
        },
       },
@@ -6170,7 +6209,7 @@ const CATALOG = [
       const rpn=rMap[h]?.[axle];
       if(rpn&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rpn,qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
-      if(sel.shocks){const sM={'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003381',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003381',qty:2}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'69170',qty:1});
       const isBoth=sel.scope==='both';
@@ -6235,11 +6274,11 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
-            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}]},
          ];
        },
       },
@@ -6282,9 +6321,9 @@ const CATALOG = [
       const rMap={stock:'KLM69025','5-6':'KLM69026','8-10':'KLM69027'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
-      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
-      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
-      if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
+      if(sel.shocks==='rr'){parts.push({section:'Shocks',pn:'10003382',qty:2});parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
       if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
@@ -6352,11 +6391,11 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
-            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}]},
          ];
        },
       },
@@ -6407,9 +6446,9 @@ const CATALOG = [
       const rMap={stock:'KLM69025','5-6':'KLM69722','8-10':'KLM69727'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
-      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
-      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
-      if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
+      if(sel.shocks==='rr'){parts.push({section:'Shocks',pn:'10003382',qty:2});parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
       if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
@@ -6477,11 +6516,11 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr',         label:'Remote Reservoir Kit (Front + Rear)',
-            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
+            sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10003382',qty:2},{pn:'10004022',qty:1},{pn:'10003384',qty:2}]},
          ];
        },
       },
@@ -6532,9 +6571,9 @@ const CATALOG = [
       const rMap={stock:'KLM69025','5-6':'KLM69722','8-10':'KLM69727'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
       if(sel['radius-arms']==='ra') parts.push({section:'Radius Arms',pn:'10005712',qty:1});
-      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10015855',qty:2});}
-      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10015855',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
-      if(sel.shocks==='rr') parts.push({section:'Shocks',pn:'10008956',qty:1});
+      if(sel.shocks==='mono-front'){parts.push({section:'Shocks',pn:'10003380',qty:2});}
+      if(sel.shocks==='mono-both'){parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10015856',qty:2});}
+      if(sel.shocks==='rr'){parts.push({section:'Shocks',pn:'10003382',qty:2});parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       if(sel.shocks==='rr-1012-f'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});}
       if(sel.shocks==='rr-1012'){parts.push({section:'Shocks',pn:'10004022',qty:1});parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10003384',qty:2});}
       const dssBrkt={'bracket-only-4wd':'16978','bracket-only-2wd':'16970','dss-4wd':'16978','dss-2wd':'16970'};
@@ -8338,12 +8377,19 @@ const CATALOG = [
       {key:'rear', label:'Rear Air Suspension', badge:'req',
        hint:'Select the rear suspension kit.',
        condition:(sel)=>sel.height!=='overlander'&&!!sel.scope&&sel.scope!=='front-only'&&(sel.scope==='rear-only'||!!sel.front),
-       choices:()=>[
-         {val:'stock',         label:'Stock Height 4-Link Rear',                              sub:'10014700 — stock height rear air suspension',   parts:[{pn:'10014700',qty:1}]},
-         {val:'lowering',      label:'2.5" Lowering 4-Link Rear',                            sub:'10029801 — 2.5" lowering rear air suspension',  parts:[{pn:'10029801',qty:1}]},
-         {val:'2stage-hitch',  label:'2-Stage Rear Air Suspension — w/ 2.5" Receiver Hitch', sub:'10013346 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013346',qty:1}]},
-         {val:'2stage-nohitch',label:'2-Stage Rear Air Suspension — No Receiver Hitch',      sub:'10013347 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013347',qty:1}]},
-       ],
+       choices:(kit,sel)=>{
+         if(sel.height==='3-lift') return [
+           {val:'10045787', label:'3" Lift 4-Link Rear (10045787)',
+            sub:'2023+ F-450/F-550/F-600 CC — matching 3" rear lift. Shocks not included.',
+            parts:[{pn:'10045787',qty:1}]},
+         ];
+         return [
+           {val:'stock',         label:'Stock Height 4-Link Rear',                              sub:'10014700 — stock height rear air suspension',   parts:[{pn:'10014700',qty:1}]},
+           {val:'lowering',      label:'2.5" Lowering 4-Link Rear',                            sub:'10029801 — 2.5" lowering rear air suspension',  parts:[{pn:'10029801',qty:1}]},
+           {val:'2stage-hitch',  label:'2-Stage Rear Air Suspension — w/ 2.5" Receiver Hitch', sub:'10013346 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013346',qty:1}]},
+           {val:'2stage-nohitch',label:'2-Stage Rear Air Suspension — No Receiver Hitch',      sub:'10013347 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013347',qty:1}]},
+         ];
+       },
       },
       {key:'shocks', label:'Shocks', badge:'req',
        hint:'Raptor 2.0 monotube shocks.',
@@ -8551,12 +8597,19 @@ const CATALOG = [
       {key:'rear', label:'Rear Air Suspension', badge:'req',
        hint:'Select the rear suspension kit.',
        condition:(sel)=>sel.height!=='overlander'&&!!sel.scope&&sel.scope!=='front-only'&&(sel.scope==='rear-only'||!!sel.front),
-       choices:()=>[
-         {val:'stock',         label:'Stock Height 4-Link Rear',                              sub:'10014700 — stock height rear air suspension',   parts:[{pn:'10014700',qty:1}]},
-         {val:'lowering',      label:'2.5" Lowering 4-Link Rear',                            sub:'10029801 — 2.5" lowering rear air suspension',  parts:[{pn:'10029801',qty:1}]},
-         {val:'2stage-hitch',  label:'2-Stage Rear Air Suspension — w/ 2.5" Receiver Hitch', sub:'10013346 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013346',qty:1}]},
-         {val:'2stage-nohitch',label:'2-Stage Rear Air Suspension — No Receiver Hitch',      sub:'10013347 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013347',qty:1}]},
-       ],
+       choices:(kit,sel)=>{
+         if(sel.height==='3-lift') return [
+           {val:'10045787', label:'3" Lift 4-Link Rear (10045787)',
+            sub:'2023+ F-450/F-550/F-600 CC — matching 3" rear lift. Shocks not included.',
+            parts:[{pn:'10045787',qty:1}]},
+         ];
+         return [
+           {val:'stock',         label:'Stock Height 4-Link Rear',                              sub:'10014700 — stock height rear air suspension',   parts:[{pn:'10014700',qty:1}]},
+           {val:'lowering',      label:'2.5" Lowering 4-Link Rear',                            sub:'10029801 — 2.5" lowering rear air suspension',  parts:[{pn:'10029801',qty:1}]},
+           {val:'2stage-hitch',  label:'2-Stage Rear Air Suspension — w/ 2.5" Receiver Hitch', sub:'10013346 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013346',qty:1}]},
+           {val:'2stage-nohitch',label:'2-Stage Rear Air Suspension — No Receiver Hitch',      sub:'10013347 — 1999+ F-450/F-550 Chassis Cab',      parts:[{pn:'10013347',qty:1}]},
+         ];
+       },
       },
       {key:'shocks', label:'Shocks', badge:'req',
        hint:'Raptor 2.0 monotube shocks.',
@@ -8764,10 +8817,17 @@ const CATALOG = [
       {key:'rear', label:'Rear Air Suspension', badge:'req',
        hint:'Select the rear suspension kit.',
        condition:(sel)=>sel.height!=='overlander'&&!!sel.scope&&sel.scope!=='front-only'&&(sel.scope==='rear-only'||!!sel.front),
-       choices:()=>[
-         {val:'stock',    label:'Stock Height 4-Link Rear',  sub:'10014700 — stock height rear air suspension', parts:[{pn:'10014700',qty:1}]},
-         {val:'lowering', label:'2.5" Lowering 4-Link Rear', sub:'10029801 — 2.5" lowering rear air suspension', parts:[{pn:'10029801',qty:1}]},
-       ],
+       choices:(kit,sel)=>{
+         if(sel.height==='3-lift') return [
+           {val:'10045787', label:'3" Lift 4-Link Rear (10045787)',
+            sub:'2023+ F-450/F-550/F-600 CC — matching 3" rear lift. Shocks not included.',
+            parts:[{pn:'10045787',qty:1}]},
+         ];
+         return [
+           {val:'stock',    label:'Stock Height 4-Link Rear',  sub:'10014700 — stock height rear air suspension', parts:[{pn:'10014700',qty:1}]},
+           {val:'lowering', label:'2.5" Lowering 4-Link Rear', sub:'10029801 — 2.5" lowering rear air suspension', parts:[{pn:'10029801',qty:1}]},
+         ];
+       },
       },
       {key:'shocks', label:'Shocks', badge:'req',
        hint:'Raptor 2.0 monotube shocks.',
@@ -11510,12 +11570,13 @@ const CATALOG = [
          ];
        },
       },
-      {key:'front-shock', label:'Front Shocks', badge:'req',
+      {key:'front-shock', label:'Front Shocks', badge:'opt',
        hint:'Two front shocks required for the 1.5" control arm kit. Optional for lifted kits.',
        condition:(sel)=>!!sel.front,
        choices:(kit,sel)=>{
          const h=sel.height;
          if(h==='stock-1.5') return [
+           {val:'none', label:'No Front Shocks', sub:'Not recommended — shocks are required for proper function of the 1.5" control arm kit'},
            {val:'raptor', label:'Kelderman-Raptor 2.0 Stem Mount (10037606 ×2)',
             sub:'Required — Ext: 22.75" / Comp: 15.25"', parts:[{pn:'10037606',qty:2}]},
            {val:'rancho', label:'Rancho RS999043 (80119 ×2)',
@@ -12324,9 +12385,9 @@ const CATALOG = [
   // ─────────────────────────────────────────────────────────────
   // RAM CHASSIS CAB BUMPERS — 2010-2018 (4500 / 5500)
   // ─────────────────────────────────────────────────────────────
-  ramSDBumper2010('ram-4500-cc-2010-bump', 2010, 2018, 'RAM', 'RAM 4500 Chassis Cab', '4500 Chassis Cab', '401043010', null, null, false),
+  ramSDBumper2010('ram-4500-cc-2010-bump', 2010, 2018, 'RAM', 'RAM 4500 Chassis Cab', '4500 Chassis Cab', '401043010', null, null, false, '401043008'),
 
-  ramSDBumper2010('ram-5500-cc-2010-bump', 2010, 2018, 'RAM', 'RAM 5500 Chassis Cab', '5500 Chassis Cab', '401044010', null, null, false),
+  ramSDBumper2010('ram-5500-cc-2010-bump', 2010, 2018, 'RAM', 'RAM 5500 Chassis Cab', '5500 Chassis Cab', '401044010', null, null, false, '401044008'),
 
   // ─────────────────────────────────────────────────────────────
   // DODGE 2500 PICKUP — 2003-2005 (G3)
@@ -13624,7 +13685,7 @@ const CATALOG = [
   const globalSuspFinish = {
     key:'susp-finish', label:'Suspension Finish', badge:'opt',
     default:'textured-black',
-    condition:(sel)=>sel.category!=='bumpers'&&Object.values(sel).some(v=>v!==undefined),
+    condition:(sel)=>(sel.category==='suspension'||sel.category==='suspension+bumpers'||(sel.category===undefined&&(!!sel.height||!!sel.scope)))&&Object.values(sel).some(v=>v!==undefined),
     choices:(kit,sel)=>{
       const is2stage = sel.rear==='2stage-hitch'||sel.rear==='2stage-nohitch'||sel['suspension-type']==='2stage-rear';
       if(is2stage) return [{val:'textured-black', label:'Textured Black Powder Coat'}];
