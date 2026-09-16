@@ -963,23 +963,24 @@ const P = {
   'KLM16288':  {desc:'Kit — 1999-2005 Ford F-53 Chassis, 2-Stage Front Air Suspension, w/o Banks Headers',             msrp:2525},
   'KLM16288B': {desc:'Kit — 1999-2005 Ford F-53 Chassis, 2-Stage Front Air Suspension, w/ Banks Headers',              msrp:2625},
   'KLM70691':  {desc:'Kit — 2006-2019 Ford F-53 Chassis, 2-Stage Front Air Suspension, 3" Wide Leaf Springs',          msrp:1975},
-  'KLMS3000':  {desc:'Kit — 2006-2019 Ford F-53 Chassis, 2-Stage Front Air Suspension, 4" Wide Factory Leaf Springs',  msrp:2875},
+  'KLM53000':  {desc:'Kit — 2006-2019 Ford F-53 Chassis, 2-Stage Front Air Suspension, 4" Wide Factory Leaf Springs',  msrp:2875},
   '10015893':  {desc:'Kit — 2020+ Ford F-53 Chassis, 2-Stage Front Air Suspension, 3" Wide Leaf Springs',              msrp:1975},
   '10016232':  {desc:'Kit — 2020+ Ford F-53 Chassis, 2-Stage Front Air Suspension, 4" Wide Factory Leaf Springs',      msrp:2875},
   '10009448':  {desc:'Kit — 1999+ Ford F-53 Chassis, 2-Stage Rear Air Suspension',                                     msrp:2875},
 
   // ── Peterbilt / Kenworth Semi Trucks ─────────────────────────
-  '10045284': {desc:'Kit — 2008-2023 Peterbilt 389 Front Air Leaf Suspension',                                         msrp:5250},
-  '10040652': {desc:'Kit — 1987-2007 Peterbilt 379 Front Air Leaf Suspension',                                         msrp:5250},
-  '10030151': {desc:'Kit — 1990+ Kenworth W900L / Peterbilt 386 Front Air Leaf Suspension',                            msrp:5250},
-  '10037484': {desc:'Kit — Kenworth W900B Front Air Leaf Suspension',                                                   msrp:5450},
-  '10042089': {desc:'Kit — Kenworth T660/T680 Front Air Leaf Suspension',                                              msrp:5450},
-  '80356':    {desc:'Shock — Gabriel Fleet (85014), Peterbilt 379/389/386 / Kenworth W900L/W900B Front (each)',        msrp:100},
-  '10016034': {desc:'Shock — Kelderman-Raptor 2.0 Piggyback 20-Position Adjustable, Semi Front Air Ride (each)',      msrp:800},
-  '80200':    {desc:'Shock — Carbon Shock, Semi Front Air Ride (each)',                                                 msrp:1110},
-  '10037885':      {desc:'Kit — Over Height Control Valve Set (Semi Kits)',                                            msrp:1000},
-  'Gloss-Red-Semi': {desc:'Gloss Red Powder Coat Upcharge (Semi)',                                                      msrp:250},
-  '10031894':       {desc:'Kit — Peterbilt 389 Semi Air Ride Conversion Kit (3/4" U-Bolt) — For Trucks With Factory Front Air Suspension', msrp:2995},
+  '10045284': {desc:'Kit — 2008-2023 Peterbilt 389 Front Air Leaf Suspension',                                         msrp:5800},
+  '10040652': {desc:'Kit — 1987-2007 Peterbilt 379 Front Air Leaf Suspension',                                         msrp:5800},
+  '10030151': {desc:'Kit — 1990+ Kenworth W900L / Peterbilt 386 Front Air Leaf Suspension',                            msrp:5800},
+  '10037484': {desc:'Kit — Kenworth W900B Front Air Leaf Suspension',                                                   msrp:6000},
+  '10042089': {desc:'Kit — Kenworth T660/T680 Front Air Leaf Suspension',                                              msrp:6000},
+  '80356':    {desc:'Shock — Gabriel Fleet (85014), Peterbilt 379/389/386 / Kenworth W900L/W900B Front (each)',        msrp:110},
+  '10016034': {desc:'Shock — Kelderman-Raptor 2.0 Piggyback 20-Position Adjustable, Semi Front Air Ride (each)',      msrp:880},
+  '80200':    {desc:'Shock — Carbon Shock, Semi Front Air Ride (each)',                                                 msrp:1225},
+  '10037885':      {desc:'Kit — Over Height Control Valve Set (Semi Kits)',                                            msrp:1100},
+  'Gloss-Red-Semi': {desc:'Gloss Red Powder Coat Upcharge (Semi)',                                                      msrp:275},
+  'Custom-PC-Semi': {desc:'Custom Powder Coat Upcharge (Semi) — Price TBD',                                              msrp:0},
+  '10031894':       {desc:'Kit — Peterbilt 389 Semi Air Ride Conversion Kit (3/4" U-Bolt) — For Trucks With Factory Front Air Suspension', msrp:3300},
 
   // ── Mercedes-Benz Sprinter ────────────────────────────────────
   '10029639': {desc:'Kit — 2019+ Mercedes-Benz Sprinter 2500 SRW 170"WB, 2-Stage Rear Air Suspension',                msrp:3450},
@@ -3338,11 +3339,15 @@ function fordSD17Bumper(id, yr_from, yr_to, make, model, label, frontModelBase, 
        if(s==='alpha-winch') return !!sel['front-center-winch'];
        return !!sel['front-center-light'];
      },
-     choices:()=>[
-       {val:'no-acc',   label:'No Adaptive Cruise Control',               sub:'2017-2022 — No ACC sensor module in front bumper'},
-       {val:'acc-1719', label:'With Adaptive Cruise Control (2017-2019)', sub:'2017-2019 ACC sensor module'},
-       {val:'acc-2022', label:'With Adaptive Cruise Control (2020-2022)', sub:'2020-2022 ACC sensor module — separate P/N family'},
-     ],
+     choices:(kit,sel)=>{
+       const yr=parseInt(S.year,10)||yr_from;
+       const noAcc={val:'no-acc',label:'No Adaptive Cruise Control',sub:'No ACC sensor module in front bumper'};
+       const a1719={val:'acc-1719',label:'With Adaptive Cruise Control (2017-2019)',sub:'2017-2019 ACC sensor module'};
+       const a2022={val:'acc-2022',label:'With Adaptive Cruise Control (2020-2022)',sub:'2020-2022 ACC sensor module — separate P/N family'};
+       if(yr>=2020) return [noAcc,a2022];
+       if(yr<=2019) return [noAcc,a1719];
+       return [noAcc,a1719,a2022];
+     },
     },
     {key:'front-endcap', label:'End Cap Width', badge:'req',
      condition:(sel)=>!!sel['front-acc'],
@@ -3839,7 +3844,7 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
-          const needsFrontLP=(gg&&gg!=='none'&&sel['gg-clevis']==='clevis')||(sel['front-series']==='bravo'&&sel['bravo-face']==='clevis');
+          const needsFrontLP=(gg&&gg!=='none'&&clevis)||(sel['front-series']==='bravo'&&sel['bravo-face']==='clevis');
           if(needsFrontLP) parts.push({section:'Hooks',pn:'61000',qty:2});
         }
       }
@@ -6259,7 +6264,7 @@ const CATALOG = [
       },
       {key:'shocks', label:'Shocks', badge:'opt',
        hint:'Select shock package, if desired.',
-       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       condition:(sel)=>!!sel.scope&&!!sel.height&&sel.scope!=='rear-only',
        choices:(kit,sel)=>{
          if(sel.height==='8-10'){
            const opts=[{val:'none',label:'No Shocks'}];
@@ -6284,17 +6289,19 @@ const CATALOG = [
       },
       {key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
-       choices:()=>[
-         {val:'none',             label:'No DSS'},
-         {val:'bracket-only-4wd', label:'Add DSS Bracket Only — 4x4 (16978)',
-          sub:'16978 — Bracket only, no shocks', parts:[{pn:'16978',qty:1}]},
-         {val:'bracket-only-2wd', label:'Add DSS Bracket Only — 2WD (16970)',
-          sub:'16970 — Bracket only, no shocks', parts:[{pn:'16970',qty:1}]},
-         {val:'dss-4wd',          label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
-          sub:'16978 + (2) Raptor 2.0 Monotube Shocks', parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]},
-         {val:'dss-2wd',          label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
-          sub:'16970 + (2) Raptor 2.0 Monotube Shocks', parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]},
-       ],
+       choices:(kit,sel)=>{
+         const isLift=sel.height==='5-6'||sel.height==='8-10';
+         const opts=[{val:'none',label:'No DSS'}];
+         opts.push({val:'bracket-only-4wd',label:'Add DSS Bracket Only — 4x4 (16978)',
+           sub:'16978 — Bracket only, no shocks',parts:[{pn:'16978',qty:1}]});
+         if(!isLift) opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
+           sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
+         opts.push({val:'dss-4wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
+           sub:'16978 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]});
+         if(!isLift) opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
+           sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         return opts;
+       },
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
        condition:(sel)=>!!sel.scope,
@@ -6376,7 +6383,7 @@ const CATALOG = [
       },
       {key:'shocks', label:'Shocks', badge:'opt',
        hint:'Select shock package, if desired.',
-       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       condition:(sel)=>!!sel.scope&&!!sel.height&&sel.scope!=='rear-only',
        choices:(kit,sel)=>{
          if(sel.height==='8-10'){
            const opts=[{val:'none',label:'No Shocks'}];
@@ -6403,6 +6410,7 @@ const CATALOG = [
        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
        choices:(kit,sel)=>{
          const is810=sel.height==='8-10';
+         const isLift=is810||sel.height==='5-6';
          const opts=[{val:'none',label:'No DSS'}];
          if(is810){
            opts.push({val:'shocks-only-4wd',label:'Add Steering Stabilizer Shocks — 4x4',
@@ -6414,10 +6422,12 @@ const CATALOG = [
            opts.push({val:'dss-4wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
              sub:'16978 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]});
          }
-         opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
-           sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
-         opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
-           sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         if(!isLift){
+           opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
+             sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
+           opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
+             sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         }
          return opts;
        },
       },
@@ -6501,7 +6511,7 @@ const CATALOG = [
       },
       {key:'shocks', label:'Shocks', badge:'opt',
        hint:'Select shock package, if desired.',
-       condition:(sel)=>!!sel.scope&&(sel.height==='stock'||sel.height==='8-10')&&sel.scope!=='rear-only',
+       condition:(sel)=>!!sel.scope&&!!sel.height&&sel.scope!=='rear-only',
        choices:(kit,sel)=>{
          if(sel.height==='8-10'){
            const opts=[{val:'none',label:'No Shocks'}];
@@ -6528,6 +6538,7 @@ const CATALOG = [
        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only',
        choices:(kit,sel)=>{
          const is810=sel.height==='8-10';
+         const isLift=is810||sel.height==='5-6';
          const opts=[{val:'none',label:'No DSS'}];
          if(is810){
            opts.push({val:'shocks-only-4wd',label:'Add Steering Stabilizer Shocks — 4x4',
@@ -6539,10 +6550,12 @@ const CATALOG = [
            opts.push({val:'dss-4wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 4x4',
              sub:'16978 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16978',qty:1},{pn:'10003382',qty:2}]});
          }
-         opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
-           sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
-         opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
-           sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         if(!isLift){
+           opts.push({val:'bracket-only-2wd',label:'Add DSS Bracket Only — 2WD (16970)',
+             sub:'16970 — Bracket only, no shocks',parts:[{pn:'16970',qty:1}]});
+           opts.push({val:'dss-2wd',label:'Add DSS Bracket + Kelderman-Raptor Shocks — 2WD',
+             sub:'16970 + (2) Raptor 2.0 Monotube Shocks',parts:[{pn:'16970',qty:1},{pn:'10003382',qty:2}]});
+         }
          return opts;
        },
       },
@@ -10097,7 +10110,7 @@ const CATALOG = [
       ]),
       fordF53('ford-f53-2006', 2006, 2019, 'F-53 Chassis', 'Leaf Spring Width', [
         {val:'3-wide', label:'3" Wide Leaf Springs (KLM70691)', sub:'Standard width leaf springs', parts:[{pn:'KLM70691',qty:1}]},
-        {val:'4-wide', label:'4" Wide Factory Leaf Springs (KLMS3000)', sub:'4" wide factory leaf spring (+$900)', parts:[{pn:'KLMS3000',qty:1}]},
+        {val:'4-wide', label:'4" Wide Factory Leaf Springs (KLM53000)', sub:'4" wide factory leaf spring (+$900)', parts:[{pn:'KLM53000',qty:1}]},
       ]),
       fordF53('ford-f53-1999', 1999, 2005, 'F-53 Chassis', 'Year / Headers', [
         {val:'no-banks', label:'1999-2005 — w/o Banks Headers (KLM16288)', parts:[{pn:'KLM16288',qty:1}]},
@@ -10148,6 +10161,7 @@ const CATALOG = [
            {val:'textured-black', label:'Textured Black Powder Coat'},
            {val:'gloss-black',    label:'Gloss Black Powder Coat'},
            {val:'gloss-red',      label:'Gloss Red Powder Coat (+$250)', parts:[{pn:'Gloss-Red-Semi',qty:1}]},
+           {val:'custom-pc',      label:'Custom Powder Coat (Price TBD)', parts:[{pn:'Custom-PC-Semi',qty:1}]},
          ],
         },
         {key:'ctrl', label:'Air Controls', badge:'opt', default:'standard',
@@ -10173,7 +10187,8 @@ const CATALOG = [
           }
           const shockMap={gabriel:[{pn:'80356',qty:2}], raptor:[{pn:'10016034',qty:2}], carbon:[{pn:'80200',qty:2}]};
           (shockMap[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));
-          if(sel['susp-finish']==='gloss-red') parts.push({section:'Front Suspension',pn:'Gloss-Red-Semi',qty:1});
+          if(sel['susp-finish']==='gloss-red')  parts.push({section:'Front Suspension',pn:'Gloss-Red-Semi',qty:1});
+          if(sel['susp-finish']==='custom-pc') parts.push({section:'Front Suspension',pn:'Custom-PC-Semi',qty:1});
           if(sel.ctrl==='over-hcv') parts.push({section:'Air Controls',pn:'10037885',qty:1});
           return parts;
         },
