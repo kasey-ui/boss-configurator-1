@@ -482,7 +482,7 @@ const P = {
   '10046343': {desc:'Kit — 3" Lift Front — ARKA — 2025+ RAM 4500/5500 Chassis Cab. Shocks Not Included (RAP-10156 / 10037607 ×2, sold separately).', msrp:1970},
   '10038135': {desc:'Kit — 6" Lift Front — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Shock: RAP-10096 / 10003384 ×2, Not Included.', msrp:4630},
   '10039931': {desc:'Kit — 4-Link / Watts Link Rear — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Approx. 3" Rear Lift. Shock: RAP-10158 / 10037609 ×2, Not Included.', msrp:5750},
-  'JE-REEL-RAM5500': {desc:'CV Front Driveshaft with Flange — JE Reel (4118-RAM5500) — 2025+ RAM 4500/5500 Chassis Cab. Required for ARKA and Overlander front lift systems.', msrp:2000},
+  'REEL-418-RAM5500': {desc:'CV Front Driveshaft with Flange — JE Reel (REEL-418-RAM5500) — 2025+ RAM 4500/5500 Chassis Cab. Required for ARKA and Overlander front lift systems.', msrp:2000, noDiscount:true},
   '10037607': {desc:'Kelderman-Raptor 2.0 Monotube Shock (RAP-10156) — 2025+ RAM 4500/5500 CC, 3" ARKA Lift Front (sold individually)', msrp:390},
   '10003381': {desc:'Kelderman-Raptor 2.0 Remote Reservoir Shock (RAP-10093) — 5-6" Lift Front, F-250/F-350',         msrp:480},
   '10003382': {desc:'Kelderman-Raptor 2.0 Steering Stabilizer Mono Tube Shock (RAP-10094)',                           msrp:360},
@@ -2639,7 +2639,7 @@ function ramCC2025(id, model, label) {
       if(sel.system==='overlander'||sel.system==='arka'){
         const s=sel.scope, isArka=sel.system==='arka';
         if(s!=='rear-only')  parts.push({section:'Front Suspension',pn:isArka?'10046343':'10038135',qty:1});
-        if(s!=='rear-only')  parts.push({section:'Driveshaft',pn:'JE-REEL-RAM5500',qty:1});
+        if(s!=='rear-only')  parts.push({section:'Driveshaft',pn:'REEL-418-RAM5500',qty:1});
         if(s!=='front-only') parts.push({section:'Rear Suspension', pn:'10039931',qty:1});
         const d=sel.dss;
         if(d==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
@@ -14415,7 +14415,7 @@ function renderSummary() {
     for(const item of items) {
       const partInfo = P[item.pn]||{desc:item.pn,msrp:0};
       const lineTotal = partInfo.msrp * item.qty;
-      total += lineTotal;
+      if(!partInfo.noDiscount) total += lineTotal;
       html += `<div class="sum-row">
         <span class="s-pn">${item.pn}${item.qty>1?' ×'+item.qty:''}<button class="copy-pn-btn" onclick="copyPn(this,'${item.pn}')" title="Copy part number"><svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/></svg></button></span>
         <span class="s-desc">${partInfo.desc}</span>
