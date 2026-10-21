@@ -481,7 +481,8 @@ const P = {
   'SK860':    {desc:'PSC Hydraulic Assist Kit — 2025+ RAM 4500/5500 Chassis Cab, With Lane Assist',               msrp:3070},
   '10046343': {desc:'Kit — 3" Lift Front — ARKA — 2025+ RAM 4500/5500 Chassis Cab. Shock: RAP-10156 / 10037607 ×2, Not Included.', msrp:2750},
   '10038135': {desc:'Kit — 6" Lift Front — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Shock: RAP-10096 / 10003384 ×2, Not Included.', msrp:4630},
-  '10039931': {desc:'Kit — 6" Lift Rear — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Shock: RAP-10158 / 10037609 ×2, Not Included.', msrp:5250},
+  '10039931': {desc:'Kit — 4-Link / Watts Link Rear — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Approx. 3" Rear Lift. Shock: RAP-10158 / 10037609 ×2, Not Included.', msrp:5750},
+  'JE-REEL-RAM5500': {desc:'CV Front Driveshaft with Flange — JE Reel (4118-RAM5500) — 2025+ RAM 4500/5500 Chassis Cab. Required for ARKA and Overlander front lift systems.', msrp:2000},
   '10037607': {desc:'Kelderman-Raptor 2.0 Monotube Shock (RAP-10156) — 2025+ RAM 4500/5500 CC, 3" ARKA Lift Front (sold individually)', msrp:390},
   '10003381': {desc:'Kelderman-Raptor 2.0 Remote Reservoir Shock (RAP-10093) — 5-6" Lift Front, F-250/F-350',         msrp:480},
   '10003382': {desc:'Kelderman-Raptor 2.0 Steering Stabilizer Mono Tube Shock (RAP-10094)',                           msrp:360},
@@ -2638,6 +2639,7 @@ function ramCC2025(id, model, label) {
       if(sel.system==='overlander'||sel.system==='arka'){
         const s=sel.scope, isArka=sel.system==='arka';
         if(s!=='rear-only')  parts.push({section:'Front Suspension',pn:isArka?'10046343':'10038135',qty:1});
+        if(s!=='rear-only')  parts.push({section:'Driveshaft',pn:'JE-REEL-RAM5500',qty:1});
         if(s!=='front-only') parts.push({section:'Rear Suspension', pn:'10039931',qty:1});
         const d=sel.dss;
         if(d==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10012103',qty:1});
@@ -5583,7 +5585,7 @@ const CATALOG = [
             sub:isBoth?'30664 + (2) HCVLK — Dual VIAIR compressor, dryer, dual tank, dump valve':'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas','slkd'].includes(o.val));
+         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
          if(sel.scope!=='front-only')
            opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          if(isBoth){
@@ -5596,7 +5598,7 @@ const CATALOG = [
              opts.push({val:'alp4-dc-console', label:'Air Lift 3H/3P — Dual Compressor Box (Spare Tire Keeper) + Overhead Console',sub:'10032642 + 10015203 overhead console mount',parts:[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]});
            }
          }
-         return opts.filter(o=>o.val!=='fcas'||sel.scope==='front-only');
+         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -5775,7 +5777,7 @@ const CATALOG = [
             sub:isBoth?'30664 + (2) HCVLK — Dual VIAIR compressor, dryer, dual tank, dump valve':'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas','slkd'].includes(o.val));
+         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
          if(sel.scope!=='front-only')
            opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          if(isBoth){
@@ -5788,7 +5790,7 @@ const CATALOG = [
              opts.push({val:'alp4-dc-console', label:'Air Lift 3H/3P — Dual Compressor Box (Spare Tire Keeper) + Overhead Console',sub:'10032642 + 10015203 overhead console mount',parts:[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]});
            }
          }
-         return opts.filter(o=>o.val!=='fcas'||sel.scope==='front-only');
+         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -5968,8 +5970,8 @@ const CATALOG = [
          if(sel.scope!=='front-only')
            opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          const isBoth=sel.scope==='both';
-         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas','slkd'].includes(o.val));
-         return isBoth ? opts.filter(o=>o.val!=='fcas') : opts.filter(o=>!['fcas','eslk3h2','alp4','eslk3h2-console','alp4-console','alp4-dc','alp4-dc-console'].includes(o.val));
+         if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
+         return isBoth ? opts.filter(o=>o.val!=='fcas'&&(o.val!=='slkd'||sel.height!=='stock')) : opts.filter(o=>!['fcas','eslk3h2','alp4','eslk3h2-console','alp4-console','alp4-dc','alp4-dc-console'].includes(o.val)&&(o.val!=='slkd'||sel.height!=='stock'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -8461,8 +8463,8 @@ const CATALOG = [
              parts:[{pn:'10006722',qty:2},{pn:'80227',qty:4}]});
            return opts;
          }
-         if(sel.scope==='rear-only') return [noShocks,{val:'mono', label:'Rear Monotube Shocks', sub:'(2) Raptor 2.0 monotube HD rear (10015798)', parts:[{pn:'10015798',qty:2}]}];
-         const opts=[noShocks,{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
+         if(sel.scope==='rear-only') return [{val:'mono', label:'Rear Monotube Shocks', sub:'(2) Raptor 2.0 monotube HD rear (10015798) — required', parts:[{pn:'10015798',qty:2}]}];
+         const opts=[{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
          if(is3Lift) opts.push({val:'rr-front', label:'Remote Reservoir Front + Monotube Rear',
            sub:'(2) RAP-10124 RR front (10006722) + (4) clamps (80227) + (2) monotube HD rear (10015798)',
            parts:[{pn:'10006722',qty:2},{pn:'80227',qty:4},{pn:'10015798',qty:2}]});
@@ -8703,8 +8705,8 @@ const CATALOG = [
              parts:[{pn:'10006722',qty:2},{pn:'80227',qty:4}]});
            return opts;
          }
-         if(sel.scope==='rear-only') return [noShocks,{val:'mono', label:'Rear Monotube Shocks', sub:'(2) Raptor 2.0 monotube HD rear (10015798)', parts:[{pn:'10015798',qty:2}]}];
-         const opts=[noShocks,{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
+         if(sel.scope==='rear-only') return [{val:'mono', label:'Rear Monotube Shocks', sub:'(2) Raptor 2.0 monotube HD rear (10015798) — required', parts:[{pn:'10015798',qty:2}]}];
+         const opts=[{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
          if(is3Lift) opts.push({val:'rr-front', label:'Remote Reservoir Front + Monotube Rear',
            sub:'(2) RAP-10124 RR front (10006722) + (4) clamps (80227) + (2) monotube HD rear (10015798)',
            parts:[{pn:'10006722',qty:2},{pn:'80227',qty:4},{pn:'10015798',qty:2}]});
@@ -14243,6 +14245,13 @@ function renderSteps() {
     });
     const prevDone = prevRequired.every(s=>S.sel[s.key]!==undefined);
     const isLocked = !prevDone && !isDone;
+
+    // Auto-select when a required step has exactly one valid choice
+    if(!isDone && step.badge==='req' && prevDone && choices && choices.length===1) {
+      S.sel[step.key] = choices[0].val;
+      clearDownstreamKeys(step.key);
+      render(); return;
+    }
 
     const card = document.createElement('div');
     card.className = `step-card${isLocked?' locked':''}${isDone?' done':''}`;
