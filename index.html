@@ -13828,8 +13828,8 @@ const CATALOG = [
           const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':'2WD (RWD)';
           return [
             {val:'none', label:'No Additional Rear Shocks'},
-            {val:'yes',  label:,
-             sub:,
+            {val:'yes',  label:`Add Monotube Rear Shocks — ${dtLabel}`,
+             sub:`(2) Kelderman-Raptor 2.0 bushing mount — ${dtLabel} fitment`,
              parts:[{pn,qty:2}]},
           ];
         },
