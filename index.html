@@ -482,6 +482,7 @@ const P = {
   '10046343': {desc:'Kit — 3" Lift Front — ARKA — 2025+ RAM 4500/5500 Chassis Cab. Shocks Not Included (RAP-10156 / 10037607 ×2, sold separately).', msrp:1970},
   '10038135': {desc:'Kit — 6" Lift Front — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Shock: RAP-10096 / 10003384 ×2, Not Included.', msrp:4630},
   '10039931': {desc:'Kit — 4-Link / Watts Link Rear — Overlander — 2025+ RAM 4500/5500 Chassis Cab. Approx. 3" Rear Lift. Shock: RAP-10158 / 10037609 ×2, Not Included.', msrp:5750},
+  '10040352':        {desc:'Kit — Clevis Hook Bushing Kit, per bumper — Alpha & Delta Series Bumpers (Monster Hooks Reaper Shackles)', msrp:0},
   'REEL-418-RAM5500': {desc:'CV Front Driveshaft with Flange — JE Reel (REEL-418-RAM5500) — 2025+ RAM 4500/5500 Chassis Cab. Required for ARKA and Overlander front lift systems.', msrp:2000, noDiscount:true},
   '10037607': {desc:'Kelderman-Raptor 2.0 Monotube Shock (RAP-10156) — 2025+ RAM 4500/5500 CC, 3" ARKA Lift Front (sold individually)', msrp:390},
   '10003381': {desc:'Kelderman-Raptor 2.0 Remote Reservoir Shock (RAP-10093) — 5-6" Lift Front, F-250/F-350',         msrp:480},
@@ -837,7 +838,7 @@ const P = {
 
   // ── Bumper Accessories ────────────────────────────────────────────
   '31910':        {desc:'Kit — Bravo License Plate Kit, Honeycomb Mesh — Fits Alpha, Bravo & Delta Front Bumpers', msrp:0},
-  '61000':        {desc:'Infinite Rule Security 7/8" × 3" Span-Universal Locking Pin',               msrp:45},
+  '61024':        {desc:'Infinite Rule Security 7/8" × 3" Span-Universal Locking Pin',               msrp:53},
   // Monster Hooks — Swivel Hooks (qty 2 per bumper)
   'MH-SW1B':      {desc:'Monster Hooks Swivel Hook, Satin Black',         msrp:250},
   'MH-SW1C':      {desc:'Monster Hooks Swivel Hook, Chrome Plated',       msrp:300},
@@ -992,7 +993,7 @@ const P = {
   '10037604': {desc:'Kelderman-Raptor 2.0 Bushing Mount Monotube Shock, Std Valving — 2013-2018 RAM 4500/5500 CC Front / Sprinter 3500 Rear 2WD', msrp:390},
   '10039999': {desc:'Kelderman-Raptor 2.0 Bushing Mount Monotube Shock — Sprinter 3500 Rear, AWD',                    msrp:390},
   '80465':    {desc:'Kelderman-Raptor Front Shock — Mercedes-Benz Sprinter 3500 AWD (4MATIC) Only', msrp:480},
-  '10045227': {desc:'Kit — Stock Height Auxiliary Front Shock Kit — 2015+ Mercedes-Benz Sprinter Passenger Van & Cab Chassis 2500/3500 4WD (Shocks Included)', msrp:1450},
+  '10045227': {desc:'Kit — Stock Height Auxiliary Front Shock Kit — 2015+ Mercedes-Benz Sprinter 2500/3500 AWD (4MATIC) (Shocks Included)', msrp:1450},
   '10013632': {desc:'Kit — 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB, 2" Lift 2-Stage Rear Air Suspension, AWD', msrp:3800},
 
   // ── General Medium Duty (Class 6/7) ──────────────────────────
@@ -1453,7 +1454,7 @@ const P = {
 
   // ── Ford CC Overlander 2023+ ──────────────────────────────────────
   '10036905':{desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC 4WD, 6" Lift Control Arm Front — Overlander, Axle 1" Forward — Includes Adjustable Radius Arms, 80227 Split Clamps & Hardware. REQUIRES PSC SK756. Shocks Not Included.', msrp:4630},
-  '10046218': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 3" Lift Control Arm Front, 4WD — Includes Radius Arms, Sway Bar & Bushings, Kryptonite End Links (Requires PSC SK756; Shocks: RAP-10124 / 10006722 ×2, Not Included)', msrp:4630},
+  '10046218': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 3" Lift Control Arm Front, 4WD — Includes Radius Arms, Sway Bar & Bushings, Kryptonite End Links (Shocks: RAP-10124 / 10006722 ×2, Not Included)', msrp:4630},
   'SK756':    {desc:'PSC Hydraulic Assist — 2023+ Ford F-450/F-550/F-600 Chassis Cab 4WD (Required for 3" and 6" Overlander Lift)', msrp:4450},
   '10035930': {desc:'Kit — 6" Lift 4-Link Rear — Overlander — 2023+ Ford F-450/F-550/F-600 Chassis Cab — 84", 108", 120" CA ONLY. Does NOT fit 60" CA trucks with external DEF tank. No SherpTek gooseneck mount. Includes 80253 Piggyback Clamps & Hardware. Shocks Not Included.', msrp:5250},
   '10041754': {desc:'Kit — 2023+ Ford F-450/F-550/F-600 CC, 6" Lift 4-Link Rear — Stomper, 60" CA (Ext. DEF Tank, Integrated Box Mounts, Pickup Box Conversion)', msrp:5250},
@@ -2893,7 +2894,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
     {val:'sw1s',    label:'Monster Hooks Swivel Hook — Silver Powder Coat (+$500)',   sub:'MH-SW1S × 2',   parts:[{pn:'MH-SW1S',qty:2}]},
     {val:'sw1a',    label:'Monster Hooks Swivel Hook — Raw Aluminum (+$500)',         sub:'MH-SW1A × 2',   parts:[{pn:'MH-SW1A',qty:2}]},
     {val:'sw1r',    label:'Monster Hooks Swivel Hook — Candy Red (+$500)',            sub:'MH-SW1R × 2',   parts:[{pn:'MH-SW1R',qty:2}]},
-    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2',parts:[{pn:'MH-RS78XLB',qty:2}]},
+    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2',parts:[{pn:'MH-RS78XLB',qty:2},{pn:'10040352',qty:1}]},
   ];
   const wingLightChoices = (qty)=>[
     {val:'none',          label:`No Lights — Cutout${qty>1?'s':''} Included`},
@@ -3213,7 +3214,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
         const fh = sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks', pn:hookPN[fh], qty:2});
-          if(gg&&gg!=='none') parts.push({section:'Hooks', pn:'61000', qty:2}); // locking pins for GG hooks
+          if(gg&&gg!=='none') parts.push({section:'Hooks', pn:'61024', qty:2}); // locking pins for GG hooks
         }
       }
 
@@ -3258,7 +3259,7 @@ function fordSD17Bumper(id, yr_from, yr_to, make, model, label, frontModelBase, 
     {val:'sw1s',    label:'Monster Hooks Swivel Hook — Silver Powder Coat (+$500)',   sub:'MH-SW1S × 2',    parts:[{pn:'MH-SW1S',qty:2}]},
     {val:'sw1a',    label:'Monster Hooks Swivel Hook — Raw Aluminum (+$500)',         sub:'MH-SW1A × 2',    parts:[{pn:'MH-SW1A',qty:2}]},
     {val:'sw1r',    label:'Monster Hooks Swivel Hook — Candy Red (+$500)',            sub:'MH-SW1R × 2',    parts:[{pn:'MH-SW1R',qty:2}]},
-    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2', parts:[{pn:'MH-RS78XLB',qty:2}]},
+    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2', parts:[{pn:'MH-RS78XLB',qty:2},{pn:'10040352',qty:1}]},
   ];
   const wingLightChoices = (qty)=>[
     {val:'none',          label:`No Lights — Cutout${qty>1?'s':''} Included`},
@@ -3562,7 +3563,7 @@ function fordSD17Bumper(id, yr_from, yr_to, make, model, label, frontModelBase, 
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks', pn:hookPN[fh], qty:2});
-          if(gg&&gg!=='none') parts.push({section:'Hooks', pn:'61000', qty:2});
+          if(gg&&gg!=='none') parts.push({section:'Hooks', pn:'61024', qty:2});
         }
       }
 
@@ -3866,8 +3867,9 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
+          if(fh==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
           const needsFrontLP=(gg&&gg!=='none'&&clevis)||(sel['front-series']==='bravo'&&sel['bravo-face']==='clevis');
-          if(needsFrontLP) parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(needsFrontLP) parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -3884,7 +3886,8 @@ function ramSDBumper(id, yr_from, yr_to, make, model, label, frontModelBase, ggM
         const rph=sel['rear-pu-hooks'];
         if(rph&&rph!=='none'&&hookPN[rph]){
           parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
-          if(rs==='bravo'&&rf==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(rph==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(rs==='bravo'&&rf==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4177,8 +4180,9 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
+          if(fh==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
           const needsLP=(ggModelBase&&sel['gg-clevis']==='clevis')||(sel['front-series']==='bravo'&&sel['bravo-face']==='clevis');
-          if(needsLP) parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(needsLP) parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4194,7 +4198,8 @@ function ramSDBumper2010(id, yr_from, yr_to, make, model, label, frontModelBase,
         const rph=sel['rear-pu-hooks'];
         if(rph&&rph!=='none'&&hookPN[rph]){
           parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
-          if(rs==='bravo'&&rf==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(rph==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(rs==='bravo'&&rf==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4416,7 +4421,8 @@ function gmHDPickup2020Bumper(id, yr_from, yr_to, make, model, label, frontModel
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
-          if(gg&&gg!=='none'&&sel['gg-clevis']==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(fh==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(gg&&gg!=='none'&&sel['gg-clevis']==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4429,7 +4435,7 @@ function gmHDPickup2020Bumper(id, yr_from, yr_to, make, model, label, frontModel
         const rh=sel['rear-hooks'];
         if(rh&&rh!=='none'&&hookPN[rh]){
           parts.push({section:'Hooks',pn:hookPN[rh],qty:2});
-          if(sel['rear-series']==='bravo-clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(sel['rear-series']==='bravo-clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4770,7 +4776,8 @@ function gmSilveradoCCBumper(id, yr_from, yr_to, make, model, label, frontModelB
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
-          if(series==='bravo'&&sel['bravo-face']==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(fh==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(series==='bravo'&&sel['bravo-face']==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
 
@@ -4780,6 +4787,7 @@ function gmSilveradoCCBumper(id, yr_from, yr_to, make, model, label, frontModelB
         const rph=sel['rear-pu-hooks'];
         if(rph&&rph!=='none'&&hookPN[rph]){
           parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
+          if(rph==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
         }
       }
 
@@ -4930,7 +4938,8 @@ function ramSDBumper2003(id, yr_from, yr_to, make, model, label, frontModelBase,
         const fh=sel['front-hooks'];
         if(fh&&fh!=='none'&&hookPN[fh]){
           parts.push({section:'Hooks',pn:hookPN[fh],qty:2});
-          if(series==='bravo'&&sel['bravo-face']==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(fh==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(series==='bravo'&&sel['bravo-face']==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
       if(hasRearPos(sel)){
@@ -4941,7 +4950,8 @@ function ramSDBumper2003(id, yr_from, yr_to, make, model, label, frontModelBase,
         const rph=sel['rear-pu-hooks'];
         if(rph&&rph!=='none'&&hookPN[rph]){
           parts.push({section:'Hooks',pn:hookPN[rph],qty:2});
-          if(rf==='clevis') parts.push({section:'Hooks',pn:'61000',qty:2});
+          if(rph==='rs78xlb') parts.push({section:'Hooks',pn:'10040352',qty:1});
+          if(rf==='clevis') parts.push({section:'Hooks',pn:'61024',qty:2});
         }
       }
       return parts;
@@ -5233,7 +5243,7 @@ function fordSD11Bumper(id, yr_from, yr_to, make, model, label, modelBase, hasSt
     {val:'sw1s',    label:'Monster Hooks Swivel Hook — Silver Powder Coat (+$500)',   sub:'MH-SW1S × 2',    parts:[{pn:'MH-SW1S',qty:2}]},
     {val:'sw1a',    label:'Monster Hooks Swivel Hook — Raw Aluminum (+$500)',         sub:'MH-SW1A × 2',    parts:[{pn:'MH-SW1A',qty:2}]},
     {val:'sw1r',    label:'Monster Hooks Swivel Hook — Candy Red (+$500)',            sub:'MH-SW1R × 2',    parts:[{pn:'MH-SW1R',qty:2}]},
-    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2', parts:[{pn:'MH-RS78XLB',qty:2}]},
+    {val:'rs78xlb', label:'Monster Hooks Reaper Hook (+$350)',                        sub:'MH-RS78XLB × 2', parts:[{pn:'MH-RS78XLB',qty:2},{pn:'10040352',qty:1}]},
   ];
   const wingLightChoices = (qty)=>[
     {val:'none',          label:`No Lights — Cutout${qty>1?'s':''} Included`},
@@ -10720,7 +10730,7 @@ const CATALOG = [
           {val:'stock',    label:'Stock Height',  sub:'2-Stage front + coil replacement rear'},
           {val:'3-inch',   label:'3" Lift',       sub:'3" front and rear lift'},
           {val:'5-6',      label:'5-6" Lift',     sub:'5-6" front and rear lift'},
-          {val:'12-inch',  label:'12" Lift',      sub:'12" 4-Link front and rear — includes mandatory driveshaft'},
+          {val:'12-inch',  label:'12" Lift',      sub:'12" 4-Link front and rear — front driveshaft required'},
         ],
       },
       {
@@ -10892,7 +10902,7 @@ const CATALOG = [
       },
       {
         key:'arms', label:'Fabricated Radius Arms', badge:'opt',
-        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&(sel.scope==='front-only'||!!sel.rear),
+        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&sel.height!=='12-inch'&&(sel.scope==='front-only'||!!sel.rear),
         choices:()=>[
           {val:'none', label:'No Radius Arms'},
           {val:'arms', label:'Add Fabricated Radius Arms (10003773)',
@@ -10961,7 +10971,7 @@ const CATALOG = [
       const parts = [];
       const fpnMap = {'front-stock':'10004394','front-3':'10005023','68rfe':'10004537','aisin':'10006031','12-68rfe':'10003641','12-aisin':'10005987'};
       if(sel.front&&fpnMap[sel.front]) parts.push({section:'Front Suspension',pn:fpnMap[sel.front],qty:1});
-      // 12" lift — mandatory driveshaft
+      // 12" lift — front driveshaft required
       if(sel.front==='12-68rfe') parts.push({section:'Front Suspension',pn:'REEL-RAM4119K-68RFRE',qty:1});
       if(sel.front==='12-aisin') parts.push({section:'Front Suspension',pn:'REEL-RAM4119K-AISIN',qty:1});
       if(sel['front-shock']==='rr'){parts.push({section:'Shocks',pn:'10003380',qty:2});parts.push({section:'Shocks',pn:'10004545',qty:1});}
@@ -11256,7 +11266,7 @@ const CATALOG = [
           {val:'stock',   label:'Stock Height', sub:'Front and/or rear at factory ride height'},
           {val:'3-inch',  label:'3" Lift',       sub:'3" front lift — pair with stock height rear or front-only'},
           {val:'5-6',     label:'5-6" Lift',     sub:'Front and rear lift kit'},
-          {val:'12-inch', label:'12" Lift',      sub:'12" 4-Link front and rear — includes mandatory driveshaft'},
+          {val:'12-inch', label:'12" Lift',      sub:'12" 4-Link front and rear — front driveshaft required'},
         ],
       },
       {
@@ -11408,7 +11418,7 @@ const CATALOG = [
       },
       {
         key:'arms', label:'Fabricated Radius Arms', badge:'opt',
-        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&(sel.scope==='front-only'||!!sel.rear),
+        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&sel.height!=='12-inch'&&(sel.scope==='front-only'||!!sel.rear),
         choices:()=>[
           {val:'none', label:'No Radius Arms'},
           {val:'arms', label:'Add Fabricated Radius Arms (10003773)',
@@ -11475,7 +11485,7 @@ const CATALOG = [
         const fPnMap={'68rfe':'10004537','aisin':'10006031','12-68rfe':'10003641','12-aisin':'10005987'};
         const fPn = fPnMap[sel.front] || (sel.height==='stock'?'10004394':sel.height==='3-inch'?'10005023':null);
         if(fPn) parts.push({section:'Front Suspension',pn:fPn,qty:1});
-        // 12" mandatory driveshaft
+        // 12" lift — front driveshaft required
         if(sel.front==='12-68rfe') parts.push({section:'Front Suspension',pn:'REEL-RAM4119K-68RFRE',qty:1});
         if(sel.front==='12-aisin') parts.push({section:'Front Suspension',pn:'REEL-RAM4119K-AISIN',qty:1});
       }
@@ -13780,9 +13790,18 @@ const CATALOG = [
     kits:[{id:'spr-2500-kit', label:'Air Suspension System', sub:'2019+ 170"WB SRW — 2-Stage Rear'}],
     steps:[
       {
+        key:'drive', label:'Drivetrain', badge:'req',
+        hint:'Select drivetrain — determines shock compatibility and front shock availability.',
+        condition:()=>true,
+        choices:()=>[
+          {val:'2wd', label:'2WD (RWD — Rear-Wheel Drive)'},
+          {val:'awd', label:'AWD (4MATIC — All-Wheel Drive)'},
+        ],
+      },
+      {
         key:'rear', label:'Rear Air Suspension', badge:'req',
         hint:'2-Stage rear air suspension for 2019+ Sprinter 2500 SRW 170"WB.',
-        condition:()=>true,
+        condition:(sel)=>!!sel.drive,
         choices:()=>[
           {val:'std', label:'2-Stage Rear Air Suspension',
            sub:'2019+ Mercedes-Benz Sprinter 2500 SRW 170"WB (10029639)',
@@ -13790,18 +13809,30 @@ const CATALOG = [
         ],
       },
       {
-        key:'shocks', label:'Rear Shocks', badge:'opt',
-        hint:'Optional monotube rear shocks. Fitment differs by drivetrain — select accordingly.',
-        condition:(sel)=>!!sel.rear,
+        key:'front-shock', label:'Front Shocks', badge:'opt',
+        hint:'Optional auxiliary front shock kit — AWD (4MATIC) applications only.',
+        condition:(sel)=>sel.drive==='awd'&&!!sel.rear,
         choices:()=>[
-          {val:'none', label:'No Additional Shocks'},
-          {val:'2wd',  label:'Add Monotube Shocks — 2WD (RWD)',
-           sub:'(2) Kelderman-Raptor 2.0 bushing mount — rear-wheel drive fitment',
-           parts:[{pn:'10037604',qty:2}]},
-          {val:'awd',  label:'Add Monotube Shocks — AWD (4MATIC)',
-           sub:'(2) Kelderman-Raptor 2.0 bushing mount — all-wheel drive fitment',
-           parts:[{pn:'10039999',qty:2}]},
+          {val:'none', label:'No Front Shocks'},
+          {val:'yes',  label:'Add Auxiliary Front Shock Kit (10045227)',
+           sub:'10045227 — Stock Height Auxiliary Front Shock Kit, 2015+ Sprinter 2500/3500 AWD (4MATIC) (shocks included)',
+           parts:[{pn:'10045227',qty:1}]},
         ],
+      },
+      {
+        key:'shocks', label:'Rear Shocks', badge:'opt',
+        hint:'Optional monotube rear shocks. P/N matched to selected drivetrain.',
+        condition:(sel)=>!!sel.rear,
+        choices:(kit,sel)=>{
+          const pn=sel.drive==='awd'?'10039999':'10037604';
+          const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':'2WD (RWD)';
+          return [
+            {val:'none', label:'No Additional Rear Shocks'},
+            {val:'yes',  label:,
+             sub:,
+             parts:[{pn,qty:2}]},
+          ];
+        },
       },
       {
         key:'ctrl', label:'Air Controls', badge:'req',
@@ -13820,8 +13851,11 @@ const CATALOG = [
     buildParts:(kit,sel)=>{
       const parts=[];
       if(sel.rear==='std') parts.push({section:'Rear Suspension', pn:'10029639', qty:1});
-      if(sel.shocks==='2wd') parts.push({section:'Shocks', pn:'10037604', qty:2});
-      if(sel.shocks==='awd') parts.push({section:'Shocks', pn:'10039999', qty:2});
+      if(sel['front-shock']==='yes') parts.push({section:'Shocks', pn:'10045227', qty:1});
+      if(sel.shocks==='yes'){
+        const sPn=sel.drive==='awd'?'10039999':'10037604';
+        parts.push({section:'Shocks', pn:sPn, qty:2});
+      }
       const c={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
       (c[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
       if(sel.ctrl==='none') mfLine(false, !!sel.rear, false, true).forEach(p=>parts.push(p));
@@ -13854,7 +13888,7 @@ const CATALOG = [
         choices:()=>[
           {val:'none', label:'No Front Shocks'},
           {val:'yes',  label:'Add Auxiliary Front Shock Kit (10045227)',
-           sub:'10045227 — Stock Height Auxiliary Front Shock Kit, 2015+ Sprinter 2500/3500 4WD (shocks included)',
+           sub:'10045227 — Stock Height Auxiliary Front Shock Kit, 2015+ Sprinter 2500/3500 AWD (4MATIC) (shocks included)',
            parts:[{pn:'10045227',qty:1}]},
         ],
       },
