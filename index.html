@@ -2780,7 +2780,7 @@ function ramCC2013(id, model, label, yrFrom=2013, yrTo=2018, frontPn='KLM21525')
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth&&has4link){
-           opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -5111,7 +5111,7 @@ function withAccessories(entry, cfg) {
   }
 
   // Inject BFH hitch as a suspension-path step — visible only when Spare Tire Keeper ctrl selected
-  const spareTireKeeperVals = ['alp4','alp4-console','alp4-dc','alp4-dc-console'];
+  const spareTireKeeperVals = ['alp4','alp4-console'];
   if(hasHitch) {
     newSteps = [...newSteps, {
       key:'bfh', label:'THE BFH — Upgraded Hitch Receiver', badge:'opt',
@@ -5594,21 +5594,18 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK — Dual VIAIR compressor, dryer, dual tank, dump valve':'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+           {val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',
+            sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',
+            parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]},
          ];
          if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
-         if(sel.scope!=='front-only')
-           opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          if(isBoth){
-           opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'alp4',           label:'Air Lift ALP4 Electronic Air Control System — Spare Tire Keeper',sub:'10040872 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040872',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',sub:'10040870 + 10015203 overhead console mount',parts:[{pn:'10040870',qty:1},{pn:'10015203',qty:1}]});
            opts.push({val:'alp4-console',   label:'Air Lift ALP4 Electronic Air Control System — Spare Tire Keeper + Overhead Console',sub:'10040872 + 10015203 — spare tire keeper w/ overhead console mount',parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]});
-           if(sel.height==='stock'||sel.height==='2-3'||sel.height==='5-6'){
-             opts.push({val:'alp4-dc',        label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper)',sub:'10032642 — Dual compressor, dual tank, retains spare tire',parts:[{pn:'10032642',qty:1}]});
-             opts.push({val:'alp4-dc-console', label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper) + Overhead Console',sub:'10032642 + 10015203 overhead console mount',parts:[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]});
-           }
          }
-         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock'));
+         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock')&&(o.val!=='single-sd'||sel.scope!=='front-only'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -5786,21 +5783,18 @@ const CATALOG = [
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK — Dual VIAIR compressor, dryer, dual tank, dump valve':'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
+           {val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',
+            sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',
+            parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]},
          ];
          if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
-         if(sel.scope!=='front-only')
-           opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          if(isBoth){
-           opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'alp4',           label:'Air Lift ALP4 Electronic Air Control System — Spare Tire Keeper',sub:'10040872 — 4-corner electronic w/ spare tire keeper',parts:[{pn:'10040872',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',sub:'10040870 + 10015203 overhead console mount',parts:[{pn:'10040870',qty:1},{pn:'10015203',qty:1}]});
            opts.push({val:'alp4-console',   label:'Air Lift ALP4 Electronic Air Control System — Spare Tire Keeper + Overhead Console',sub:'10040872 + 10015203 — spare tire keeper w/ overhead console mount',parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]});
-           if(sel.height==='stock'||sel.height==='2-3'||sel.height==='5-6'){
-             opts.push({val:'alp4-dc',        label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper)',sub:'10032642 — Dual compressor, dual tank, retains spare tire',parts:[{pn:'10032642',qty:1}]});
-             opts.push({val:'alp4-dc-console', label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper) + Overhead Console',sub:'10032642 + 10015203 overhead console mount',parts:[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]});
-           }
          }
-         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock'));
+         return opts.filter(o=>(o.val!=='fcas'||sel.scope==='front-only')&&(o.val!=='slkd'||sel.height!=='stock')&&(o.val!=='single-sd'||sel.scope!=='front-only'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -5960,11 +5954,14 @@ const CATALOG = [
            {val:'slkd',             label:'Mechanical, Self-Leveling Air Control System (Single Compressor - Single Tank)',
             sub:sel.scope==='both'?'SLKD2WD + (2) HCVLK — Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel':'SLKD2WD — Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:sel.scope==='both'?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
+           {val:'single-sd',        label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',
+            sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',
+            parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]},
            {val:'dual-mech',        label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:sel.scope==='both'?'30664 + (2) HCVLK — Dual VIAIR compressor, dryer, dual tank, dump valve':'30664 — Dual VIAIR compressor, dryer, dual tank, dump valve',
             parts:sel.scope==='both'?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
            {val:'eslk3h2',          label:'Air Lift ALP4 Electronic Air Control System',
-            sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+            sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
            {val:'alp4',             label:'Air Lift ALP4 Electronic Air Control System — Spare Tire Keeper',
             sub:'10040872 — 4-corner electronic w/ spare tire keeper', parts:[{pn:'10040872',qty:1}]},
            {val:'eslk3h2-console',  label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
@@ -5973,15 +5970,9 @@ const CATALOG = [
             sub:'10040872 + 10015203 — spare tire keeper w/ overhead console mount',
             parts:[{pn:'10040872',qty:1},{pn:'10015203',qty:1}]},
          ];
-         if(sel.height==='stock'||sel.height==='2-3'){
-           opts.push({val:'alp4-dc',        label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper)',sub:'10032642 — Dual compressor, dual tank, retains spare tire',parts:[{pn:'10032642',qty:1}]});
-           opts.push({val:'alp4-dc-console', label:'Air Lift ALP4 Electronic Air Control System — Dual Compressor Box (Spare Tire Keeper) + Overhead Console',sub:'10032642 + 10015203 overhead console mount',parts:[{pn:'10032642',qty:1},{pn:'10015203',qty:1}]});
-         }
-         if(sel.scope!=='front-only')
-           opts.push({val:'single-sd',label:'Single VIAIR Compressor Box — Mechanical 2 Corner, w/Dryer, Dual Tank, w/Dump Valve (10015338)',sub:sel.scope==='both'?'10015338 + (2) HCVLK — 2023+ Ford Super Duty Pickup Controls Box':'10015338 — 2023+ Ford Super Duty Pickup Controls Box',parts:sel.scope==='both'?[{pn:'10015338',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'10015338',qty:1}]});
          const isBoth=sel.scope==='both';
          if(!isBoth&&sel.scope==='front-only') return opts.filter(o=>['none','fcas'].includes(o.val)||(o.val==='slkd'&&sel.height!=='stock'));
-         return isBoth ? opts.filter(o=>o.val!=='fcas'&&(o.val!=='slkd'||sel.height!=='stock')) : opts.filter(o=>!['fcas','eslk3h2','alp4','eslk3h2-console','alp4-console','alp4-dc','alp4-dc-console'].includes(o.val)&&(o.val!=='slkd'||sel.height!=='stock'));
+         return isBoth ? opts.filter(o=>o.val!=='fcas'&&(o.val!=='slkd'||sel.height!=='stock')) : opts.filter(o=>!['fcas','eslk3h2','alp4','eslk3h2-console','alp4-console'].includes(o.val)&&(o.val!=='slkd'||sel.height!=='stock'));
        },
       },
       {key:'susp-sensors', label:'OEM Headlight & Bed Level Sensors', badge:'req',
@@ -6118,7 +6109,7 @@ const CATALOG = [
          {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ];
@@ -6240,7 +6231,7 @@ const CATALOG = [
          {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ];
@@ -6355,7 +6346,7 @@ const CATALOG = [
          {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ];
@@ -6483,7 +6474,7 @@ const CATALOG = [
          {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ];
@@ -6611,7 +6602,7 @@ const CATALOG = [
          {val:'dual-mech',      label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console',label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ];
@@ -6814,7 +6805,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7055,7 +7046,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7233,7 +7224,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7367,7 +7358,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7496,7 +7487,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7616,7 +7607,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7741,7 +7732,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -7907,7 +7898,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -8088,7 +8079,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -8231,7 +8222,7 @@ const CATALOG = [
             sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD', parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
             sub:isBoth?'30664 + (2) HCVLK':'30664', parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
-           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'3h',       label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ].filter(o=>{
            if(sel.scope==='front-only') return ['none','fcas','slkd'].includes(o.val);
            if(o.val==='fcas') return false;
@@ -8577,7 +8568,7 @@ const CATALOG = [
          ];
          if(isBoth){
            opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-             sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+             sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 + Overhead Console Mount',
              sub:'10040870 + 10015203 overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10015203',qty:1}]});
          }
@@ -8819,7 +8810,7 @@ const CATALOG = [
          ];
          if(isBoth){
            opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-             sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+             sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 + Overhead Console Mount',
              sub:'10040870 + 10015203 overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10015203',qty:1}]});
          }
@@ -9022,7 +9013,7 @@ const CATALOG = [
          ];
          if(isBoth){
            opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-             sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+             sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 + Overhead Console Mount',
              sub:'10040870 + 10015203 overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10015203',qty:1}]});
          }
@@ -9426,7 +9417,7 @@ const CATALOG = [
          {val:'dual-mech',label:'Mechanical, Self-Leveling Air Control System (Dual Compressor - Dual Tank)',
           sub:'30664', parts:[{pn:'30664',qty:1}]},
          {val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',
-          sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+          sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          {val:'eslk3h2-console', label:'Air Lift ALP4 Electronic Air Control System + Overhead Console',
           sub:'10040870 + 10009335 overhead console mount', parts:[{pn:'10040870',qty:1},{pn:'10009335',qty:1}]},
        ].filter(o=>isBoth||!['eslk3h2','eslk3h2-console'].includes(o.val)); },
@@ -9491,7 +9482,7 @@ const CATALOG = [
            {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD + 2× HCVLK)',
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]},
-           {val:'eslk3h2', label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'eslk3h2', label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ];
          return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -9567,7 +9558,7 @@ const CATALOG = [
            {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD + 2× HCVLK)',
             sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
             parts:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]},
-           {val:'eslk3h2', label:'Air Lift ALP4 Electronic Air Control System', sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]},
+           {val:'eslk3h2', label:'Air Lift ALP4 Electronic Air Control System', sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]},
          ];
          return [
            {val:'none', label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
@@ -11920,7 +11911,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -12175,7 +12166,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
          }
          return opts;
        },
@@ -12388,7 +12379,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -12576,7 +12567,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -12718,7 +12709,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console', sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -12887,7 +12878,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console', sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -13054,7 +13045,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console', sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -13210,7 +13201,7 @@ const CATALOG = [
             parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
          if(isBoth){
-           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+           opts.push({val:'eslk3h2',         label:'Air Lift ALP4 Electronic Air Control System',                   sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
            opts.push({val:'eslk3h2-console', label:'Air Lift ALP4 Electronic + Overhead Console', sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
          }
          return opts;
@@ -13330,7 +13321,7 @@ const CATALOG = [
            {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});}
+         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});}
          return opts;
        },
       },
@@ -13389,7 +13380,7 @@ const CATALOG = [
            {val:'slkd2wd',   label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',sub:isBoth?'SLKD2WD + (2) HCVLK':'SLKD2WD — Viair compressor, 3-gal tank, HCV, dump valves, air dryer',parts:isBoth?[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKD2WD',qty:1}]},
            {val:'dual-mech', label:'Mechanical Self-Leveling — Dual Compressor (30664)',sub:isBoth?'30664 + (2) HCVLK':'30664 — Dual VIAIR compressor, dryer, dual tank',parts:isBoth?[{pn:'30664',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'30664',qty:1}]},
          ];
-         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'4-corner independent electronic control',parts:[{pn:'10040870',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});}
+         if(isBoth){opts.push({val:'eslk3h2',label:'Air Lift ALP4 Electronic Air Control System',sub:'10040870 — 4-corner electronic air control system',parts:[{pn:'10040870',qty:1}]});opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console',sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount',parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});}
          return opts;
        },
       },
@@ -13595,7 +13586,7 @@ const CATALOG = [
           ];
           if(isBoth){
             opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
-              sub:'4-corner independent electronic control', parts:[{pn:'10040870',qty:1}]});
+              sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
             opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console (10009358)',
               sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
           }
