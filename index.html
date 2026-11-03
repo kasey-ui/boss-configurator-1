@@ -988,13 +988,13 @@ const P = {
 
   // ── Mercedes-Benz Sprinter ────────────────────────────────────
   '10029639': {desc:'Kit — 2019+ Mercedes-Benz Sprinter 2500 SRW 170"WB, 2-Stage Rear Air Suspension',                msrp:3450},
-  '10012180': {desc:'Kit — 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB, 2" Lift 2-Stage Rear Air Suspension, 2WD',  msrp:3800},
+  '10012180': {desc:'Kit — 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB, 2" Lift 2-Stage Rear Air Suspension, 2WD (Compatible with rear-mounted Cummins Onan generators)',  msrp:3800},
   '10012821': {desc:'Kit — Cummins Onan Generator Mounting Brackets & Hardware Kit, 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB', msrp:0},
   '10037604': {desc:'Kelderman-Raptor 2.0 Bushing Mount Monotube Shock, Std Valving — 2013-2018 RAM 4500/5500 CC Front / Sprinter 3500 Rear 2WD', msrp:390},
   '10039999': {desc:'Kelderman-Raptor 2.0 Bushing Mount Monotube Shock — Sprinter 3500 Rear, AWD',                    msrp:390},
   '80465':    {desc:'Kelderman-Raptor Front Shock — Mercedes-Benz Sprinter 3500 AWD (4MATIC) Only', msrp:480},
   '10045227': {desc:'Kit — Stock Height Auxiliary Front Shock Kit — 2015+ Mercedes-Benz Sprinter 2500/3500 AWD (4MATIC) (Shocks Included)', msrp:1450},
-  '10013632': {desc:'Kit — 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB, 2" Lift 2-Stage Rear Air Suspension, AWD', msrp:3800},
+  '10013632': {desc:'Kit — 2014+ Mercedes-Benz Sprinter 3500 DRW 170"WB, 2" Lift 2-Stage Rear Air Suspension, 4WD (2014–2022) & AWD (2023+) (Compatible with rear-mounted Cummins Onan generators)', msrp:3800},
 
   // ── General Medium Duty (Class 6/7) ──────────────────────────
   '10031575':       {desc:'Kit — General Medium Duty 2-Stage Rear Air Suspension, C&C, 34" Framerail, With Shocks & Shock Mounts, No Controls', msrp:4825},
@@ -1595,7 +1595,7 @@ const P = {
 
   // ── Fox Shocks — G3/G4 (2003-2013) ──────────────────────────────
   '980-02-032':        {desc:'Fox Performance Shock — 2003-2013 RAM 2500/3500 Pickup 5-6" Front (each)', msrp:450},
-  '980-02-034':        {desc:'Fox Performance Shock — 2003-2013 RAM 2500/3500 Pickup 8-10" Front (each)', msrp:450},
+  '980-02-034':        {desc:'Fox Performance Shock — 2003-2013 RAM 2500/3500 Pickup 8-10" Front; 1999-2004 Ford Super Duty / 1999-2005 Excursion 12-14" Front ×3 (each)', msrp:450},
   '980-02-035':        {desc:'Fox Performance Shock — 2003-2013 RAM 2500/3500 Pickup 5-6" & 8-10" Rear (each)', msrp:450},
   // ── Fox Shocks — G5 (2013-2018) ──────────────────────────────────
   '985-24-007':        {desc:'Fox Performance Shock — 2013-2018 RAM 3500 5-6" Rear IFP Aluminum (each)', msrp:450},
@@ -7859,7 +7859,7 @@ const CATALOG = [
          const h=sel.height;
          if(h==='5-6')   return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-005 ×2)',sub:'(2) 985-24-005 — 1999-2004 Ford 5-6" front',parts:[{pn:'985-24-005',qty:2}]}];
          if(h==='9-10')  return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-053 ×2)',sub:'(2) 985-24-053 — 1999-2004 Ford 9-10" front',parts:[{pn:'985-24-053',qty:2}]}];
-         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×2)',sub:'(2) 980-02-031 — 1999-2004 Ford 12-14" front',parts:[{pn:'980-02-031',qty:2}]}];
+         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×1, 980-02-034 ×3)',sub:'(1) 980-02-031 + (3) 980-02-034 — 1999-2004 Ford 12-14" front',parts:[{pn:'980-02-031',qty:1},{pn:'980-02-034',qty:3}]}];
        },
       },
       {key:'rear-shock', label:'Rear Shocks', badge:'opt',
@@ -7935,7 +7935,7 @@ const CATALOG = [
       const dssPn=isLift?'30169':'69170';
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel['front-shock']==='fox') parts.push({section:'Shocks',pn:h==='12-14'?'980-02-031':h==='9-10'?'985-24-053':'985-24-005',qty:2});
+      if(sel['front-shock']==='fox'){if(h==='12-14'){parts.push({section:'Shocks',pn:'980-02-031',qty:1});parts.push({section:'Shocks',pn:'980-02-034',qty:3});}else parts.push({section:'Shocks',pn:h==='9-10'?'985-24-053':'985-24-005',qty:2});}
       if(sel['rear-shock']==='fox')  parts.push({section:'Shocks',pn:h==='12-14'?'980-24-032':h==='9-10'?'985-24-053':'985-24-005',qty:2});
       if(!isLift&&rt==='2stage'){
         const c2={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
@@ -8040,7 +8040,7 @@ const CATALOG = [
          const h=sel.height;
          if(h==='5-6')   return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-005 ×2)',sub:'(2) 985-24-005 — 1999-2004 Ford 5-6" front',parts:[{pn:'985-24-005',qty:2}]}];
          if(h==='9-10')  return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-053 ×2)',sub:'(2) 985-24-053 — 1999-2004 Ford 9-10" front',parts:[{pn:'985-24-053',qty:2}]}];
-         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×2)',sub:'(2) 980-02-031 — 1999-2004 Ford 12-14" front',parts:[{pn:'980-02-031',qty:2}]}];
+         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×1, 980-02-034 ×3)',sub:'(1) 980-02-031 + (3) 980-02-034 — 1999-2004 Ford 12-14" front',parts:[{pn:'980-02-031',qty:1},{pn:'980-02-034',qty:3}]}];
        },
       },
       {key:'rear-shock', label:'Rear Shocks', badge:'opt',
@@ -8120,7 +8120,7 @@ const CATALOG = [
       const dssPn=isLift?'30169':'69170';
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel['front-shock']==='fox') parts.push({section:'Shocks',pn:h==='12-14'?'980-02-031':h==='9-10'?'985-24-053':'985-24-005',qty:2});
+      if(sel['front-shock']==='fox'){if(h==='12-14'){parts.push({section:'Shocks',pn:'980-02-031',qty:1});parts.push({section:'Shocks',pn:'980-02-034',qty:3});}else parts.push({section:'Shocks',pn:h==='9-10'?'985-24-053':'985-24-005',qty:2});}
       if(sel['rear-shock']==='fox')  parts.push({section:'Shocks',pn:h==='12-14'?'980-24-032':h==='9-10'?'985-24-053':'985-24-005',qty:2});
       if(!isLift&&rt==='2stage'){
         const c2={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
@@ -8189,7 +8189,7 @@ const CATALOG = [
          const h=sel.height;
          if(h==='5-6')   return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-005 ×2)',sub:'(2) 985-24-005 — 1999-2005 Excursion 5-6" front',parts:[{pn:'985-24-005',qty:2}]}];
          if(h==='9-10')  return [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox IFP Monotube Front Shocks (985-24-053 ×2)',sub:'(2) 985-24-053 — 1999-2005 Excursion 9-10" front',parts:[{pn:'985-24-053',qty:2}]}];
-         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×2)',sub:'(2) 980-02-031 — 1999-2005 Excursion 12-14" front',parts:[{pn:'980-02-031',qty:2}]}];
+         return              [{val:'none',label:'No Front Shocks'},{val:'fox',label:'Fox Remote Reservoir Front Shocks (980-02-031 ×1, 980-02-034 ×3)',sub:'(1) 980-02-031 + (3) 980-02-034 — 1999-2005 Excursion 12-14" front',parts:[{pn:'980-02-031',qty:1},{pn:'980-02-034',qty:3}]}];
        },
       },
       {key:'rear-shock', label:'Rear Shocks', badge:'opt',
@@ -8246,7 +8246,7 @@ const CATALOG = [
       const dssPn=isLift?'30169':'69170';
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:dssPn,qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
-      if(sel['front-shock']==='fox') parts.push({section:'Shocks',pn:h==='12-14'?'980-02-031':h==='9-10'?'985-24-053':'985-24-005',qty:2});
+      if(sel['front-shock']==='fox'){if(h==='12-14'){parts.push({section:'Shocks',pn:'980-02-031',qty:1});parts.push({section:'Shocks',pn:'980-02-034',qty:3});}else parts.push({section:'Shocks',pn:h==='9-10'?'985-24-053':'985-24-005',qty:2});}
       if(sel['rear-shock']==='fox')  parts.push({section:'Shocks',pn:h==='12-14'?'980-24-032':h==='9-10'?'985-24-053':'985-24-005',qty:2});
       if(!isLift&&scope!=='front-only'){
         const c2={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
@@ -10299,7 +10299,7 @@ const CATALOG = [
             slkdwd: isBoth?[{pn:'SLKDWD',qty:1},{pn:'HCVLK',qty:2}]:[{pn:'SLKDWD',qty:1}],
           };
           (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-          if(sel.ctrl==='none') mfLine(s!=='rear-only'&&!!sel.front, s!=='front-only'&&!!sel.rear, false, false).forEach(p=>parts.push(p));
+          if(sel.ctrl==='none') mfLine(s!=='rear-only'&&!!sel.front, s!=='front-only'&&!!sel.rear, false, true).forEach(p=>parts.push(p));
           return parts;
         },
       };
@@ -10753,20 +10753,14 @@ const CATALOG = [
           ];
           if(h==='5-6') return [
             {val:'68rfe', label:'5-6" Lift Front — 68RFE Transmission',
-             sub:'2019+ RAM 2500/3500 4x4 — 5-6" front lift (68RFE trans)',
+             sub:'2019+ RAM 2500 4x4 — 5-6" front lift (68RFE trans)',
              parts:[{pn:'10004537',qty:1}]},
-            {val:'aisin', label:'5-6" Lift Front — AISIN Transmission',
-             sub:'2019+ RAM 2500/3500 4x4 — 5-6" front lift (AISIN AS69RC trans)',
-             parts:[{pn:'10006031',qty:1}]},
           ];
           // 12" lift
           return [
             {val:'12-68rfe', label:'12" Lift Front — 68RFE Transmission (10003641)',
-             sub:'2019-2024 RAM 2500/3500 4x4 — 12" 4-Link front lift (68RFE) — driveshaft auto-added',
+             sub:'2019-2024 RAM 2500 4x4 — 12" 4-Link front lift (68RFE) — driveshaft auto-added',
              parts:[{pn:'10003641',qty:1}]},
-            {val:'12-aisin', label:'12" Lift Front — AISIN Transmission (10005987)',
-             sub:'2019-2024 RAM 2500/3500 4x4 — 12" 4-Link front lift (AISIN) — driveshaft auto-added',
-             parts:[{pn:'10005987',qty:1}]},
           ];
         },
       },
@@ -13816,8 +13810,8 @@ const CATALOG = [
         hint:'Optional monotube rear shocks. P/N matched to selected drivetrain.',
         condition:(sel)=>!!sel.rear,
         choices:(kit,sel)=>{
-          const pn=sel.drive==='awd'?'10039999':'10037604';
-          const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':'2WD (RWD)';
+          const pn=(sel.drive==='awd'||sel.drive==='4wd')?'10039999':'10037604';
+          const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':sel.drive==='4wd'?'4WD':'2WD (RWD)';
           return [
             {val:'none', label:'No Additional Rear Shocks'},
             {val:'yes',  label:`Add Monotube Rear Shocks — ${dtLabel}`,
@@ -13845,7 +13839,7 @@ const CATALOG = [
       if(sel.rear==='std') parts.push({section:'Rear Suspension', pn:'10029639', qty:1});
       if(sel['front-shock']==='yes') parts.push({section:'Shocks', pn:'10045227', qty:1});
       if(sel.shocks==='yes'){
-        const sPn=sel.drive==='awd'?'10039999':'10037604';
+        const sPn=(sel.drive==='awd'||sel.drive==='4wd')?'10039999':'10037604';
         parts.push({section:'Shocks', pn:sPn, qty:2});
       }
       const c={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
@@ -13870,7 +13864,8 @@ const CATALOG = [
         hint:'Select drivetrain — determines the rear kit and shock compatibility.',
         choices:()=>[
           {val:'2wd', label:'2WD (RWD — Rear-Wheel Drive)'},
-          {val:'awd', label:'AWD (4MATIC — All-Wheel Drive)'},
+          {val:'4wd', label:'4WD (2014–2022 — Traditional Four-Wheel Drive)'},
+          {val:'awd', label:'AWD (2023+ — 4MATIC All-Wheel Drive)'},
         ],
       },
       {
@@ -13889,8 +13884,8 @@ const CATALOG = [
         hint:'Optional monotube rear shocks. P/N matched to selected drivetrain.',
         condition:(sel)=>!!sel.drive,
         choices:(kit,sel)=>{
-          const pn=sel.drive==='awd'?'10039999':'10037604';
-          const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':'2WD (RWD)';
+          const pn=(sel.drive==='awd'||sel.drive==='4wd')?'10039999':'10037604';
+          const dtLabel=sel.drive==='awd'?'AWD (4MATIC)':sel.drive==='4wd'?'4WD':'2WD (RWD)';
           return [
             {val:'none', label:'No Additional Rear Shocks'},
             {val:'yes',  label:`Add Monotube Rear Shocks — ${dtLabel}`,
@@ -13927,7 +13922,7 @@ const CATALOG = [
     buildParts:(kit,sel)=>{
       const parts=[];
       if(sel.drive) {
-        const rearPn=sel.drive==='awd'?'10013632':'10012180';
+        const rearPn=(sel.drive==='awd'||sel.drive==='4wd')?'10013632':'10012180';
         parts.push({section:'Rear Suspension', pn:rearPn, qty:1});
       }
       const c={arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}]};
@@ -13935,7 +13930,7 @@ const CATALOG = [
       if(sel.ctrl==='none') mfLine(false, !!sel.drive, false, true).forEach(p=>parts.push(p));
       if(sel['front-shock']==='yes') parts.push({section:'Shocks', pn:'10045227', qty:1});
       if(sel.shocks==='yes'){
-        const sPn=sel.drive==='awd'?'10039999':'10037604';
+        const sPn=(sel.drive==='awd'||sel.drive==='4wd')?'10039999':'10037604';
         parts.push({section:'Shocks', pn:sPn, qty:2});
       }
       if(sel['vehicle-style']==='motorhome') parts.push({section:'Generator Brackets', pn:'10012821', qty:1});
