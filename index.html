@@ -909,6 +909,7 @@ const P = {
   // ── Ford Chassis Cab 1999+ 2-Stage Rear ──────────────────────
   '10013346': {desc:'Kit — 1999+ Ford F-350/F-450/F-550 Chassis Cab, 2-Stage Rear Air Susp., w/ 2.5" Receiver Hitch', msrp:3450},
   '10013347': {desc:'Kit — 1999+ Ford F-350/F-450/F-550 Chassis Cab, 2-Stage Rear Air Susp., No Receiver Hitch',      msrp:3400},
+  '10046901': {desc:'Kit — 2008+ RAM 4500/5500 Chassis Cab, 3" Receiver Hitch — Compatible with aft fuel tank, SherpTek bed & Kelderman SherpTek rear bumper, and OEM suspension & rear spring hangers', msrp:1100},
   'KLM69620': {desc:'Kit — 2017+ Ford Chassis Cab, 2-Stage Rear Air Susp. (Modified), No Receiver Hitch',             msrp:3400},
 
   // ── Ford Chassis Cab 2008-2016 ────────────────────────────────
@@ -2932,7 +2933,9 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
     const cv = clevis ? '1' : '0';
     if(config==='sq-solid')  return `KLM-202021023-0111100000${cv}`;
     if(config==='sq-lights') return `KLM-202021023-0212100000${cv}`;
-    if(config==='headlight') return 'KLM-202021023-11903030001'; // always clevis
+    if(config==='headlight-solid') return 'KLM-202021023-11103030001'; // always clevis
+    if(config==='headlight-360')   return 'KLM-202021023-11903030001'; // always clevis
+    if(config==='headlight-sr')    return 'KLM-202021023-12103030001'; // always clevis
     return null;
   };
 
@@ -3070,7 +3073,9 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
        {val:'none',      label:'No Grille Guard'},
        {val:'sq-solid',  label:'Commander Grille Guard — Square × 2 Crossbars, No Light Cutouts (+$1,050–$1,100)', sub:'KLM-202021023-01111000...'},
        {val:'sq-lights', label:'Commander Grille Guard — Square × 2 Crossbars with Light Bar Cutouts (+$1,100)',    sub:'KLM-202021023-02121000...'},
-       {val:'headlight', label:'Commander Grille Guard + Headlight Guard — 30" 360-Connect Center (+$1,400)',        sub:'KLM-202021023-11903030001 — Always w/ Clevis Ears'},
+       {val:'headlight-solid', label:'Commander Grille Guard + Headlight Guard — Sq. Center, No Light (+$1,400)',       sub:'KLM-202021023-11103030001 — Always w/ Clevis Ears'},
+       {val:'headlight-360',   label:'Commander Grille Guard + Headlight Guard — 30" 360-Connect Center (+$1,400)',      sub:'KLM-202021023-11903030001 — Always w/ Clevis Ears'},
+       {val:'headlight-sr',    label:'Commander Grille Guard + Headlight Guard — 20" SR Light Center (+$1,400)',         sub:'KLM-202021023-12103030001 — Always w/ Clevis Ears'},
      ],
     },
     {key:'gg-clevis', label:'Grille Guard Hook Mounts', badge:'req',
@@ -3113,7 +3118,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
     },
     // Front — Headlight Guard Center Light
     {key:'gg-hl-light', label:'Headlight Guard — Center Light Bar', badge:'opt',
-     condition:(sel)=>sel['gg-config']==='headlight'&&!!sel['front-lp'],
+     condition:(sel)=>sel['gg-config']==='headlight-360'&&!!sel['front-lp'],
      choices:()=>[
        {val:'none',         label:'No Light Bar — 30" Structural Cutout Included'},
        {val:'360-connect',  label:'30" Rigid 360-Connect Light Bar (+$2,100)', sub:'RIG36306', parts:[{pn:'RIG36306',qty:1}]},
@@ -3129,7 +3134,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
      condition:(sel)=>!!sel['front-lp']&&(
        !sel['gg-config']||
        sel['gg-config']==='none'||
-       sel['gg-config']==='headlight'||
+       sel['gg-config']?.startsWith('headlight')||
        sel['gg-clevis']==='clevis'
      ),
      choices:()=>hookChoices,
@@ -3180,7 +3185,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
 
         // Grille guard
         const gg = sel['gg-config'];
-        const clevis = gg==='headlight'||sel['gg-clevis']==='clevis';
+        const clevis = gg?.startsWith('headlight')||sel['gg-clevis']==='clevis';
         const ggpn = ggPN(gg, clevis);
         if(ggpn) parts.push({section:'Grille Guard', pn:ggpn, qty:1});
 
@@ -3192,7 +3197,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
                   sel['gg-light-bars']==='sr-driving'  ? {pn:'RIG921314'}    : null;
           if(p&&p.pn&&sel['gg-light-bars']!=='none') parts.push({section:'Grille Guard Lights', pn:p.pn, qty:2});
         }
-        if(gg==='headlight'&&sel['gg-hl-light']==='360-connect')
+        if(gg==='headlight-360'&&sel['gg-hl-light']==='360-connect')
           parts.push({section:'Grille Guard Lights', pn:'RIG36306', qty:1});
 
         // Winch (Alpha Winch Center)
@@ -4970,9 +4975,10 @@ function withAccessories(entry, cfg) {
   const hasDSS       = cfg.dss && cfg.dss.length > 0;
   const hasArms      = !!cfg.arms;
   const multiDrv     = hasDSS && cfg.dss.length > 1;
-  const hasFlareCaps = !!(cfg.flareCaps && cfg.flareCaps.length > 0);
-  const hasHR        = !!(cfg.headacheRack && cfg.headacheRack.variants && cfg.headacheRack.variants.length > 0);
-  const hasHitch     = !!cfg.hitch;
+  const hasFlareCaps    = !!(cfg.flareCaps && cfg.flareCaps.length > 0);
+  const hasHR           = !!(cfg.headacheRack && cfg.headacheRack.variants && cfg.headacheRack.variants.length > 0);
+  const hasHitch        = !!cfg.hitch;
+  const hasReceiverHitch= !!cfg.receiverHitch;
 
   const accSteps = [];
 
@@ -4982,7 +4988,8 @@ function withAccessories(entry, cfg) {
   if(hasArms)            accTypeChoices.push({val:'arms',          label:'Fabricated Radius Arms',                  sub:'Bolt-on fabricated radius arms with finish choice'});
   if(hasDSS && hasArms)  accTypeChoices.push({val:'dss+arms',      label:'DSS Bracket + Radius Arms',               sub:'Both steering stabilizer bracket and fabricated radius arms'});
   if(hasFlareCaps)       accTypeChoices.push({val:'flare-caps',    label:'Fender Flare Caps',                       sub:'Front and/or rear injection-molded OE texture fender flare caps'});
-  if(hasHR)              accTypeChoices.push({val:'headache-rack', label:'Headache Rack',                           sub:'Kelderman headache rack with 40" 360-Connect light cutout'});
+  if(hasHR)              accTypeChoices.push({val:'headache-rack',   label:'Headache Rack',                           sub:'Kelderman headache rack with 40" 360-Connect light cutout'});
+  if(hasReceiverHitch)   accTypeChoices.push({val:'receiver-hitch',  label:'Receiver Hitch',                          sub:'3" receiver hitch — compatible with aft fuel tank, SherpTek bed/bumper, OEM suspension'});
 
   accSteps.push({
     key:'acc-type', label:'Accessory Type', badge:'req',
@@ -5062,6 +5069,20 @@ function withAccessories(entry, cfg) {
       choices:()=>[
         {val:'none', label:'No Light Bar — Cutout Included'},
         {val:'yes',  label:`40" Rigid 360-Connect Light Bar (+$2,000)`, sub:`${cfg.headacheRack.lightPN}`, parts:[{pn:cfg.headacheRack.lightPN,qty:1}]},
+      ],
+    });
+  }
+
+  // Receiver hitch step
+  if(hasReceiverHitch) {
+    accSteps.push({
+      key:'acc-hitch', label:'Receiver Hitch', badge:'req',
+      condition:(sel)=>sel.category==='accessories'&&sel['acc-type']==='receiver-hitch',
+      choices:()=>[
+        {val:'none', label:'No Receiver Hitch'},
+        {val:'yes',  label:`Add 3" Receiver Hitch (${cfg.receiverHitch.pn})`,
+         sub:`${cfg.receiverHitch.pn} — 3" receiver hitch, compatible with aft fuel tank, SherpTek bed & bumper, OEM suspension`,
+         parts:[{pn:cfg.receiverHitch.pn,qty:1}]},
       ],
     });
   }
@@ -5154,6 +5175,8 @@ function withAccessories(entry, cfg) {
           if(v) parts.push({section:'Headache Rack',pn:v.pn,qty:1});
           if(sel['acc-hr-light']==='yes') parts.push({section:'Headache Rack',pn:cfg.headacheRack.lightPN,qty:1});
         }
+        if(sel['acc-type']==='receiver-hitch'&&sel['acc-hitch']==='yes'&&cfg.receiverHitch)
+          parts.push({section:'Accessories',pn:cfg.receiverHitch.pn,qty:1});
         return parts;
       }
       // Suspension / Bumpers / Suspension+Bumpers paths
@@ -8707,7 +8730,7 @@ const CATALOG = [
            return opts;
          }
          if(sel.scope==='rear-only') return [{val:'mono', label:'Rear Monotube Shocks', sub:'(2) Raptor 2.0 monotube HD rear (10015798) — required', parts:[{pn:'10015798',qty:2}]}];
-         const opts=[{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
+         const opts=[noShocks,{val:'mono', label:'Monotube Shocks (Front + Rear)', sub:'(2) Front + (2) Rear Raptor 2.0 monotube', parts:[{pn:'10015855',qty:2},{pn:'10015798',qty:2}]}];
          if(is3Lift) opts.push({val:'rr-front', label:'Remote Reservoir Front + Monotube Rear',
            sub:'(2) RAP-10124 RR front (10006722) + (4) clamps (80227) + (2) monotube HD rear (10015798)',
            parts:[{pn:'10006722',qty:2},{pn:'80227',qty:4},{pn:'10015798',qty:2}]});
@@ -9526,12 +9549,12 @@ const CATALOG = [
     yr_from:2008, yr_to:2016,
     make:'Ford', model:'F-550 Chassis Cab',
     label:'F-550 Chassis Cab',
-    kits:[{id:'ford-f550cc-2008-kit', label:'Air Suspension System', sub:'Stock height or 2" lowering — front available 2011-2016'}],
+    kits:[{id:'ford-f550cc-2008-kit', label:'Air Suspension System', sub:'Stock height, 2" lowering, or 2-Stage rear — front available 2011-2016'}],
     steps:[
       {key:'scope', label:'Suspension Scope', badge:'req',
        choices:()=>[
          {val:'both',      label:'Front + Rear', sub:'2011-2016: control arm front + 4-link rear — 2WD or 4WD'},
-         {val:'rear-only', label:'Rear Only',    sub:'4-link rear air suspension'},
+         {val:'rear-only', label:'Rear Only',    sub:'4-link or 2-Stage rear air suspension'},
        ],
       },
       {key:'front', label:'Front Air Suspension', badge:'req',
@@ -9545,14 +9568,25 @@ const CATALOG = [
       {key:'rear', label:'Rear Air Suspension', badge:'req',
        condition:(sel)=>sel.scope==='rear-only'||sel.front==='yes',
        choices:()=>[
-         {val:'stock', label:'Stock Height 4-Link Rear (10004016)', sub:'2008-2016 F-550 CC — 4-Link, stock height', parts:[{pn:'10004016',qty:1}]},
-         {val:'low',   label:'2" Lowering 4-Link Rear (KLM17571)', sub:'2008-2016 F-550 CC — 4-Link, 2" lowering',  parts:[{pn:'KLM17571',qty:1}]},
+         {val:'stock',          label:'Stock Height 4-Link Rear (10004016)',                   sub:'2008-2016 F-550 CC — 4-Link, stock height',         parts:[{pn:'10004016',qty:1}]},
+         {val:'low',            label:'2" Lowering 4-Link Rear (KLM17571)',                    sub:'2008-2016 F-550 CC — 4-Link, 2" lowering',          parts:[{pn:'KLM17571',qty:1}]},
+         {val:'2stage',         label:'2-Stage Rear — w/ 2.5" Receiver Hitch (10013346)',      sub:'1999+ F-550 CC — 2-Stage rear, 2.5" hitch receiver', parts:[{pn:'10013346',qty:1}]},
+         {val:'2stage-nohitch', label:'2-Stage Rear — No Receiver Hitch (10013347)',            sub:'1999+ F-550 CC — 2-Stage rear, no hitch receiver',   parts:[{pn:'10013347',qty:1}]},
        ],
       },
       {key:'ctrl', label:'Air Controls', badge:'req',
        condition:(sel)=>!!sel.rear,
        choices:(kit,sel)=>{
          const hasFront=sel.front==='yes';
+         const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
+         if(is2stage) return [
+           {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
+           {val:'arck',    label:'Air Compressor Kit Only (ARCK)', sub:'Viair compressor, gauge, relay, wiring, air line', parts:[{pn:'ARCK',qty:1}]},
+           {val:'eslk1al', label:'Electronic Self-Leveling (ESLK1AL)', sub:'AMK compressor, magnetic sensor — automatic self-leveling', parts:[{pn:'ESLK1AL',qty:1}]},
+           {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD)',
+            sub:'Viair compressor, 3-gal tank, HCV valves, dump valves, air dryer, panel',
+            parts:[{pn:'SLKD2WD',qty:1}]},
+         ];
          if(hasFront) return [
            {val:'none',    label:'No Controls — Manual Fill', sub:'Fill via shop air — no compressor or automation'},
            {val:'slkd',    label:'Mechanical Self-Leveling — Single Compressor (SLKD2WD + 2× HCVLK)',
@@ -9573,13 +9607,16 @@ const CATALOG = [
       const parts=[];
       const hasFront=sel.front==='yes';
       if(hasFront) parts.push({section:'Front Suspension',pn:'F2F4-4-CC-11',qty:1});
-      const rearPnMap={stock:'10004016',low:'KLM17571'};
+      const rearPnMap={stock:'10004016',low:'KLM17571','2stage':'10013346','2stage-nohitch':'10013347'};
       if(sel.rear) parts.push({section:'Rear Suspension',pn:rearPnMap[sel.rear],qty:1});
-      const ctrlMap=hasFront
-        ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'10040870',qty:1}]}
-        :{slkd:[{pn:'SLKD2WD',qty:1}]};
+      const is2stage=sel.rear==='2stage'||sel.rear==='2stage-nohitch';
+      const ctrlMap=is2stage
+        ?{arck:[{pn:'ARCK',qty:1}],eslk1al:[{pn:'ESLK1AL',qty:1}],slkd:[{pn:'SLKD2WD',qty:1}]}
+        :hasFront
+          ?{slkd:[{pn:'SLKD2WD',qty:1},{pn:'HCVLK',qty:2}],eslk3h2:[{pn:'10040870',qty:1}]}
+          :{slkd:[{pn:'SLKD2WD',qty:1}]};
       (ctrlMap[sel.ctrl]||[]).forEach(p=>parts.push({section:'Air Controls',...p}));
-      if(sel.ctrl==='none') mfLine(hasFront,!!sel.rear,false,!hasFront).forEach(p=>parts.push(p));
+      if(sel.ctrl==='none') mfLine(hasFront,!!sel.rear,is2stage,!is2stage&&!hasFront).forEach(p=>parts.push(p));
       return parts;
     },
   }, null, null, null,
@@ -11636,8 +11673,17 @@ const CATALOG = [
       {
         key:'dss', label:'Dual Steering Stabilizer', badge:'opt',
         hint:'Recommended for lifted applications.',
-        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&sel.height!=='stock'&&(sel.scope==='front-only'||!!sel.rear),
+        condition:(sel)=>!!sel.scope&&sel.scope!=='rear-only'&&(sel.scope==='front-only'||!!sel.rear),
         choices:(kit,sel)=>{
+          if(sel.height==='stock') return [
+            {val:'none',           label:'No Dual Steering Stabilizer'},
+            {val:'bracket',        label:'Add DSS Bracket Only (Stock Height — 18401)',
+             sub:'2025+ RAM 2500/3500 Stock Height DSS — bracket only, no shocks',
+             parts:[{pn:'18401',qty:1}]},
+            {val:'bracket-shocks', label:'Add DSS Bracket + Kelderman-Raptor Shocks (18401 + 10003382 ×2)',
+             sub:'18401 bracket + (2) Raptor 2.0 Monotube Shocks (10003382)',
+             parts:[{pn:'18401',qty:1},{pn:'10003382',qty:2}]},
+          ];
           const dPn = sel.height==='3-inch' ? '10038633' : '10039988';
           return [
             {val:'none',           label:'No Dual Steering Stabilizer'},
@@ -13730,18 +13776,24 @@ const CATALOG = [
   // ─────────────────────────────────────────────────────────────
   // RAM 4500 / 5500 Chassis Cab — 2025+
   // ─────────────────────────────────────────────────────────────
-  withBumpers(ramCC2025('ram-cc-4500-2025','4500 Chassis Cab','4500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401043025','201043025',null,false,false)),
-  withBumpers(ramCC2025('ram-cc-5500-2025','5500 Chassis Cab','5500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401044025','201044025',null,false,false)),
+  withAccessories(withBumpers(ramCC2025('ram-cc-4500-2025','4500 Chassis Cab','4500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401043025','201043025',null,false,false)), {
+    receiverHitch:{pn:'10046901'},
+  }),
+  withAccessories(withBumpers(ramCC2025('ram-cc-5500-2025','5500 Chassis Cab','5500 Chassis Cab'), null, null, null, ramSDBumper('_',null,null,'','','','401044025','201044025',null,false,false)), {
+    receiverHitch:{pn:'10046901'},
+  }),
 
   // RAM 4500 / 5500 Chassis Cab — 2019+
   // ─────────────────────────────────────────────────────────────
   withAccessories(withBumpers(ramCC2019('ram-cc-4500-2019','4500 Chassis Cab','4500 Chassis Cab',2024),null,null,null,
     ramSDBumper('_',null,null,'','','','401043019','201043019',null,false,false)), {
     dss:[{pn:'10012103',note:'2019+ RAM 4500-5500 4x4 Chassis Cab, Dual Steering Stabilizer Bracket, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
   withAccessories(withBumpers(ramCC2019('ram-cc-5500-2019','5500 Chassis Cab','5500 Chassis Cab',2024),null,null,null,
     ramSDBumper('_',null,null,'','','','401044019','201044019',null,false,false)), {
     dss:[{pn:'10012103',note:'2019+ RAM 4500-5500 4x4 Chassis Cab, Dual Steering Stabilizer Bracket, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
 
   // ─────────────────────────────────────────────────────────────
@@ -13751,18 +13803,22 @@ const CATALOG = [
   withAccessories(withBumpers(ramCC2013('ram-cc-4500-2013','RAM 4500 Chassis Cab','4500 Chassis Cab',2013,2015,'KLM17500'), null, null, null,
     ramSDBumper2010('ram-4500-cc-2013-bump', 2013, 2015, 'RAM', 'RAM 4500 Chassis Cab', '4500 Chassis Cab', '401043010', null, null, false, '401043008')), {
     dss:[{pn:'10013073',note:'2013-2018 RAM 4500/5500 Chassis Cab 4x4, Steering Stabilizer, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
   withAccessories(withBumpers(ramCC2013('ram-cc-4500-2016','RAM 4500 Chassis Cab','4500 Chassis Cab',2016,2018,'KLM21525'), null, null, null,
     ramSDBumper2010('ram-4500-cc-2016-bump', 2016, 2018, 'RAM', 'RAM 4500 Chassis Cab', '4500 Chassis Cab', '401043010', null, null, false, '401043008')), {
     dss:[{pn:'10013073',note:'2013-2018 RAM 4500/5500 Chassis Cab 4x4, Steering Stabilizer, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
   withAccessories(withBumpers(ramCC2013('ram-cc-5500-2013','RAM 5500 Chassis Cab','5500 Chassis Cab',2013,2015,'KLM17500'), null, null, null,
     ramSDBumper2010('ram-5500-cc-2013-bump', 2013, 2015, 'RAM', 'RAM 5500 Chassis Cab', '5500 Chassis Cab', '401044010', null, null, false, '401044008')), {
     dss:[{pn:'10013073',note:'2013-2018 RAM 4500/5500 Chassis Cab 4x4, Steering Stabilizer, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
   withAccessories(withBumpers(ramCC2013('ram-cc-5500-2016','RAM 5500 Chassis Cab','5500 Chassis Cab',2016,2018,'KLM21525'), null, null, null,
     ramSDBumper2010('ram-5500-cc-2016-bump', 2016, 2018, 'RAM', 'RAM 5500 Chassis Cab', '5500 Chassis Cab', '401044010', null, null, false, '401044008')), {
     dss:[{pn:'10013073',note:'2013-2018 RAM 4500/5500 Chassis Cab 4x4, Steering Stabilizer, No Shocks'}],
+    receiverHitch:{pn:'10046901'},
   }),
 
   // ─────────────────────────────────────────────────────────────
@@ -13862,11 +13918,13 @@ const CATALOG = [
       {
         key:'drive', label:'Drivetrain', badge:'req',
         hint:'Select drivetrain — determines the rear kit and shock compatibility.',
-        choices:()=>[
-          {val:'2wd', label:'2WD (RWD — Rear-Wheel Drive)'},
-          {val:'4wd', label:'4WD (2014–2022 — Traditional Four-Wheel Drive)'},
-          {val:'awd', label:'AWD (2023+ — 4MATIC All-Wheel Drive)'},
-        ],
+        choices:()=>{
+          const yr=parseInt(S.year,10)||2014;
+          const opts=[{val:'2wd', label:'2WD (RWD — Rear-Wheel Drive)'}];
+          if(yr<=2022) opts.push({val:'4wd', label:'4WD (2014–2022 — Traditional Four-Wheel Drive)'});
+          if(yr>=2023) opts.push({val:'awd', label:'AWD (2023+ — 4MATIC All-Wheel Drive)'});
+          return opts;
+        },
       },
       {
         key:'front-shock', label:'Front Shocks', badge:'opt',
