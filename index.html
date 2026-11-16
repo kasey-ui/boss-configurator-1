@@ -5929,9 +5929,9 @@ const CATALOG = [
          return [
            {val:'none',       label:'No Shocks'},
            {val:'mono-front', label:'Monotube Front Shocks Only',
-            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10003380',qty:2}]},
+            sub:'(2) Raptor 2.0 monotube front — minimum required', parts:[{pn:'10015855',qty:2}]},
            {val:'mono-both',  label:'Monotube Front + Rear Shocks',
-            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10003380',qty:2},{pn:'10015856',qty:2}]},
+            sub:'(2) front monotube + (2) bushing mount rear', parts:[{pn:'10015855',qty:2},{pn:'10015856',qty:2}]},
            {val:'rr', label:'Remote Reservoir Kit (Front + Rear)',
             sub:'Raptor 2.0 remote reservoir shocks — premium upgrade', parts:[{pn:'10008956',qty:1}]},
          ];
@@ -6014,7 +6014,7 @@ const CATALOG = [
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
       const rMap={'stock':'10015113','2-3':'10015113','5-6':'10015191'};
       if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
-      if(sel.shocks){const sM={'mono-front':[{pn:'10003380',qty:2}],'mono-both':[{pn:'10003380',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003380',qty:2},{pn:'80227',qty:4}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
+      if(sel.shocks){const sM={'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003380',qty:2},{pn:'80227',qty:4}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
       if(h==='stock'&&sel.arms==='arms') parts.push({section:'Radius Arms',pn:'10015144',qty:1});
