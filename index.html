@@ -454,6 +454,7 @@ const P = {
   '10015243': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup, 5-6" Lift Rear, 3.5" Axle SRW',                            msrp:4850},
   '10015242': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup, 5-6" Lift Rear, 4.0" Axle SRW',                            msrp:4850},
   '10015191': {desc:'Kit — 2023+ Ford F-350/F-450 Pickup, 5-6" Lift Rear, 4.5" Axle DRW',                            msrp:4850},
+  '10046941': {desc:'Kit — 3" Lift 4-Link Rear, 4.5" Axle DRW : 2023+ Ford F-450 Pickup (In Development — EC-1427)', msrp:4850},
   '10040427': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup, 10-12" Lift Cradle Rear, 3.5" Axle SRW',                   msrp:4850},
   '10032609': {desc:'Kit — 2023+ Ford F-250/F-350 Pickup, 10-12" Lift Cradle Rear, 4.0" Axle SRW',                   msrp:4850},
   '10040935': {desc:'Kit — 2023+ Ford F-350 Pickup, 10-12" Lift Cradle Rear, 4.5" Axle DRW',                         msrp:4850},
@@ -838,6 +839,8 @@ const P = {
 
   // ── Bumper Accessories ────────────────────────────────────────────
   '31910':        {desc:'Kit — Bravo License Plate Kit, Honeycomb Mesh — Fits Alpha, Bravo & Delta Front Bumpers', msrp:0},
+  '31566':        {desc:'Assembly — Light Delete Screen, End Cap (Fits Delta & Bravo Front Bumpers)',                msrp:40},
+  '31569':        {desc:'Assembly — 20" Light Delete Screen, Center Section (Fits Delta & Bravo Front Bumpers)',    msrp:40},
   '61024':        {desc:'Infinite Rule Security 7/8" × 3" Span-Universal Locking Pin',               msrp:53},
   // Monster Hooks — Swivel Hooks (qty 2 per bumper)
   'MH-SW1B':      {desc:'Monster Hooks Swivel Hook, Satin Black',         msrp:250},
@@ -1036,11 +1039,11 @@ const P = {
   'SLKD2WD':  {desc:'Kit — Self-Leveling: Viair Compressor, 3-Gal Tank, Pressure Switch, Relay, (2) Height Control Valves, (2) Dump Valves, Air Dryer, Control Panel', msrp:2325},
   'HCVLK':    {desc:'Kit — Haldex Height Control Valve w/ Front Linkage — Mechanical, 1 Corner',                      msrp:175},
   '30664':    {desc:'Kit — Dual VIAIR Air Compressor / Controls Box — Mechanical 2-Corner, w/Dryer, Dual Tank, w/Dump Valves', msrp:3200},
-  'ESLK3H2':  {desc:'Air Lift ALP4 Electronic Air Control System (Legacy ESLK3H2)',                                                       msrp:4475},
-  '10040870': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer',                         msrp:4675},
-  '10040872': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer (Spare Tire Keeper) — 2023+ Ford Super Duty', msrp:4875},
-  '10032642': {desc:'Kit — Air Lift ALP4 Dual Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire — 2023+ Ford SD F250/350/450 Pickup', msrp:4675},
-  '10037368': {desc:'Kit — Air Lift ALP4 Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire — 2025+ RAM 2500/3500 Pickup', msrp:4675},
+  // ESLK3H2 legacy part removed — replaced by 10040870 (ALP4 w/ Smart Terrain)
+  '10040870': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer, w/ Smart Terrain',                         msrp:4995},
+  '10040872': {desc:'Air Lift ALP4 Controls / Compressor Box — 4-Corner Electronic w/ Dryer, w/ Smart Terrain (Spare Tire Keeper) — 2023+ Ford Super Duty', msrp:4995},
+  '10032642': {desc:'Kit — Air Lift ALP4 Dual Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire, w/ Smart Terrain — 2023+ Ford SD F250/350/450 Pickup', msrp:4995},
+  '10037368': {desc:'Kit — Air Lift ALP4 Controls - Air Compressor Box - Dual Compressor - Dual Tank - Retain Spare Tire, w/ Smart Terrain — 2025+ RAM 2500/3500 Pickup', msrp:4995},
   '10015338': {desc:'Kit — Single VIAIR Air Compressor / Super Duty Controls Box - Mechanical 2 Corner - w/Dryer - Dual Tank - w/Dump Valve : 2023+ Ford Super Duty Pickup - Compressor Box', msrp:2625},
   'ARCK':     {desc:'Air Compressor Kit — Viair Compressor, Single Needle Gauge, Relay, Wiring, Air Line',             msrp:475},
   '10041529': {desc:'Kit — 2019+ RAM 2500/5500 Pickup & Cab Chassis, Single VIAIR Compressor, 1-Corner Manual w/ Overhead Mount (2-Stage Rear)', msrp:650},
@@ -2256,6 +2259,14 @@ function gmKodiakCC(id, model, label) {
          ];
        },
       },
+      {key:'engine', label:'Engine Type', badge:'req',
+       hint:'KLM50810 (2WD) and KLM11175 (4WD) fit both gas and diesel — verify before quoting.',
+       condition:(sel)=>sel.scope!=='rear-only'&&!!sel.drive,
+       choices:()=>[
+         {val:'gas',    label:'Gas',    sub:'Gas engine — part number unchanged'},
+         {val:'diesel', label:'Diesel', sub:'Diesel engine — part number unchanged'},
+       ],
+      },
       {key:'rear', label:'Rear Suspension', badge:'req',
        condition:(sel)=>!!sel.scope&&sel.scope!=='front-only'&&!!sel.drive,
        choices:(kit,sel)=>{
@@ -3129,6 +3140,14 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
      condition:(sel)=>!!sel['front-lp'],
      choices:()=>wingLightChoices(4),
     },
+    // Front — Light Delete Screens (Delta / Bravo only, no wing lights)
+    {key:'front-delete-screens', label:'Light Delete Screens', badge:'opt',
+     condition:(sel)=>['delta','bravo'].includes(sel['front-series'])&&(!sel['front-wing-lights']||sel['front-wing-lights']==='none'),
+     choices:()=>[
+       {val:'none',    label:'No Delete Screens'},
+       {val:'screens', label:'Light Delete Screens — Block Off Kit (+$120)', sub:'31566 ×2 (End Caps) + 31569 ×1 (Center) — ⚠ Verify parts are active in E2 before quoting', parts:[{pn:'31566',qty:2},{pn:'31569',qty:1}]},
+     ],
+    },
     // Front — Hooks
     {key:'front-hooks', label:'Hooks', badge:'opt',
      condition:(sel)=>!!sel['front-lp']&&(
@@ -3207,6 +3226,7 @@ function fordSDBumper(id, yr_from, yr_to, make, model, label, modelBase, hasStoc
         // Center light bar (Alpha Light / Delta / Bravo)
         const dcMap = {'sr-midnight':'RIG920214BLK','sr-combo':'RIG920314','sr-driving':'RIG921314','e-series':'RIG120313','e-midnight':'RIG120213BLK'};
         if(dcMap[sel['front-center-light']]) parts.push({section:'Bumper Lights', pn:dcMap[sel['front-center-light']], qty:1});
+        if(sel['front-delete-screens']==='screens'){parts.push({section:'Bumper Accessories',pn:'31566',qty:2});parts.push({section:'Bumper Accessories',pn:'31569',qty:1});}
 
         // Outer wing lights (qty 4)
         if(wingPN[sel['front-wing-lights']])
@@ -3481,6 +3501,14 @@ function fordSD17Bumper(id, yr_from, yr_to, make, model, label, frontModelBase, 
      condition:(sel)=>hasFront(sel['bumper-position'])&&!!sel['front-lp'],
      choices:()=>wingLightChoices(4),
     },
+    // Light Delete Screens (Delta / Bravo only, no wing lights)
+    {key:'front-delete-screens', label:'Light Delete Screens', badge:'opt',
+     condition:(sel)=>['delta','bravo'].includes(sel['front-series'])&&(!sel['front-wing-lights']||sel['front-wing-lights']==='none'),
+     choices:()=>[
+       {val:'none',    label:'No Delete Screens'},
+       {val:'screens', label:'Light Delete Screens — Block Off Kit (+$120)', sub:'31566 ×2 (End Caps) + 31569 ×1 (Center) — ⚠ Verify parts are active in E2 before quoting', parts:[{pn:'31566',qty:2},{pn:'31569',qty:1}]},
+     ],
+    },
     {key:'front-hooks', label:'Hooks', badge:'opt',
      condition:(sel)=>{
        if(!hasFront(sel['bumper-position'])||!sel['front-lp']) return false;
@@ -3554,6 +3582,7 @@ function fordSD17Bumper(id, yr_from, yr_to, make, model, label, frontModelBase, 
         // Center light bar
         const clMap={'e-series':'RIG120313','e-midnight':'RIG120213BLK'};
         if(clMap[sel['front-center-light']]) parts.push({section:'Bumper Lights', pn:clMap[sel['front-center-light']], qty:1});
+        if(sel['front-delete-screens']==='screens'){parts.push({section:'Bumper Accessories',pn:'31566',qty:2});parts.push({section:'Bumper Accessories',pn:'31569',qty:1});}
 
         // Outer wing lights (qty 4)
         if(wingPN[sel['front-wing-lights']]) parts.push({section:'Bumper Lights', pn:wingPN[sel['front-wing-lights']], qty:4});
@@ -5424,6 +5453,14 @@ function fordSD11Bumper(id, yr_from, yr_to, make, model, label, modelBase, hasSt
      condition:(sel)=>hasFront(sel['bumper-position'])&&!!sel['front-lp'],
      choices:()=>wingLightChoices(4),
     },
+    // Light Delete Screens (Bravo only, no wing lights)
+    {key:'front-delete-screens', label:'Light Delete Screens', badge:'opt',
+     condition:(sel)=>sel['front-series']==='bravo'&&(!sel['front-wing-lights']||sel['front-wing-lights']==='none'),
+     choices:()=>[
+       {val:'none',    label:'No Delete Screens'},
+       {val:'screens', label:'Light Delete Screens — Block Off Kit (+$120)', sub:'31566 ×2 (End Caps) + 31569 ×1 (Center) — ⚠ Verify parts are active in E2 before quoting', parts:[{pn:'31566',qty:2},{pn:'31569',qty:1}]},
+     ],
+    },
     {key:'front-hooks', label:'Front Tow Hooks', badge:'opt',
      mirror:'',
      condition:(sel)=>{
@@ -5464,6 +5501,7 @@ function fordSD11Bumper(id, yr_from, yr_to, make, model, label, modelBase, hasSt
         // Center light bar
         const clMap={'e-series':'RIG120313','e-midnight':'RIG120213BLK'};
         if(clMap[sel['front-center-light']]) parts.push({section:'Bumper Lights', pn:clMap[sel['front-center-light']], qty:1});
+        if(sel['front-delete-screens']==='screens'){parts.push({section:'Bumper Accessories',pn:'31566',qty:2});parts.push({section:'Bumper Accessories',pn:'31569',qty:1});}
         // Wing lights
         if(wingPN[sel['front-wing-lights']]) parts.push({section:'Bumper Lights', pn:wingPN[sel['front-wing-lights']], qty:4});
         // License plate
@@ -5521,6 +5559,16 @@ const CATALOG = [
        choices:()=>[
          {val:'3.5', label:'3.5" Round Axle', sub:'F-250'},
          {val:'4.0', label:'4.0" Round Axle', sub:'F-250'},
+       ],
+      },
+      {key:'rear-kit', label:'Rear Kit Selection', badge:'req',
+       hint:'For 2-3" front lift, the rear can remain at stock height or be lifted 3" — recommended for Mini Stomper (large tire) applications.',
+       condition:(sel)=>sel.height==='2-3'&&sel.scope!=='front-only'&&!!sel.axle,
+       choices:()=>[
+         {val:'stock', label:'Standard — Stock Height Rear Kit',
+          sub:'4-Link rear at factory ride height — same kit used for stock height trucks'},
+         {val:'3r',    label:'3" Rear Lift Kit (10046941) — ⚠ In Development',
+          sub:'EC-1427 — Recommended for Mini Stomper / large tire applications — ⚠ 10046941 is 4.5" DRW (F-450 spec) — verify part # for SRW axle sizes before quoting'},
        ],
       },
       {key:'system', label:'10-12" Lift System Type', badge:'req',
@@ -5648,7 +5696,7 @@ const CATALOG = [
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
       const rMap10=isCradle?{'3.5':'10040427','4.0':'10032609'}:{'3.5':'10015249','4.0':'10015248'};
       const rMap={'stock':{'3.5':'10015188','4.0':'10015168'},'2-3':{'3.5':'10015188','4.0':'10015168'},'5-6':{'3.5':'10015243','4.0':'10015242'},'10-12':rMap10};
-      const rpn=rMap[h]?.[axle];
+      const rpn=h==='2-3'&&sel['rear-kit']==='3r'?'10046941':(rMap[h]?.[axle]);
       if(rpn&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rpn,qty:1});
       if(is1012&&isCradle&&sel.box&&sel.scope!=='front-only'){const bM={'160-short':'10032603','176-long':'10040770'};parts.push({section:'Cradle Center',pn:bM[sel.box],qty:1});}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015292',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
@@ -5710,6 +5758,16 @@ const CATALOG = [
        choices:()=>[
          {val:'4.0', label:'4.0" Round Axle (SRW)', sub:'F-350 Single Rear Wheel'},
          {val:'4.5', label:'4.5" Round Axle (DRW)', sub:'F-350 Dual Rear Wheel'},
+       ],
+      },
+      {key:'rear-kit', label:'Rear Kit Selection', badge:'req',
+       hint:'For 2-3" front lift, the rear can remain at stock height or be lifted 3" — recommended for Mini Stomper (large tire) applications.',
+       condition:(sel)=>sel.height==='2-3'&&sel.scope!=='front-only'&&!!sel.axle,
+       choices:(kit,sel)=>[
+         {val:'stock', label:'Standard — Stock Height Rear Kit',
+          sub:'4-Link rear at factory ride height — same kit used for stock height trucks'},
+         {val:'3r',    label:'3" Rear Lift Kit (10046941) — ⚠ In Development',
+          sub:sel.axle==='4.5'?'EC-1427 — Recommended for Mini Stomper / large tire applications — same shocks as stock height':'EC-1427 — Recommended for Mini Stomper / large tire applications — ⚠ 10046941 is 4.5" DRW spec — verify part # for SRW axle before quoting'},
        ],
       },
       {key:'system', label:'10-12" Lift System Type', badge:'req',
@@ -5837,7 +5895,7 @@ const CATALOG = [
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
       const rMap10=isCradle?{'4.0':'10032609','4.5':'10040935'}:{'4.0':'10015248','4.5':'10015247'};
       const rMap={'stock':{'4.0':'10015168','4.5':'10015113'},'2-3':{'4.0':'10015168','4.5':'10015113'},'5-6':{'4.0':'10015242','4.5':'10015191'},'10-12':rMap10};
-      const rpn=rMap[h]?.[axle];
+      const rpn=h==='2-3'&&sel['rear-kit']==='3r'?'10046941':(rMap[h]?.[axle]);
       if(rpn&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rpn,qty:1});
       if(is1012&&isCradle&&sel.box&&sel.scope!=='front-only'){const bM={'160-short':'10032603','176-long':'10040770'};parts.push({section:'Cradle Center',pn:bM[sel.box],qty:1});}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015292',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
@@ -5890,6 +5948,16 @@ const CATALOG = [
          {val:'both',       label:'Front + Rear', sub:'Complete air suspension system — both ends'},
          {val:'front-only', label:'Front Only',   sub:'Front air suspension — factory or existing rear'},
          {val:'rear-only',  label:'Rear Only',    sub:'Rear air suspension — factory or existing front'},
+       ],
+      },
+      {key:'rear-kit', label:'Rear Kit Selection', badge:'req',
+       hint:'For 2-3" front lift, the rear can remain at stock height or be lifted 3" — recommended for Mini Stomper (large tire) applications.',
+       condition:(sel)=>sel.height==='2-3'&&!!sel.scope&&sel.scope!=='front-only',
+       choices:()=>[
+         {val:'stock', label:'Standard — Stock Height Rear Kit (10015113)',
+          sub:'4-Link rear at factory ride height — same kit used for stock height trucks'},
+         {val:'3r',    label:'3" Rear Lift Kit (10046941) — ⚠ In Development',
+          sub:'EC-1427 — Recommended for Mini Stomper / large tire applications — same shocks as stock height (10015113)'},
        ],
       },
       {key:'shocks', label:'Shocks', badge:'opt',
@@ -6013,7 +6081,8 @@ const CATALOG = [
       const fMap={'stock':'KLM69020','2-3':'10016213','5-6':'10015956'};
       if(fMap[h]&&sel.scope!=='rear-only') parts.push({section:'Front Suspension',pn:fMap[h],qty:1});
       const rMap={'stock':'10015113','2-3':'10015113','5-6':'10015191'};
-      if(rMap[h]&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rMap[h],qty:1});
+      const rpn=h==='2-3'&&sel['rear-kit']==='3r'?'10046941':rMap[h];
+      if(rpn&&sel.scope!=='front-only') parts.push({section:'Rear Suspension',pn:rpn,qty:1});
       if(sel.shocks){const sM={'mono-front':[{pn:'10015855',qty:2}],'mono-both':[{pn:'10015855',qty:2},{pn:'10015856',qty:2}],rr:[{pn:'10008956',qty:1}],'mono-rear':[{pn:'10015856',qty:2}],'rr-rear':[{pn:'10033796',qty:2},{pn:'80227',qty:4}],'rr-56':[{pn:'10004022',qty:1},{pn:'10003380',qty:2},{pn:'10003383',qty:2}],'rr-56-f':[{pn:'10003380',qty:2},{pn:'80227',qty:4}],'rr-56-r':[{pn:'10003383',qty:2},{pn:'80227',qty:4}]};(sM[sel.shocks]||[]).forEach(p=>parts.push({section:'Shocks',...p}));}
       if(sel.dss==='dss'){parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});parts.push({section:'Shocks',pn:'10003382',qty:2});}
       if(sel.dss==='bracket-only') parts.push({section:'Steering Stabilizer',pn:'10015862',qty:1});
@@ -13628,7 +13697,7 @@ const CATALOG = [
             opts.push({val:'eslk3h2',        label:'Air Lift ALP4 Electronic Air Control System',
               sub:'10040870 — 4-corner electronic air control system', parts:[{pn:'10040870',qty:1}]});
             opts.push({val:'eslk3h2-console',label:'Air Lift ALP4 Electronic + Overhead Console (10009358)',
-              sub:'ESLK3H2 + 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
+              sub:'10040870 + 10009358 — 2019+ RAM HD overhead console remote mount', parts:[{pn:'10040870',qty:1},{pn:'10009358',qty:1}]});
           }
           return opts;
         },
